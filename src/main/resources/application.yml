@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: MyMatching
+
+  security:
+    user:
+      name: user
+      password: 1234
