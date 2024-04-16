@@ -2,7 +2,45 @@ spring:
   application:
     name: MyMatching
 
+  profiles:
+    include: gcs
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/MyMatching
+    username: root
+    password: 1234
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
   security:
     user:
       name: user
       password: 1234
+
+server:
+  port: 8080
+
+  error:
+    include-exception: false      # Response 에 Exception 을 표시할지
+    include-message: always       # Response 에 Exception Message 를 표시할지 (never | always | on_param)
+    include-stacktrace: never     # Response 에 Stack Trace 를 표시할지 (never | always | on_param)
+    whitelabel.enabled: true      # 에러 발생 시 Spring 기본 에러 페이지 노출 여부
+
+jwt:
+  secret: HELLONICETOSEEYOUWELCOMETOTHEMYMATCHINGHELLONICETOSEEYOUWELCOMETOTHEMYMATCHINGHELLONICETOSEEYOUWELCOMETOTHEMYMATCHINGHELLONICETOSEEYOUWELCOMETOTHEMYMATCHING
+  access-token-time: 600000  # 10분
+  refresh-token-time: 864000000  # 10일

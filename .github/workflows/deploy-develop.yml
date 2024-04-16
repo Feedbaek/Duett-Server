@@ -24,27 +24,26 @@ jobs:
       - name: Set yml file
         uses: microsoft/variable-substitution@v1
         with:
-          files: ./src/main/resources/application.yml, ./src/main/resources/application-oauth2.yml, ./src/main/resources/application-gcs.yml
+          files: ./src/main/resources/application.yml, ./src/main/resources/application-gcs.yml
         env:
-          server.port: ${{ secrets.SERVER_PORT }}
-          spring.datasource.driver-class-name: ${{ secrets.BUILD_DATASOURCE_DRIVER_CLASS_NAME }}
-          spring.datasource.url: ${{ secrets.BUILD_DATASOURCE_URL }}
+          spring.datasource.driver-class-name: ${{ secrets.TEST_DATASOURCE_DRIVER_CLASS_NAME }}
+          spring.datasource.url: ${{ secrets.TEST_DATASOURCE_URL }}
           spring.datasource.username: ${{ secrets.DATASOURCE_USERNAME }}
           spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
+          spring.jpa.hibernate.ddl-auto: ${{ secrets.TEST_JPA_DDL_AUTO }}
 
-          spring.jpa.hibernate.ddl-auto: ${{ secrets.BUILD_JPA_DDL_AUTO }}
-
-          spring.cloud.gcp.storage.credentials.location: ${{ secrets.GCS_KEY_LOCATION }}
-          spring.cloud.gcp.storage.project-id: ${{ secrets.GCS_PROJECT_ID }}
-          spring.cloud.gcp.storage.bucket: ${{ secrets.GCS_BUCKET_NAME }}
-          spring.cloud.gcp.storage.bucket-dir: ${{ secrets.GCS_BUCKET_DIR }}
-          spring.cloud.gcp.storage.key-name: ${{ secrets.GCS_KEY_NAME }}
+          server.port: ${{ secrets.TEST_SERVER_PORT }}
+          server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}
 
           jwt.secret: ${{ secrets.JWT_SECRET }}
           jwt.access-token-time: ${{ secrets.ACCESS_TOKEN_TIME }}
           jwt.refresh-token-time: ${{ secrets.REFRESH_TOKEN_TIME }}
 
-          server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}
+          spring.cloud.gcp.storage.credentials.location: ${{ secrets.GCS_KEY_LOCATION }}
+          spring.cloud.gcp.storage.project-id: ${{ secrets.GCS_PROJECT_ID }}
+          spring.cloud.gcp.storage.bucket: ${{ secrets.GCS_BUCKET_NAME }}
+          spring.cloud.gcp.storage.bucket-dir: ${{ secrets.TEST_GCS_BUCKET_DIR }}
+          spring.cloud.gcp.storage.key-name: ${{ secrets.GCS_KEY_NAME }}
 
       - name: Create-json
         id: create-json
