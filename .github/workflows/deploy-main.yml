@@ -28,16 +28,12 @@ jobs:
         env:
           spring.datasource.driver-class-name: ${{ secrets.DATASOURCE_DRIVER_CLASS_NAME }}
           spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
-          spring.datasource.username: ${{ secrets.DATASOURCE_USERNAME }}
-          spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
           spring.jpa.hibernate.ddl-auto: ${{ secrets.JPA_DDL_AUTO }}
 
           server.port: ${{ secrets.SERVER_PORT }}
           server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}
 
           jwt.secret: ${{ secrets.JWT_SECRET }}
-          jwt.access-token-time: ${{ secrets.ACCESS_TOKEN_TIME }}
-          jwt.refresh-token-time: ${{ secrets.REFRESH_TOKEN_TIME }}
 
           spring.cloud.gcp.storage.credentials.location: ${{ secrets.GCS_KEY_LOCATION }}
           spring.cloud.gcp.storage.project-id: ${{ secrets.GCS_PROJECT_ID }}

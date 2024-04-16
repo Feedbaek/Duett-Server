@@ -1,6 +1,6 @@
 spring:
   application:
-    name: MyMatching
+    name: mymatching
 
   profiles:
     include: gcs
