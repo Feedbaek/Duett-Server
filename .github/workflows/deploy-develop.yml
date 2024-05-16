@@ -2,7 +2,7 @@ name: Deploy Test
 
 on:
   push:
-    branches: []
+    branches: [ 'tmp' ]
 
 jobs:
   build:
