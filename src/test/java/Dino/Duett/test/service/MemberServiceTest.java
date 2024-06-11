@@ -6,7 +6,6 @@ import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.member.repository.RoleRepository;
 import Dino.Duett.domain.member.service.MemberService;
-import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.utils.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

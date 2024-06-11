@@ -5,16 +5,13 @@ import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
-@SuperBuilder
 @Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -34,10 +31,6 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
-
     @OneToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
@@ -47,16 +40,6 @@ public class Member extends BaseEntity {
             throw new MemberException.MemberCoinNotEnoughException();
         }
         return this.coin -= coin;
-    }
-
-    @Builder
-    public Member(Long id, String phoneNumber, String kakaoId, Integer coin, MemberState state, Profile profile) {
-        this.id = id;
-        this.phoneNumber = phoneNumber;
-        this.kakaoId = kakaoId;
-        this.coin = coin;
-        this.state = state;
-        this.profile = profile;
     }
 
     @Builder
