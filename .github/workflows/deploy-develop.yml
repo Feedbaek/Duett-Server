@@ -2,7 +2,7 @@ name: Deploy Test
 
 on:
   push:
-    branches: [ 'tmp' ]
+    branches: [ 'develop' ]
 
 jobs:
   build:
@@ -29,6 +29,8 @@ jobs:
           spring.datasource.driver-class-name: ${{ secrets.DATASOURCE_DRIVER_CLASS_NAME }}
           spring.datasource.url: ${{ secrets.TEST_DATASOURCE_URL }}
           spring.jpa.hibernate.ddl-auto: ${{ secrets.TEST_JPA_DDL_AUTO }}
+
+          spring.data.redis.database: ${{ secrets.TEST_REDIS_DATABASE }}
 
           server.port: ${{ secrets.TEST_SERVER_PORT }}
           server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}

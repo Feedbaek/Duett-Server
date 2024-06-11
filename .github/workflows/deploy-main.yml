@@ -2,7 +2,7 @@ name: Deploy to GCP Instance using SSH
 
 on:
   push:
-    branches: [ 'tmp' ]
+    branches: [ 'main' ]
 
 jobs:
   build:
@@ -29,6 +29,8 @@ jobs:
           spring.datasource.driver-class-name: ${{ secrets.DATASOURCE_DRIVER_CLASS_NAME }}
           spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
           spring.jpa.hibernate.ddl-auto: ${{ secrets.JPA_DDL_AUTO }}
+
+          spring.data.redis.database: ${{ secrets.REDIS_DATABASE }}
 
           server.port: ${{ secrets.SERVER_PORT }}
           server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}
