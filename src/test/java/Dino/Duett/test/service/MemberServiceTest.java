@@ -2,9 +2,7 @@ package Dino.Duett.test.service;
 
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.domain.member.entity.Member;
-import Dino.Duett.domain.member.entity.Role;
 import Dino.Duett.domain.member.enums.MemberState;
-import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.member.repository.RoleRepository;
 import Dino.Duett.domain.member.service.MemberService;
