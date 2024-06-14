@@ -43,12 +43,13 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(Long id, String phoneNumber, String kakaoId, Integer coin, MemberState state, Role role) {
+    public Member(Long id, String phoneNumber, String kakaoId, Integer coin, MemberState state, Role role, Profile profile) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.kakaoId = kakaoId;
         this.coin = coin;
         this.state = state;
         this.role = role;
+        this.profile = profile;
     }
 }
