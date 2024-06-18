@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Profile extends BaseEntity {
     private Long id;
     @Column(length = 15)
     private String name;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     @Enumerated(EnumType.STRING)
     private MbtiType mbti;
     @Column(length = 30)
@@ -55,13 +56,8 @@ public class Profile extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Music> musics = new ArrayList<>();
 
-    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-
     @Builder
-    public Profile(Long id, String name, LocalDateTime birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Region region, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, Member member) {
+    public Profile(Long id, String name, LocalDate birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Region region, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, Member member) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -75,7 +71,6 @@ public class Profile extends BaseEntity {
         this.profileTags = profileTags;
         this.mood = mood;
         this.musics = musics;
-        this.member = member;
     }
 
     public void updateMood(final Mood mood) {
