@@ -5,10 +5,11 @@ import Dino.Duett.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
 @Entity
 @Table(name = "music")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Music extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +21,6 @@ public class Music extends BaseEntity {
     private String artist;
     @Column(nullable = false)
     private String url;
-
-    public Music(Long id, String title, String artist, String url) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-        this.url = url;
-    }
 
     public static Music of(String title, String artist, String url) {
         return new Music(

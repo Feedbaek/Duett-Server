@@ -25,7 +25,8 @@ import static Dino.Duett.global.enums.LimitConstants.YOUTUBE_SEARCH_LIMIT;
 @Slf4j
 public class SearchService {
     private final EnvBean envBean;
-    private static int youtubeKeyCurrentIndex = 0;
+    private final YouTube youtube;
+    private int youtubeKeyCurrentIndex = 0;
 
     /** @param index 유튜브 API 키 인덱스
      * @return 유튜브 API 키
@@ -56,15 +57,18 @@ public class SearchService {
     private List<SearchResultSnippet> requestYoutubeSearching(final YouTube.Search.List search) throws IOException {
         for (int i = 0; i < envBean.getYoutubeKeyMaxSize(); i++) {
             try {
-                search.setKey(getYoutubeApiKey(youtubeKeyCurrentIndex));
-                return search.execute().getItems().stream()
+                int idx = (youtubeKeyCurrentIndex + i) % envBean.getYoutubeKeyMaxSize();
+                search.setKey(getYoutubeApiKey(idx));
+                List<SearchResult> searchResult = search.execute().getItems();
+                youtubeKeyCurrentIndex = idx;
+                return searchResult.stream()
                         .map(SearchResult::getSnippet)
                         .toList();
             } catch (GoogleJsonResponseException e) {
                 if (e.getStatusCode() == 403) {
                     log.error( "[GoogleJsonResponseException] " + (youtubeKeyCurrentIndex+1)+ "번째 YouTube API Key가 만료되었습니다.");
-                    youtubeKeyCurrentIndex = (youtubeKeyCurrentIndex+1) % envBean.getYoutubeKeyMaxSize();
                 } else {
+                    log.error( "[IllegalArgumentException] " + e.getMessage());
                     throw new YoutubeException.YoutubeApiRequestFailed();
                 }
             } catch (IllegalArgumentException e) {
@@ -81,14 +85,6 @@ public class SearchService {
      */
     public List<VideoResponse> searchVideos(final String q, Long maxResults){
         try {
-            // YouTube Data API에 접근할 수 있는 YouTube 클라이언트 생성
-            YouTube youtube = new YouTube.Builder(
-                    new NetHttpTransport(),
-                    GsonFactory.getDefaultInstance(),
-                    request -> {
-                    })
-                    .build();
-
             // YouTube Data API를 사용해 동영상 검색을 위한 요청 객체 생성. 최대 사이즈 제한
             YouTube.Search.List search = youtube.search().list(Collections.singletonList("id,snippet"))
                     .setQ(q)

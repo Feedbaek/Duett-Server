@@ -18,6 +18,7 @@ public enum ErrorCode {
     INVALID_VERIFICATION_CODE(1000, "인증 코드가 유효하지 않습니다"),
     VERIFICATION_CODE_NOT_FOUND(1001, "인증 코드를 찾을 수 없습니다"),
     LOGIN_FAILED(1002, "로그인 실패"),
+    INVALID_PHONE_NUMBER(1003, "휴대폰 번호가 유효하지 않습니다"),
 
     // 2000: Member
     DUPLICATE_PHONE_NUMBER(2000, "전화번호가 중복됩니다"),

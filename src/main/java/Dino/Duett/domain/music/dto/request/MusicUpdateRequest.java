@@ -26,4 +26,7 @@ public class MusicUpdateRequest {
     @Schema(description = "음악 링크 고유식별자", name = "urlName")
     @NotBlank
     private String url;
+    public MusicUpdateRequest of(Long musicId, String title, String artist, String url) {
+        return new MusicUpdateRequest(musicId, title, artist, url);
+    }
 }

@@ -1,15 +1,8 @@
 package Dino.Duett.config;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Getter
 @Component
@@ -57,15 +50,4 @@ public class EnvBean {
     private String youtubeApiKey14;
 
     private final int youtubeKeyMaxSize = 14;
-
-    @Bean
-    public Storage storage() throws IOException {
-        ClassPathResource resource = new ClassPathResource(keyName);
-        GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
-        return StorageOptions.newBuilder()
-                .setProjectId(projectId)
-                .setCredentials(credentials)
-                .build()
-                .getService();
-    }
 }

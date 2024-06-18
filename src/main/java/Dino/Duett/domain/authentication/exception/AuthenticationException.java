@@ -20,4 +20,10 @@ public class AuthenticationException extends CustomException {
         }
     }
 
+    public static class InvalidPhoneNumberException extends AuthenticationException {
+        public InvalidPhoneNumberException() {
+            super(ErrorCode.INVALID_PHONE_NUMBER);
+        }
+    }
+
 }
