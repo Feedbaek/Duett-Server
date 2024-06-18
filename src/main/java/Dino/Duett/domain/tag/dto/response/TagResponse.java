@@ -1,6 +1,7 @@
 package Dino.Duett.domain.tag.dto.response;
 
 import Dino.Duett.domain.tag.entity.Tag;
+import Dino.Duett.domain.tag.enums.TagState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,13 +10,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class TagResponse {
-
-    @Schema(description = "태그 이름", example = "음악")
+    @Schema(description = "태그 이름", example = "팝")
     String name;
-    @Schema(description = "태그 강조 순위. 2:강조, 1:일반, 0: 선택안함", example = "1")
-    int priority;
+    @Schema(description = "태그 강조 순위. FEATURED: 강조 선택, STANDARD: 선택, NONE: 미선택", example = "STANDARD")
+    TagState state;
 
-    public static TagResponse of(Tag tag, int priority){
-        return new TagResponse(tag.getName(), priority);
+    public static TagResponse of(String name,
+                                 TagState state) {
+        return new TagResponse(
+                name,
+                state);
     }
 }

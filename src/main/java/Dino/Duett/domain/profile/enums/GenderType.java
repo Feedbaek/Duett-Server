@@ -15,12 +15,6 @@ public enum GenderType {
 
     private final String value;
 
-    public static GenderType findByGenderType(final String code) {
-        return Arrays.stream(GenderType.values())
-                .filter(v -> v.getValue().equals(code))
-                .findAny()
-                .orElseThrow(ProfileException.GenderTypeNotFoundException::new);
-    }
     public GenderType getOppositeGender() {
         switch (this) {
             case MAN:

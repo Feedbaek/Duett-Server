@@ -16,7 +16,10 @@ public class TagByTypeResponse {
     @Schema(description = "취미 태그 목록")
     List<TagResponse> hobbyTags;
 
-    public static TagByTypeResponse of(List<TagResponse> musicTags, List<TagResponse> hobbyTags){
-        return new TagByTypeResponse(musicTags, hobbyTags);
+    public static TagByTypeResponse of(List<TagResponse> musicTags,
+                                       List<TagResponse> hobbyTags){
+        return new TagByTypeResponse(
+                musicTags,
+                hobbyTags);
     }
 }

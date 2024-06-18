@@ -1,14 +1,10 @@
 package Dino.Duett.domain.tag.entity;
 
 import Dino.Duett.domain.tag.enums.TagType;
-import Dino.Duett.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "tag")
@@ -20,20 +16,23 @@ public class Tag {
     @Column(name = "tag_id")
     private Long id;
 
+    @Column(nullable = false, length = 20)
     private String name;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TagType type;
 
-    public Tag(final Long id, final String name, final String type) {
+    public Tag(Long id, String name, TagType type) {
         this.id = id;
         this.name = name;
         this.type = type;
     }
 
-    public static Tag of(final String name, final String type) {
+    public static Tag of(String name, TagType type) {
         return new Tag(
                 null,
                 name,
-                type);
+                type
+        );
     }
 }
