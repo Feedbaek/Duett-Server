@@ -1,5 +1,6 @@
 package Dino.Duett.domain.member.service;
 
+import Dino.Duett.domain.authentication.dto.CheckMemberDto;
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.entity.Role;
@@ -58,4 +59,7 @@ public class MemberService {
                 .build();
     }
 
+    public CheckMemberDto existsByPhoneNumber(String phoneNumber) {
+        return CheckMemberDto.of(memberRepository.existsByPhoneNumber(phoneNumber));
+    }
 }

@@ -6,6 +6,7 @@ import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.entity.Role;
 import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.enums.RoleName;
+import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.entity.Region;
 import Dino.Duett.domain.profile.enums.GenderType;
