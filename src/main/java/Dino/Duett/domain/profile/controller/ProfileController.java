@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class ProfileController {
+public class ProfileController implements ProfileApi{
     private final ProfileCardService profileCardService;
     private final MusicService musicService;
     private final MoodService moodService;

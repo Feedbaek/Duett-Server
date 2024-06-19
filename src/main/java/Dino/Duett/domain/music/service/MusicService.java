@@ -4,7 +4,7 @@ import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
-import Dino.Duett.domain.music.dto.MusicResponse;
+import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.music.dto.request.MusicUpdateRequest;
 import Dino.Duett.domain.music.entity.Music;
 import Dino.Duett.domain.music.exception.MusicException;

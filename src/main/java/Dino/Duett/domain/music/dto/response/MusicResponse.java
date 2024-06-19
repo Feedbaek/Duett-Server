@@ -1,4 +1,4 @@
-package Dino.Duett.domain.music.dto;
+package Dino.Duett.domain.music.dto.response;
 
 import Dino.Duett.domain.music.entity.Music;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
 
 @Schema(description = "음악 조회 응답")
 @Getter

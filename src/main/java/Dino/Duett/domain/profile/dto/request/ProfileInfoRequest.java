@@ -1,14 +1,12 @@
 package Dino.Duett.domain.profile.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Schema(description = "내 정보 등록 및 수정 요청", type = "multipartForm")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class ProfileInfoRequest {

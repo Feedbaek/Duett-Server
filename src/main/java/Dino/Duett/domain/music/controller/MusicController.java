@@ -1,8 +1,5 @@
 package Dino.Duett.domain.music.controller;
 
-import Dino.Duett.config.security.AuthMember;
-import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
-import Dino.Duett.domain.music.dto.MusicResponse;
 import Dino.Duett.domain.music.service.MusicService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/musics")

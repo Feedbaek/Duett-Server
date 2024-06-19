@@ -4,15 +4,13 @@ import Dino.Duett.domain.mood.dto.request.MoodRequest;
 import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
 import Dino.Duett.domain.music.dto.request.MusicUpdateRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Schema(description = "음악 취향 수정 요청", type = "multipartForm")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class ProfileMusicRequest {

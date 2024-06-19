@@ -6,7 +6,7 @@ import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.mood.service.MoodService;
-import Dino.Duett.domain.music.dto.MusicResponse;
+import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.music.service.MusicService;
 import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;

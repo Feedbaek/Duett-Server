@@ -1,9 +1,7 @@
 package Dino.Duett.domain.profile.dto.request;
 
-import Dino.Duett.domain.music.dto.MusicResponse;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.dto.request.TagRequest;
-import Dino.Duett.domain.tag.dto.response.TagResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

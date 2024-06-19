@@ -1,7 +1,7 @@
 package Dino.Duett.domain.profile.dto.response;
 
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
-import Dino.Duett.domain.music.dto.MusicResponse;
+import Dino.Duett.domain.music.dto.response.MusicResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
