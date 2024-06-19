@@ -27,7 +27,7 @@ public class Member extends BaseEntity {
     @Column(name = "state", nullable = false)
     private MemberState state;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

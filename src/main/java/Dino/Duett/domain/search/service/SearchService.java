@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 
 import static Dino.Duett.global.enums.LimitConstants.YOUTUBE_SEARCH_LIMIT;
 
+@Slf4j(topic = "SearchService")
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SearchService {
     private final EnvBean envBean;
     private final YouTube youtube;

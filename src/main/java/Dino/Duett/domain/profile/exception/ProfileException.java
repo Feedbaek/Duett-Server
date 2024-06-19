@@ -25,4 +25,10 @@ public class ProfileException extends CustomException {
             super(ErrorCode.GENDER_TYPE_NOT_FOUND);
         }
     }
+
+    public static class ProfileForbiddenException extends ProfileException {
+        public ProfileForbiddenException() {
+            super(ErrorCode.PROFILE_FORBIDDEN);
+        }
+    }
 }

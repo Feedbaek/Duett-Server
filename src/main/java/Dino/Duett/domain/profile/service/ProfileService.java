@@ -39,6 +39,7 @@ public class ProfileService {
      * @param memberId 사용자 id
      * @return ProfileResponse
      */
+    @Transactional
     public ProfileResponse getProfile(final Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
@@ -61,6 +62,7 @@ public class ProfileService {
                 .build();
     }
 
+    @Transactional
     public ProfileInfoResponse getProfileInfo(final Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
@@ -146,7 +148,7 @@ public class ProfileService {
                 profileTagService.getProfileTagsWithAllTags(profile.getId(), TagType.MUSIC),
                 profileTagService.getProfileTagsWithAllTags(profile.getId(), TagType.HOBBY));
     }
-    public Profile createProfile(Long memberId){ //todo: 수정혹은 삭제예정. - 멤버 생성시 프로필카드 생성
+    public Profile createProfile(Long memberId){ // todo: 수정혹은 삭제예정. - 멤버 생성시 프로필카드 생성
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = Profile.builder()
                 .member(member)
