@@ -37,21 +37,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
     @ExceptionHandler({
-            MoodException.MoodNotFoundException.class,
-            MusicException.class,
             TagException.TagMaxLimitException.class,
-            MethodArgumentNotValidException.class,
-            ProfileException.ProfileNotFoundException.class,
-            TagException.TagNotFoundException.class,
+            MethodArgumentNotValidException.class
     })
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
         log.error(e.getErrorInfoLog());
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));
     }
+    @ExceptionHandler({
+            MusicException.MusicNotFoundException.class,
+            ProfileException.ProfileNotFoundException.class,
+            TagException.TagNotFoundException.class,
+            MoodException.MoodNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleGlobalNotFoundException(final CustomException e) {
+        log.error(e.getErrorInfoLog());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.from(e));
+    }
+
 
     @ExceptionHandler({
-            ProfileException.ProfileForbiddenException.class,
-            MoodException.MoodForbiddenException.class
+            ProfileException.ProfileForbiddenException.class
     })
     public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
         log.error(e.getErrorInfoLog());
@@ -71,6 +77,6 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleGlobalInternalServerException(final CustomException e) {
         log.error(e.getErrorInfoLog());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.from(e));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.from(e));
     }
 }

@@ -31,18 +31,4 @@ public enum TagType {
             "조깅", "걷기", "헬스"));
     private final String title;
     private final List<String> names;
-
-    public static String findByMusicTagType(final String code) {
-        return MUSIC.getNames().stream()
-                .filter(v -> v.equals(code))
-                .findAny()
-                .orElseThrow(TagException.TagTypeNotFoundException::new);
-    }
-
-    public static String findByHobbyTagType(final String code) {
-        return HOBBY.getNames().stream()
-                .filter(v -> v.equals(code))
-                .findAny()
-                .orElseThrow(TagException.TagTypeNotFoundException::new);
-    }
 }

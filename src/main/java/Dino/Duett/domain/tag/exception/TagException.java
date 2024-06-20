@@ -13,11 +13,6 @@ public class TagException extends CustomException {
             super(ErrorCode.TAG_NOT_FOUND);
         }
     }
-    public static class TagTypeNotFoundException extends TagException {
-        public TagTypeNotFoundException() {
-            super(ErrorCode.TAG_TYPE_NOT_FOUND);
-        }
-    }
     public static class TagMaxLimitException extends TagException {
         public TagMaxLimitException() {
             super(ErrorCode.TAG_MAX_LIMIT);
