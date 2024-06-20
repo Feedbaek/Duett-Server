@@ -62,7 +62,7 @@ public class SignUpControllerTest {
                     multipart("/api/v1/sign-up")
                             .file(profileImage)
                             .param("phoneNumber", signUpReq.getPhoneNumber())
-                            .param("code", verificationCode)
+                            .param("verificationCode", verificationCode)
                             .param("nickname", signUpReq.getNickname())
                             .param("kakaoId", signUpReq.getKakaoId())
                             .param("sex", signUpReq.getSex())
