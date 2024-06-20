@@ -27,7 +27,7 @@ jobs:
       - name: Set yml file
         uses: microsoft/variable-substitution@v1
         with:
-          files: ./src/main/resources/application.yml, ./src/main/resources/application-gcs.yml
+          files: ./src/main/resources/application.yml, ./src/main/resources/application-gcs.yml, ./src/main/resources/application-youtube.yml
         env:
           spring.datasource.driver-class-name: ${{ secrets.BUILD_DATASOURCE_DRIVER_CLASS_NAME }}
           spring.datasource.url: ${{ secrets.BUILD_DATASOURCE_URL }}
@@ -45,7 +45,7 @@ jobs:
           spring.cloud.gcp.storage.credentials.location: ${{ secrets.GCS_KEY_LOCATION }}
           spring.cloud.gcp.storage.project-id: ${{ secrets.GCS_PROJECT_ID }}
           spring.cloud.gcp.storage.bucket-name: ${{ secrets.GCS_BUCKET_NAME }}
-          spring.cloud.gcp.storage.bucket-dir: ${{ secrets.GCS_BUCKET_DIR }}
+          spring.cloud.gcp.storage.bucket-dir: ${{ secrets.GCS_TEST_BUCKET_DIR }}
           spring.cloud.gcp.storage.key-name: ${{ secrets.GCS_KEY_NAME }}
 
           youtube.api-key1: ${{ secrets.YOUTUBE_API_KEY_1 }}
