@@ -21,13 +21,14 @@ public class TagException extends CustomException {
             super(ErrorCode.TAG_NOT_FOUND, property);
         }
     }
-    public static class TagMaxLimitException extends TagException {
-        public TagMaxLimitException() {
-            super(ErrorCode.TAG_MAX_LIMIT);
+    public static class ProfileTagMaxLimitException extends TagException {
+        public ProfileTagMaxLimitException() {
+            super(ErrorCode.PROFILE_TAG_MAX_LIMIT);
         }
-        public TagMaxLimitException(Map<String, String> property) {
-            super(ErrorCode.TAG_MAX_LIMIT, property);
+        public ProfileTagMaxLimitException(Map<String, String> property) {
+            super(ErrorCode.PROFILE_TAG_MAX_LIMIT, property);
         }
     }
+
 
 }

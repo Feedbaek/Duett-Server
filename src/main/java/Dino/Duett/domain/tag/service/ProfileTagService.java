@@ -18,9 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import static Dino.Duett.global.enums.LimitConstants.TAG_MAX_LIMIT;
+import static Dino.Duett.global.enums.LimitConstants.FEATURED_PROFILE_TAG_MAX_LIMIT;
+import static Dino.Duett.global.enums.LimitConstants.PROFILE_TAG_MAX_LIMIT;
 
 @Service
 @RequiredArgsConstructor
@@ -45,9 +47,6 @@ public class ProfileTagService {
                 .toList();
     }
 
-    public Long countProfileTags(final Long profileId, final TagType tagType) {
-        return profileTagRepository.countByProfileIdAndTagType(profileId, tagType);
-    }
 
     public List<TagResponse> getProfileTagsOnlyFeatured(final Long profileId) {
         return profileTagRepository.findAllByProfileIdAndTagState(profileId, TagState.FEATURED).stream()
@@ -58,8 +57,14 @@ public class ProfileTagService {
     }
 
     public void validateProfileTagLimit(final Profile profile, final TagType tagType) {
-        if (profileTagRepository.countByProfileIdAndTagType(profile.getId(), tagType) > TAG_MAX_LIMIT.getLimit()) {
-            throw new TagException.TagMaxLimitException();
+        Integer featuredProfileTagLimit = profileTagRepository.countByProfileIdAndTagTypeAndTagState(profile.getId(), tagType, TagState.FEATURED);
+        Integer profileTagLimit = profileTagRepository.countByProfileIdAndTagType(profile.getId(), tagType);
+        if (profileTagLimit> PROFILE_TAG_MAX_LIMIT.getLimit()) {
+            throw new TagException.ProfileTagMaxLimitException(Map.of("ProfileTagSize", String.valueOf(profileTagLimit)));
+        }
+
+        if (featuredProfileTagLimit> FEATURED_PROFILE_TAG_MAX_LIMIT.getLimit()) {
+            throw new TagException.ProfileTagMaxLimitException(Map.of("FeaturedProfileTagSize", String.valueOf(featuredProfileTagLimit)));
         }
     }
 
@@ -69,6 +74,7 @@ public class ProfileTagService {
         Profile profile = member.getProfile();
         changeProfileTagsByTagType(profile, musicTags, TagType.MUSIC);
         changeProfileTagsByTagType(profile, hobbyTags, TagType.HOBBY);
+
     }
 
     @Transactional

@@ -36,7 +36,7 @@ public interface ProfileTagRepository extends JpaRepository<ProfileTag, Long> {
             "FROM ProfileTag pt " +
             "JOIN pt.tag t " +
             "WHERE pt.profile.id = :profileId AND t.type = :type")
-    Long countByProfileIdAndTagType(
+    Integer countByProfileIdAndTagType(
             @Param("profileId") Long profileId,
             @Param("type") TagType type);
 
@@ -46,5 +46,13 @@ public interface ProfileTagRepository extends JpaRepository<ProfileTag, Long> {
             "WHERE pt.profile.id = :profileId AND pt.state = :state")
     List<ProfileTagProjection> findAllByProfileIdAndTagState(
             @Param("profileId") Long profileId,
+            @Param("state") TagState state);
+    @Query("SELECT COUNT(pt) " +
+            "FROM ProfileTag pt " +
+            "JOIN pt.tag t " +
+            "WHERE pt.profile.id = :profileId AND t.type = :type AND pt.state = :state")
+    Integer countByProfileIdAndTagTypeAndTagState(
+            @Param("profileId") Long profileId,
+            @Param("type") TagType type,
             @Param("state") TagState state);
 }

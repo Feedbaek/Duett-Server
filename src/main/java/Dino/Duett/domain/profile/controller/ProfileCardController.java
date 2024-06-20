@@ -1,14 +1,10 @@
 package Dino.Duett.domain.profile.controller;
 
 import Dino.Duett.config.security.AuthMember;
-import Dino.Duett.domain.profile.dto.response.*;
+import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
 import Dino.Duett.domain.profile.service.ProfileCardService;
 import Dino.Duett.global.dto.JsonBody;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +18,10 @@ import java.util.List;
 public class ProfileCardController implements ProfileCardApi {
     private final ProfileCardService profileCardService;
 
-    @GetMapping("/members/profile-cards")
-    public JsonBody<ProfileCardResponse> getProfileCard(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "내 프로필 카드 조회 성공", profileCardService.getProfileCard(authMember.getId()));
-    }
+//    @GetMapping("/members/profile-cards") // todo: MVP 에서는 자신의 프로필 카드 조회 보류
+//    public JsonBody<ProfileCardResponse> getProfileCard(@AuthenticationPrincipal final AuthMember authMember){
+//        return JsonBody.of(HttpStatus.OK.value(), "내 프로필 카드 조회 성공", profileCardService.getProfileCard(authMember.getId()));
+//    }
 
     @GetMapping("/profile-cards/{profileId}/coin")
     public JsonBody<ProfileCardResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,

@@ -53,7 +53,7 @@ public enum ErrorCode {
 
     // 7000: Tag
     TAG_NOT_FOUND(8000, "태그를 찾을 수 없습니다."),
-    TAG_MAX_LIMIT(8001, "태그 최대 개수 초과"),
+    PROFILE_TAG_MAX_LIMIT(8001, "프로필 태그 최대 개수 초과"),
 
     // 8000: Youtube
     YOUTUBE_API_REQUEST_FAILED(9000, "Youtube API 요청 실패"),

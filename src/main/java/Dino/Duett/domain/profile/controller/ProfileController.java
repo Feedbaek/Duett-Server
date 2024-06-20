@@ -109,16 +109,7 @@ public class ProfileController implements ProfileApi{
 //    public JsonBody<ProfileInfoResponse> getProfile(@AuthenticationPrincipal final AuthMember authMember){
 //        return JsonBody.of(HttpStatus.OK.value(), "내 정보 조회하기", profileService.getProfileInfo(authMember.getId()));
 //    }
-//    @Operation(summary = "내 소개 조회하기", tags = {"마이페이지"})
-//    @GetMapping("/profiles/intro")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "내 소개 조회 성공"),
-//            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
-//            @ApiResponse(responseCode = "400", description = "내 소개 조회 실패", content = @Content(schema = @Schema(hidden = true)))
-//    })
-//    public JsonBody<ProfileIntroResponse> getProfileIntro(@AuthenticationPrincipal final AuthMember authMember){
-//        return JsonBody.of(HttpStatus.OK.value(), "내 소개 조회하기", profileService.getProfileIntro(authMember.getId()));
-//    }
+
 //
     //    @Operation(summary = "마이페이지 정보 전체 조회하기", tags = {"마이페이지"})
 //    @GetMapping("/profiles")
@@ -141,33 +132,22 @@ public class ProfileController implements ProfileApi{
 //    public JsonBody<ProfileInfoResponse> updateProfile(@AuthenticationPrincipal final AuthMember authMember,
 //                                                       @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest){
 //        return JsonBody.of(HttpStatus.OK.value(), "내 정보 수정하기", profileService.updateProfileInfo(authMember.getId(), profileInfoRequest));
-//    }
 
-    @Operation(summary = "내 소개 등록 및 수정하기", tags = {"마이페이지"})
-    @PostMapping("/profiles/intro")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "내 소개 등록 성공"),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "400", description = "잘못된 인자 입력", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "8000", description = "태그를 찾을 수 없음. 태그 잘못 입력(400)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "8002", description = "태그 최대 개수 초과(400)", content = @Content(schema = @Schema(hidden = true))),
 
-    })
-    public JsonBody<ProfileIntroResponse> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
-                                                             @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
-        return JsonBody.of(HttpStatus.OK.value(), "내 소개 수정하기", profileService.updateProfileIntro(authMember.getId(), profileIntroRequest));
+
+    @GetMapping("/profiles/intro")
+    public JsonBody<ProfileIntroResponse> getProfileIntro(@AuthenticationPrincipal final AuthMember authMember){
+        return JsonBody.of(HttpStatus.OK.value(), "내 소개 조회하기", profileService.getProfileIntro(authMember.getId()));
     }
 
-    @Operation(summary = "선택 가능한 모든 태그 조회하기", tags = {"마이페이지"})
+    @PostMapping("/profiles/intro")
+    public JsonBody<Void> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
+                                                             @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
+        profileService.updateProfileIntro(authMember.getId(), profileIntroRequest);
+        return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정하기", null);
+    }
+
     @GetMapping("/profiles/tags")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 태그 조회 성공"),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
-    })
     public JsonBody<TagByTypeResponse> getAllTags(@AuthenticationPrincipal final AuthMember authMember) {
         return JsonBody.of(HttpStatus.OK.value(), "유저 태그 조회 성공", profileService.getProfileTagsWithAllTagsByMemberId(authMember.getId()));
     }

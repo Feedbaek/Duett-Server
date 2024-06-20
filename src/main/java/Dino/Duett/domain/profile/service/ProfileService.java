@@ -86,7 +86,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileIntroResponse updateProfileIntro(final Long memberId, final ProfileIntroRequest profileIntroRequest){
+    public void updateProfileIntro(final Long memberId, final ProfileIntroRequest profileIntroRequest){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
 
@@ -97,13 +97,6 @@ public class ProfileService {
         );
 
         profileTagService.changeProfileTags(memberId, profileIntroRequest.getMusicTags(), profileIntroRequest.getHobbyTags());
-        return ProfileIntroResponse.of(
-                profile.getMbti(),
-                profileTagService.getProfileTags(profile.getId(), TagType.MUSIC),
-                profileTagService.getProfileTags(profile.getId(), TagType.HOBBY),
-                profile.getSelfIntroduction(),
-                profile.getLikeableMusicTaste()
-        );
     }
 
     @Transactional

@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(TagException.TagMaxLimitException.class)
+    @ExceptionHandler(TagException.ProfileTagMaxLimitException.class)
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
         log.error(e.getErrorInfoLog());
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));
