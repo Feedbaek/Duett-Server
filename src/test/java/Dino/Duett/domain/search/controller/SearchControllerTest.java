@@ -28,13 +28,7 @@ public class SearchControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private EnvBean envBean;
-    @Autowired
     private TestUtil testUtil;
-    @Autowired
-    private MusicRepository musicRepository;
-    @MockBean
-    private SearchService searchService;
     @Autowired
     private MemberRepository memberRepository;
 
