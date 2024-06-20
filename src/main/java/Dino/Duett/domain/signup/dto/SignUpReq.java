@@ -13,7 +13,7 @@ public class SignUpReq {
     @NotBlank
     private String phoneNumber;
     @NotBlank
-    private String code;
+    private String verificationCode;
     @NotBlank
     private String nickname;
     @NotBlank

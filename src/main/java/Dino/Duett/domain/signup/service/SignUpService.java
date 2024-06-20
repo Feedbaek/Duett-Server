@@ -1,21 +1,17 @@
 package Dino.Duett.domain.signup.service;
 
 import Dino.Duett.domain.authentication.VerificationCodeManager;
-import Dino.Duett.domain.authentication.dto.VerificationCodeDto;
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.domain.member.entity.Member;
-import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.member.service.MemberService;
 import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.domain.signup.dto.SignUpRes;
 import Dino.Duett.global.exception.CustomException;
 import Dino.Duett.gmail.GmailReader;
-import Dino.Duett.gmail.exception.GmailException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -29,8 +25,8 @@ public class SignUpService {
     // 회원가입
     public SignUpRes signUp(SignUpReq signUpReq) throws CustomException {
         // redis, gmail 인증 코드 확인
-        verificationCodeManager.verifyCode(signUpReq.getPhoneNumber(), signUpReq.getCode());
-        gmailReader.validate(signUpReq.getPhoneNumber(), signUpReq.getCode());
+        verificationCodeManager.verifyCode(signUpReq.getPhoneNumber(), signUpReq.getVerificationCode());
+        gmailReader.validate(signUpReq.getPhoneNumber(), signUpReq.getVerificationCode());
         // 회원가입 처리
         Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
         MemberDto memberDto = memberService.makeMemberDto(member);

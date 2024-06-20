@@ -5,11 +5,9 @@ import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.gmail.GmailReader;
 import Dino.Duett.utils.TestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +17,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.will;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,7 +47,7 @@ public class SignUpControllerTest {
         doAnswer(invocation -> null).when(gmailReader).validate(anyString(), anyString());
 
         SignUpReq signUpReq = TestUtil.makeSignUpReq();
-        signUpReq.setCode(verificationCode);
+        signUpReq.setVerificationCode(verificationCode);
 
         // MockMultipartFile 객체를 생성하여 파일을 만듭니다.
         MockMultipartFile profileImage = new MockMultipartFile(
@@ -68,7 +62,7 @@ public class SignUpControllerTest {
                     multipart("/api/v1/sign-up")
                             .file(profileImage)
                             .param("phoneNumber", signUpReq.getPhoneNumber())
-                            .param("code", verificationCode)
+                            .param("verificationCode", verificationCode)
                             .param("nickname", signUpReq.getNickname())
                             .param("kakaoId", signUpReq.getKakaoId())
                             .param("sex", signUpReq.getSex())
