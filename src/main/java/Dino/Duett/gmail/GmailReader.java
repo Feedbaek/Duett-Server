@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Properties;
 
-@Slf4j
+@Slf4j(topic = "GmailReader")
 @Component
 public class GmailReader {
     private final EnvBean envBean;
@@ -85,6 +85,7 @@ public class GmailReader {
                 String body = getBody(lastMessage);
                 // 메일 내용과 코드가 일치하는지 확인
                 if (!body.equals(code)) {
+                    log.warn("Code does not match: " + body + " " + code);
                     throw new GmailException.EmailValidationFailedException();
                 }
             }
