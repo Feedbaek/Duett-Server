@@ -39,9 +39,9 @@ public class CustomException extends RuntimeException {
 
     public static CustomException of(
         final ErrorCode errorCode,
-        final Map<String, String> propertyValues
+        final Map<String, String> property
     ) {
-        return new CustomException(errorCode, propertyValues);
+        return new CustomException(errorCode, property);
     }
 
     public static CustomException from(final ErrorCode errorCode) {

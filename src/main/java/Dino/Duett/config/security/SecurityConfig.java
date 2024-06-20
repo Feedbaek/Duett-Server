@@ -46,17 +46,18 @@ public class SecurityConfig {
 
         // 회원가입
         "/api/v1/sign-up",
+        "/api/v1/authentication/**",
 
         // 에러 페이지
         "/error"
     };
 
-    @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
-    public WebSecurityCustomizer configureH2ConsoleEnable() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console());
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
+//    public WebSecurityCustomizer configureH2ConsoleEnable() {
+//        return web -> web.ignoring()
+//                .requestMatchers(PathRequest.toH2Console());
+//    }
 
     @Bean
     protected SecurityFilterChain apiConfig(HttpSecurity http) throws Exception {

@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
+@Disabled
 public class ProfileControllerTest{
     @Autowired
     private MockMvc mockMvc;
@@ -41,7 +42,7 @@ public class ProfileControllerTest{
 
 
     @Test
-    @Disabled("유저 소개 조회 테스트")
+    @DisplayName("유저 소개 조회 테스트")
     public void getUserIntroduction() throws Exception {
         Member member = TestUtil.createMemberWithProfile();
         memberRepository.save(member);

@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 @Slf4j(topic = "GmailReader")
@@ -86,7 +88,10 @@ public class GmailReader {
                 // 메일 내용과 코드가 일치하는지 확인
                 if (!body.equals(code)) {
                     log.warn("Code does not match: " + body + " " + code);
-                    throw new GmailException.EmailValidationFailedException();
+                    Map<String, String> err = new HashMap<>();
+                    err.put("body", body);
+                    err.put("code", code);
+                    throw new GmailException.EmailValidationFailedException(err);
                 }
             }
         } catch (GmailException e) {

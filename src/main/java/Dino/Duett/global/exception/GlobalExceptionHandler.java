@@ -10,10 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -29,6 +32,30 @@ public class GlobalExceptionHandler {
 //        return ResponseEntity.internalServerError().body(ErrorResponse.from(customException));
 //    }
 
+    // 기존 유효성 검사 예외 핸들러
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.BAD_REQUEST, errors));
+        return ResponseEntity.badRequest().body(response);
+
+    }
+    // 새로운 타입 미스매치 예외 핸들러
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = ex.getName();
+        String errorMessage = "Invalid value for field: " + fieldName;
+        errors.put(fieldName, errorMessage);
+        final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.BAD_REQUEST, errors));
+        return ResponseEntity.badRequest().body(response);
+    }
+
     // 잘못된 형식의 데이터 전송
     @ExceptionHandler(HttpMessageConversionException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageConversionException(final HttpMessageConversionException e) {
@@ -36,10 +63,8 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.BAD_REQUEST));
         return ResponseEntity.badRequest().body(response);
     }
-    @ExceptionHandler({
-            TagException.TagMaxLimitException.class,
-            MethodArgumentNotValidException.class
-    })
+
+    @ExceptionHandler(TagException.TagMaxLimitException.class)
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
         log.error(e.getErrorInfoLog());
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));
