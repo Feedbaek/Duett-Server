@@ -6,17 +6,10 @@ import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.entity.Role;
 import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.enums.RoleName;
-import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.profile.entity.Profile;
-import Dino.Duett.domain.profile.entity.Region;
-import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.signup.dto.SignUpReq;
-import Dino.Duett.domain.tag.entity.ProfileTag;
 import Dino.Duett.domain.tag.entity.Tag;
-import Dino.Duett.domain.tag.enums.TagState;
 import Dino.Duett.domain.tag.enums.TagType;
-import Dino.Duett.domain.tag.service.TagGenerator;
-import org.junit.jupiter.api.Tags;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
@@ -27,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +45,7 @@ public class TestUtil {
         MockMultipartFile multipartFile = new MockMultipartFile("profileImage", "profileImage.jpg", "image/jpeg", "profileImage".getBytes());
 
         signUpReq.setPhoneNumber(MEMBER_PHONE_NUMBER);
-        signUpReq.setCode("code");
+        signUpReq.setVerificationCode("code");
         signUpReq.setNickname(MEMBER_NICKNAME);
         signUpReq.setKakaoId(MEMBER_KAKAO_ID);
         signUpReq.setSex("male");
