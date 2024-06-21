@@ -1,21 +1,19 @@
 package Dino.Duett.domain.profile.entity;
 
 import Dino.Duett.domain.image.entity.Image;
-import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.mood.entity.Mood;
 import Dino.Duett.domain.music.entity.Music;
 import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.entity.ProfileTag;
 import Dino.Duett.global.entity.BaseEntity;
+import Dino.Duett.global.util.Validator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class Profile extends BaseEntity {
     private Long id;
     @Column(length = 15)
     private String name;
-    private LocalDate birthDate;
+    private String birthDate;
     @Enumerated(EnumType.STRING)
     private MbtiType mbti;
     @Column(length = 30)
@@ -57,7 +55,7 @@ public class Profile extends BaseEntity {
     private List<Music> musics = new ArrayList<>();
 
     @Builder
-    public Profile(Long id, String name, LocalDate birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Region region, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, Member member) {
+    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Region region, Image profileImage) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -68,9 +66,6 @@ public class Profile extends BaseEntity {
         this.gender = gender;
         this.region = region;
         this.profileImage = profileImage;
-        this.profileTags = profileTags;
-        this.mood = mood;
-        this.musics = musics;
     }
 
     public void updateMood(final Mood mood) {
@@ -81,10 +76,10 @@ public class Profile extends BaseEntity {
         if (image != null) {
             this.profileImage = image;
         }
-        if (name != null && !name.isEmpty()) {
+        if (!Validator.isNullOrBlank(name)) {
             this.name = name;
         }
-        if (oneLineIntroduction != null && !oneLineIntroduction.isEmpty()) {
+        if (!Validator.isNullOrBlank(oneLineIntroduction)) {
             this.oneLineIntroduction = oneLineIntroduction;
         }
     }
@@ -92,10 +87,10 @@ public class Profile extends BaseEntity {
         if (mbti != null) {
             this.mbti = mbti;
         }
-        if (selfIntroduction != null && !selfIntroduction.isEmpty()) {
+        if (!Validator.isNullOrBlank(selfIntroduction)) {
             this.selfIntroduction = selfIntroduction;
         }
-        if (likeableMusicTaste != null && !likeableMusicTaste.isEmpty()) {
+        if (!Validator.isNullOrBlank(likeableMusicTaste)) {
             this.likeableMusicTaste = likeableMusicTaste;
         }
     }

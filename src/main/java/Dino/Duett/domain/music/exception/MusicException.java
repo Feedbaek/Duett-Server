@@ -20,4 +20,12 @@ public class MusicException extends CustomException {
             super(ErrorCode.MUSIC_NOT_FOUND, property);
         }
     }
+    public static class MusicMaxLimitException extends MusicException {
+        public MusicMaxLimitException() {
+            super(ErrorCode.MUSIC_MAX_LIMIT);
+        }
+        public MusicMaxLimitException(Map<String, String> property) {
+            super(ErrorCode.MUSIC_MAX_LIMIT, property);
+        }
+    }
 }

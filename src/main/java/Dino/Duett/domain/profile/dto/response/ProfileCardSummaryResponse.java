@@ -1,17 +1,11 @@
 package Dino.Duett.domain.profile.dto.response;
 
-import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.dto.response.TagResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.List;
 
 @Schema(description = "프로필 카드 조회 요약 응답")
@@ -32,6 +26,6 @@ public class ProfileCardSummaryResponse {
     double distance;
     @Schema(description = "프로필 이미지 URL", example = "crush", nullable = true)
     String profileImageUrl;
-    @Schema(description = "태그", example = "[{\"name\": \"팝\", \"state\": FEATURED}, {\"name\": \"콘서트\", \"state\": FEATURED}", nullable = true)
+    @Schema(description = "태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"콘서트\", \"state\": \"FEATURED\"}", nullable = true)
     List<TagResponse> tags;
 }

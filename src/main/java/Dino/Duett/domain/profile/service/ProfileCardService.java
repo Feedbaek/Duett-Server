@@ -49,14 +49,6 @@ public class ProfileCardService {
 
         return convertToDto(profile);
     }
-    /**
-     * 만 나이 계산
-     * @param date 생년월일
-     * @return int
-     */
-    protected int calculateAge(final LocalDate date) {
-        return Period.between(date, LocalDate.now()).getYears();
-    }
 
     /**
      * 프로필 카드 요약 조회
@@ -84,7 +76,7 @@ public class ProfileCardService {
                 .map(profile -> ProfileCardSummaryResponse.builder()
                                 .profileId(profile.getId())
                                 .name(profile.getName())
-                                .age(calculateAge(profile.getBirthDate()) + "세")
+                                .age(profile.getBirthDate())
                                 .mbti(profile.getMbti())
                                 .oneLineIntroduction(profile.getOneLineIntroduction())
                                 .distance(calculateDistance(member.getProfile(), profile))
@@ -138,15 +130,6 @@ public class ProfileCardService {
     }
 
 
-    public ProfileMusicResponse getProfileMusic(final Long memberId) { // todo: 제거 예정
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
-
-        return ProfileMusicResponse.of(
-                musicService.getMusics(memberId),
-                moodService.getMood(memberId)
-        );
-    }
-
     private Profile validateProfileIsNull(Profile profile) {
         if (profile == null) {
             throw new ProfileException.ProfileNotFoundException();
@@ -158,7 +141,7 @@ public class ProfileCardService {
         return ProfileCardResponse.builder()
                 .profileId(profile.getId())
                 .name(profile.getName())
-                .age(calculateAge(profile.getBirthDate()) + "세")
+                .birthDate(profile.getBirthDate())
                 .mbti(profile.getMbti())
                 .oneLineIntroduction(profile.getOneLineIntroduction())
                 .profileImageUrl(imageService.getUrl(profile.getProfileImage()))

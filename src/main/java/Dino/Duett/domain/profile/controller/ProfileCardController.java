@@ -22,7 +22,7 @@ public class ProfileCardController implements ProfileCardApi {
 //    public JsonBody<ProfileCardResponse> getProfileCard(@AuthenticationPrincipal final AuthMember authMember){
 //        return JsonBody.of(HttpStatus.OK.value(), "내 프로필 카드 조회 성공", profileCardService.getProfileCard(authMember.getId()));
 //    }
-//
+
 //    @GetMapping("/profile-cards/{profileId}/coin")
 //    public JsonBody<ProfileCardResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
 //                                                                        @PathVariable final Long profileId){

@@ -4,13 +4,18 @@ import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
+import Dino.Duett.domain.music.dto.request.MusicDeleteRequest;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.music.dto.request.MusicUpdateRequest;
 import Dino.Duett.domain.music.entity.Music;
 import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.music.repository.MusicRepository;
+import Dino.Duett.domain.profile.dto.request.ProfileMusicRequest;
+import Dino.Duett.domain.profile.entity.Profile;
+import Dino.Duett.global.util.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,51 +23,53 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MusicService {
     private final MusicRepository musicRepository;
-    private final MemberRepository memberRepository;
 
-    public MusicResponse getMusic(final Long musicId) {
-        Music music = musicRepository.findById(musicId).orElseThrow(MusicException.MusicNotFoundException::new);
-        return MusicResponse.of(music);
+    public List<MusicResponse> getMusics(final Profile profile) {
+        return MusicResponse.of(profile.getMusics());
     }
 
-    public List<MusicResponse> getMusics(final Long memberId){
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
-
-        return member.getProfile().getMusics().stream()
-                .map(MusicResponse::of)
-                .toList();
-    }
-
-    public MusicResponse createMusic(final Long memberId, final MusicCreateRequest musicCreateRequest) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
-        Music music = Music.of(
-                musicCreateRequest.getTitle(),
-                musicCreateRequest.getArtist(),
-                musicCreateRequest.getUrl());
-
-        musicRepository.save(music);
-        member.getProfile().getMusics().add(music);
-
-        return MusicResponse.of(music);
-    }
-
-    public List<MusicResponse> updateMusics(final Long memberId, final List<MusicUpdateRequest> musicUpdateRequests) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
-
-        for(MusicUpdateRequest musicUpdateRequest : musicUpdateRequests) {
-            Music music = musicRepository.findById(musicUpdateRequest.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
-            music.updateMusic(musicUpdateRequest);
+    @Transactional
+    public void changeMusics(final Profile profile,
+                             final List<MusicCreateRequest> createMusics,
+                             final List<MusicUpdateRequest> updateMusics,
+                             final List<MusicDeleteRequest> deleteMusics) {
+        if(!Validator.isNullOrEmpty(createMusics)) {
+            createMusics(profile, createMusics);
         }
-
-        return member.getProfile().getMusics().stream()
-                .map(MusicResponse::of)
-                .toList();
+        if(!Validator.isNullOrEmpty(updateMusics)) {
+            updateMusics(updateMusics);
+        }
+        if(!Validator.isNullOrEmpty(deleteMusics)){
+            deleteMusics(profile, deleteMusics);
+        }
     }
 
-    public void deleteMusic(final Long memberId, final Long musicId) { //todo: profile에서 delete확인
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
-        Music music = musicRepository.findById(musicId).orElseThrow(MusicException.MusicNotFoundException::new);
-        member.getProfile().getMusics().remove(music);
-        musicRepository.deleteById(musicId);
+    private void createMusics(final Profile profile, final List<MusicCreateRequest> requests) {
+        List<Music> musics = requests.stream()
+                .map(request -> Music.of(
+                        request.getTitle(),
+                        request.getArtist(),
+                        request.getUrl()))
+                .toList();
+
+        musicRepository.saveAll(musics);
+        profile.getMusics().addAll(musics);
+    }
+
+    private void updateMusics(final List<MusicUpdateRequest> requests) {
+         for(MusicUpdateRequest request : requests) {
+            Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
+
+            music.updateMusic(request);
+        }
+    }
+
+    private void deleteMusics(final Profile profile, final List<MusicDeleteRequest> requests) {
+        for(MusicDeleteRequest request : requests) {
+            Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
+
+            profile.getMusics().remove(music);
+            musicRepository.deleteById(music.getId());
+        }
     }
 }

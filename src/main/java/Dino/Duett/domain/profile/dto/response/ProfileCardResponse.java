@@ -18,8 +18,8 @@ public class ProfileCardResponse {
     Long profileId;
     @Schema(description = "사용자의 이름", example = "name", nullable = true)
     String name;
-    @Schema(description = "사용자의 나이", example = "crush", nullable = true)
-    String age;
+    @Schema(description = "사용자의 생년월일", example = "2000.01.01", nullable = true)
+    String birthDate;
     @Schema(description = "MBTI 유형", example = "ENTP", nullable = true)
     MbtiType mbti;
     @Schema(description = "한 줄 소개", example = "crush", nullable = true)
@@ -28,13 +28,13 @@ public class ProfileCardResponse {
     double distance;
     @Schema(description = "프로필 이미지 URL", example = "crush", nullable = true)
     String profileImageUrl;
-    @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": FEATURED}, {\"name\": \"발라드\", \"state\": STANDARD}, {\"name\": \"힙합\", \"state\": STANDARD}]", nullable = true)
+    @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}, {\"name\": \"힙합\", \"state\": \"STANDARD\"}]", nullable = true)
     List<TagResponse> musicTags;
-    @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": STANDARD}, {\"name\": \"콘서트\", \"state\": STANDARD}, {\"name\": \"캠핑\", \"state\": STANDARD}]", nullable = true)
+    @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": \"STANDARD\"}, {\"name\": \"콘서트\", \"state\": \"STANDARD\"}, {\"name\": \"캠핑\", \"state\": \"STANDARD\"}]", nullable = true)
     List<TagResponse> hobbyTags;
-    @Schema(description = "인생곡 리스트", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"musicUrl\": \"musicUrl\"}]", nullable = true)
+    @Schema(description = "인생곡 리스트", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"url\": \"url\"}]", nullable = true)
     List<MusicResponse> lifeMusics;
-    @Schema(description = "무드 정보", example = "crush", nullable = true)
+    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImage\": \"https://duett-mood-image/image.jpg\", \"isDeleteImage\": \"true\" }", nullable = true)
     MoodResponse mood;
     @Schema(description = "긴 자기 소개", example = "crush", nullable = true)
     String selfIntroduction;

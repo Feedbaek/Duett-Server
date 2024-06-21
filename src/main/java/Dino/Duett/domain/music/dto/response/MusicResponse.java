@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Schema(description = "음악 조회 응답")
 @Getter
 @AllArgsConstructor
@@ -25,6 +27,16 @@ public class MusicResponse {
     private String url;
 
     public static MusicResponse of(Music music){
-        return new MusicResponse(music.getId(), music.getTitle(), music.getArtist(), music.getUrl());
+        return new MusicResponse(
+                music.getId(),
+                music.getTitle(),
+                music.getArtist(),
+                music.getUrl());
+    }
+
+    public static List<MusicResponse> of(List<Music> musics){
+        return musics.stream()
+                .map(MusicResponse::of)
+                .toList();
     }
 }
