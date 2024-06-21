@@ -15,11 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MoodService {
     private final MoodRepository moodRepository;
     private final ImageService imageService;
 
-    @Transactional
     public MoodResponse getMood(final Profile profile) {
         Mood mood = profile.getMood();
 
@@ -30,7 +30,6 @@ public class MoodService {
         );
     }
 
-    @Transactional
     public void changeMood(final Profile profile, final MoodRequest moodRequest) {
         Mood mood = profile.getMood();
         if(mood == null) {

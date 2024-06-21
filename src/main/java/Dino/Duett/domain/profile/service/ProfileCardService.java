@@ -58,6 +58,7 @@ public class ProfileCardService {
      * @param radius 반경
      * @return List<ProfileCardSummaryResponse>
      */
+    @Transactional
     public List<ProfileCardSummaryResponse> getProfileCardsOfSummary(final Long memberId,
                                                                      final int page,
                                                                      final int size,
@@ -121,14 +122,13 @@ public class ProfileCardService {
      * @param profile2 프로필2
      * @return double
      */
-    public double calculateDistance(final Profile profile1, final Profile profile2) {
+    private double calculateDistance(final Profile profile1, final Profile profile2) {
         return Math.sqrt(
                     Math.pow(profile1.getRegion().getLatitude() - profile2.getRegion().getLatitude(), 2) +
                         Math.pow(profile1.getRegion().getLongitude() - profile2.getRegion().getLongitude(), 2)
 
         );
     }
-
 
     private Profile validateProfileIsNull(Profile profile) {
         if (profile == null) {

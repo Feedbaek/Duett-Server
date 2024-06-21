@@ -100,6 +100,7 @@ public class ProfileService {
         );
     }
 
+    @Transactional
     public ProfileIntroResponse getProfileIntro(final Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
@@ -176,6 +177,7 @@ public class ProfileService {
         return profile;
     }
 
+    @Transactional
     public TagByTypeResponse getProfileTagsWithAllTagsByMemberId(final Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
