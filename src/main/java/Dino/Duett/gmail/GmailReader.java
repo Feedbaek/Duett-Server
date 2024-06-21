@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Slf4j(topic = "GmailReader")
 @Component
@@ -81,6 +79,16 @@ public class GmailReader {
 
                 // 발신자 번호를 이용한 검색
                 Message[] messages = inbox.search(new FromStringTerm(phoneNumber));
+
+                // 날짜 기준으로 최신순 정렬
+                Arrays.sort(messages, (m1, m2) -> {
+                    try {
+                        return m2.getReceivedDate().compareTo(m1.getReceivedDate());
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
                 // 가장 최근 메일을 가져옴
                 Message lastMessage = getLastMessages(messages);
                 // 메일의 내용을 가져옴

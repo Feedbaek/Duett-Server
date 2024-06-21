@@ -1,4 +1,4 @@
-package Dino.Duett.global.exception;
+package Dino.Duett.global.handler;
 
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.mood.exception.MoodException;
@@ -6,6 +6,9 @@ import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.search.exception.YoutubeException;
 import Dino.Duett.domain.tag.exception.TagException;
+import Dino.Duett.global.exception.CustomException;
+import Dino.Duett.global.exception.ErrorCode;
+import Dino.Duett.global.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
