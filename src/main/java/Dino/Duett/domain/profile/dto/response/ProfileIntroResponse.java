@@ -15,9 +15,9 @@ import java.util.List;
 public class ProfileIntroResponse {
     @Schema(description = "MBTI", example = "ENFP", nullable = true)
     MbtiType mbti;
-    @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": FEATURED}, {\"name\": \"발라드\", \"state\": STANDARD}, {\"name\": \"힙합\", \"state\": STANDARD}]", nullable = true)
+    @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}, {\"name\": \"힙합\", \"state\": \"STANDARD\"}]", nullable = true)
     List<TagResponse> musicTags;
-    @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": STANDARD}, {\"name\": \"콘서트\", \"state\": STANDARD}, {\"name\": \"캠핑\", \"state\": STANDARD}]", nullable = true)
+    @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": \"STANDARD\"}, {\"name\": \"콘서트\", \"state\": \"STANDARD\"}, {\"name\": \"캠핑\", \"state\": \"STANDARD\"}]", nullable = true)
     List<TagResponse> hobbyTags;
     @Schema(description = "자기소개", example = "안녕하세요!", minLength = 50, maxLength = 500, nullable = true)
     String selfIntroduction;

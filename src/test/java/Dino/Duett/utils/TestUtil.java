@@ -7,6 +7,7 @@ import Dino.Duett.domain.member.entity.Role;
 import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.profile.entity.Profile;
+import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.domain.tag.entity.Tag;
 import Dino.Duett.domain.tag.enums.TagType;
@@ -134,12 +135,15 @@ public class TestUtil {
                 .name(RoleName.USER.name())
                 .build();
         Member member = Member.builder()
-                .phoneNumber("010-4420-6790")
+                .phoneNumber("010-1234-5678")
                 .kakaoId("kakaoId")
                 .coin(0)
                 .state(MemberState.ACTIVE)
                 .role(role)
-                .profile(Profile.builder().build())
+                .profile(Profile.builder()
+                        .gender(GenderType.MAN)
+                        .birthDate("1999.01.01")
+                        .build())
                 .build();
         return member;
     }

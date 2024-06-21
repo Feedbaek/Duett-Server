@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum LimitConstants {
     PROFILE_TAG_MAX_LIMIT(3),
     FEATURED_PROFILE_TAG_MAX_LIMIT(1),
-    YOUTUBE_SEARCH_LIMIT(10);
+    YOUTUBE_SEARCH_LIMIT(10),
+    MUSIC_MAX_LIMIT(3);
 
     private final int limit;
 }

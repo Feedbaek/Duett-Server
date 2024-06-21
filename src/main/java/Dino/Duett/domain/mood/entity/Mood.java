@@ -1,11 +1,13 @@
 package Dino.Duett.domain.mood.entity;
 
 import Dino.Duett.domain.image.entity.Image;
+import Dino.Duett.global.util.Validator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Table(name = "mood")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -40,15 +42,15 @@ public class Mood {
     }
 
     public void updateMood(final String title, final String artist, final Image moodImage) {
-        if(title != null && !title.isEmpty()) {
+        if(Validator.isNullOrBlank(title)) {
             this.title = title;
         }
 
-        if(artist != null && !artist.isEmpty()) {
+        if(Validator.isNullOrBlank(artist)) {
             this.artist = artist;
         }
 
-        if(moodImage != null){
+        if(moodImage != null) {
             this.moodImage = moodImage;
         }
     }

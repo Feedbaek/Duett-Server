@@ -15,7 +15,9 @@ public class MoodResponse {
     @Schema(description = "연인과 함께 듣고싶은 곡 이미지 URL", example = "https://duett-mood-image.s3.ap-northeast-2.amazonaws.com/1.jpg")
     String moodImageUrl;
 
-    public static MoodResponse of(final String title, final String artist, final String moodImageUrl) {
+    public static MoodResponse of(final String title,
+                                  final String artist,
+                                  final String moodImageUrl) {
         return new MoodResponse(
                 title,
                 artist,

@@ -17,7 +17,7 @@ public class ProfileInfoRequest {
     @Size(min = 3, max = 15)
     private String name;
     @Schema(description = "프로필 한줄소개", example = "안녕하세요!", maxLength = 30, nullable = true)
-    @Size(max = 30)
+    @Size(min = 5, max = 30)
     private String oneLineIntroduction;
     @Schema(description = "프로필 이미지 삭제 여부", example = "true", nullable = true)
     private Boolean isDeleteImage;

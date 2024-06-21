@@ -13,20 +13,23 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MusicUpdateRequest {
     @Schema(description = "음악 id", name = "musicId")
-    @NotEmpty
     private Long musicId;
     @Schema(description = "음악 제목", name = "title")
-    @NotEmpty
     @Size(max = 100)
     private String title;
     @Schema(description = "아티스트 이름", name = "artist")
-    @NotEmpty
     @Size(max = 100)
     private String artist;
-    @Schema(description = "음악 링크 고유식별자", name = "urlName")
-    @NotBlank
+    @Schema(description = "유튜브 URL", example = "url")
     private String url;
-    public MusicUpdateRequest of(Long musicId, String title, String artist, String url) {
-        return new MusicUpdateRequest(musicId, title, artist, url);
+    public MusicUpdateRequest of(Long musicId,
+                                 String title,
+                                 String artist,
+                                 String url) {
+        return new MusicUpdateRequest(
+                musicId,
+                title,
+                artist,
+                url);
     }
 }

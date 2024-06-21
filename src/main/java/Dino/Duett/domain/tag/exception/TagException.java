@@ -29,6 +29,4 @@ public class TagException extends CustomException {
             super(ErrorCode.PROFILE_TAG_MAX_LIMIT, property);
         }
     }
-
-
 }

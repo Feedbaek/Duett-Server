@@ -2,6 +2,7 @@ package Dino.Duett.domain.music.entity;
 
 import Dino.Duett.domain.music.dto.request.MusicUpdateRequest;
 import Dino.Duett.global.entity.BaseEntity;
+import Dino.Duett.global.util.Validator;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,9 @@ public class Music extends BaseEntity {
     @Column(nullable = false)
     private String url;
 
-    public static Music of(String title, String artist, String url) {
+    public static Music of(String title,
+                           String artist,
+                           String url) {
         return new Music(
                 null,
                 title,
@@ -32,13 +35,13 @@ public class Music extends BaseEntity {
     }
 
     public void updateMusic(MusicUpdateRequest musicUpdateRequest) {
-        if(title != null && !title.isEmpty()) {
+        if (Validator.isNullOrBlank(musicUpdateRequest.getTitle())){
             this.title = musicUpdateRequest.getTitle();
         }
-        if(artist != null && !artist.isEmpty()) {
+        if (Validator.isNullOrBlank(musicUpdateRequest.getArtist())) {
             this.artist = musicUpdateRequest.getArtist();
         }
-        if (url != null && !url.isEmpty()) {
+        if (Validator.isNullOrBlank(musicUpdateRequest.getUrl())) {
             this.url = musicUpdateRequest.getUrl();
         }
     }

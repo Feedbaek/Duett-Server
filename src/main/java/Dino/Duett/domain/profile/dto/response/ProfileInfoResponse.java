@@ -2,16 +2,9 @@ package Dino.Duett.domain.profile.dto.response;
 
 import Dino.Duett.domain.profile.entity.Profile;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.mail.Multipart;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.swing.text.DateFormatter;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 @Schema(description = "내 정보 조회 응답")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,8 +25,8 @@ public class ProfileInfoResponse {
         return new ProfileInfoResponse(
                 profileImageUrl,
                 profile.getName(),
-                profile.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
-                profile.getGender().name(),
+                profile.getBirthDate(),
+                profile.getGender().getValue(),
                 profile.getOneLineIntroduction()
         );
     }
