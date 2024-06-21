@@ -5,7 +5,6 @@ import Dino.Duett.domain.image.service.ImageService;
 import Dino.Duett.domain.mood.dto.request.MoodRequest;
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.mood.entity.Mood;
-import Dino.Duett.domain.mood.exception.MoodException;
 import Dino.Duett.domain.mood.repository.MoodRepository;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.global.util.Validator;
@@ -20,6 +19,7 @@ public class MoodService {
     private final MoodRepository moodRepository;
     private final ImageService imageService;
 
+    @Transactional
     public MoodResponse getMood(final Profile profile) {
         Mood mood = profile.getMood();
 
