@@ -1,4 +1,4 @@
-package Dino.Duett.global.util;
+package Dino.Duett.global.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 

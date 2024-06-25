@@ -20,19 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static Dino.Duett.global.enums.LimitConstants.FEATURED_PROFILE_TAG_MAX_LIMIT;
 import static Dino.Duett.global.enums.LimitConstants.PROFILE_TAG_MAX_LIMIT;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProfileTagService {
     private final ProfileTagRepository profileTagRepository;
     private final MemberRepository memberRepository;
     private final TagRepository tagRepository;
 
     public List<TagResponse> getProfileTags(final Long profileId,final TagType tagType) {
-        return profileTagRepository.findAllByProfileIdAndTagType(profileId, tagType).stream()
+        return profileTagRepository.findByProfileIdAndTagType(profileId, tagType).stream()
                 .map(tag -> TagResponse.of(
                         tag.getName(),
                         tag.getState()))
@@ -40,23 +42,20 @@ public class ProfileTagService {
     }
 
     public List<TagResponse> getProfileTagsWithAllTags(final Long profileId, final TagType tagType) {
-        return profileTagRepository.findAllByProfileIdAndTagTypeWithAllTag(profileId, tagType).stream()
+        return profileTagRepository.findByProfileIdAndTagTypeWithAllTag(profileId, tagType).stream()
                 .map(tag -> TagResponse.of(
                         tag.getName(),
                         tag.getState()))
                 .toList();
     }
 
-
-    public List<TagResponse> getProfileTagsOnlyFeatured(final Long profileId) {
-        return profileTagRepository.findAllByProfileIdAndTagState(profileId, TagState.FEATURED).stream()
-                .map(tag -> TagResponse.of(
-                        tag.getName(),
-                        tag.getState()))
+    public List<String> getProfileTagsOnlyFeatured(final Long profileId) {
+        return profileTagRepository.findByProfileIdAndState(profileId, TagState.FEATURED).stream()
+                .map(profileTag -> profileTag.getTag().getName())
                 .toList();
     }
 
-    public void validateProfileTagLimit(final Profile profile, final TagType tagType) {
+    private void validateProfileTagLimit(final Profile profile, final TagType tagType) {
         Integer featuredProfileTagLimit = profileTagRepository.countByProfileIdAndTagTypeAndTagState(profile.getId(), tagType, TagState.FEATURED);
         Integer profileTagLimit = profileTagRepository.countByProfileIdAndTagType(profile.getId(), tagType);
         if (profileTagLimit> PROFILE_TAG_MAX_LIMIT.getLimit()) {
@@ -68,6 +67,24 @@ public class ProfileTagService {
         }
     }
 
+    @Transactional
+    public boolean checkFeaturedProfileTagsCount(final Profile profile) {
+        if (profile == null) {
+            return false;
+        }
+        List<ProfileTag> featuredProfileTags = profileTagRepository.findByProfileIdAndState(profile.getId(), TagState.FEATURED);
+
+        Map<TagType, Long> tagCounts = featuredProfileTags.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                profileTag -> profileTag.getTag().getType(),
+                                Collectors.counting()));
+
+        long musicTagCount = tagCounts.getOrDefault(TagType.MUSIC, 0L);
+        long hobbyTagCount = tagCounts.getOrDefault(TagType.HOBBY, 0L);
+
+        return musicTagCount == 1 && hobbyTagCount == 1;
+    }
     @Transactional
     public void changeProfileTags(final Long memberId, final List<TagRequest> musicTags, final List<TagRequest> hobbyTags) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);

@@ -40,23 +40,24 @@ public enum ErrorCode {
     MULTIPART_FILE_CONVERT_FAILED(4003, "MultipartFile 변환 실패"),
     IMAGE_DELETE_FAILED(4004, "이미지 삭제 실패"),
 
-    // 4000: Profile
+    // 5000: Profile
     PROFILE_NOT_FOUND(5000, "프로필을 찾을 수 없습니다."),
     PROFILE_FORBIDDEN(5001, "프로필 접근 권한이 없습니다."),
+    PROFILE_INCOMPLETE(5002, "프로필의 모든 필드를 채워야합니다."),
 
-    // 5000: Music
+    // 6000: Music
     MUSIC_NOT_FOUND(6000, "음악을 찾을 수 없습니다"),
     MUSIC_MAX_LIMIT(6001, "음악 최대 개수 초과"),
 
-    // 6000: Mood
+    // 7000: Mood
     MOOD_NOT_FOUND(7000, "무드를 찾을 수 없습니다."),
     MOOD_FORBIDDEN(7001, "무드 접근 권한이 없습니다."),
 
-    // 7000: Tag
+    // 8000: Tag
     TAG_NOT_FOUND(8000, "태그를 찾을 수 없습니다."),
     PROFILE_TAG_MAX_LIMIT(8001, "프로필 태그 최대 개수 초과"),
 
-    // 8000: Youtube
+    // 9000: Youtube
     YOUTUBE_API_REQUEST_FAILED(9000, "Youtube API 요청 실패"),
     YOUTUBE_API_REQUEST_LIMIT_EXCEEDED(9001, "Youtube API 키 사용량 초과");
 

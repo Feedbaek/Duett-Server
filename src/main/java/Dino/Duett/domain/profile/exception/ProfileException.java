@@ -30,4 +30,13 @@ public class ProfileException extends CustomException {
             super(ErrorCode.PROFILE_FORBIDDEN, property);
         }
     }
+
+    public static class ProfileIncompleteException extends ProfileException {
+        public ProfileIncompleteException() {
+            super(ErrorCode.PROFILE_INCOMPLETE);
+        }
+        public ProfileIncompleteException(Map<String, String> property) {
+            super(ErrorCode.PROFILE_INCOMPLETE, property);
+        }
+    }
 }

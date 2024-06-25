@@ -14,16 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class MusicResponse {
     @Schema(description = "음악 id", name = "musicId")
-    @NotEmpty
     private Long musicId;
     @Schema(description = "음악 제목", name = "title")
-    @NotEmpty
     private String title;
     @Schema(description = "아티스트 이름", name = "artist")
-    @NotEmpty
     private String artist;
-    @Schema(description = "음악 링크 고유식별자", name = "urlName")
-    @NotBlank
+    @Schema(description = "유튜브 url", name = "url")
     private String url;
 
     public static MusicResponse of(Music music){

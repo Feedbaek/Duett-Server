@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "음악 등록 요청")
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class MusicCreateRequest {
     @Schema(description = "음악 제목", name = "title")

@@ -17,9 +17,9 @@ import java.util.List;
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
     @Query("SELECT u FROM Profile u WHERE " +
             "u.gender = :oppositeGender AND " +
-            "(6371 * acos(cos(radians(:latitude)) * cos(radians(u.region.latitude)) * " +
-            "cos(radians(u.region.longitude) - radians(:longitude)) + " +
-            "sin(radians(:latitude)) * sin(radians(u.region.latitude)))) < :radius")
+            "(6371 * acos(cos(radians(:latitude)) * cos(radians(u.location.latitude)) * " +
+            "cos(radians(u.location.longitude) - radians(:longitude)) + " +
+            "sin(radians(:latitude)) * sin(radians(u.location.latitude)))) < :radius")
     List<Profile> findAllUsersWithinRadius(
             @Param("latitude") double latitude,
             @Param("longitude") double longitude,
