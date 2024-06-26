@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
+import static Dino.Duett.global.enums.LimitConstants.*;
 
 
 @Service
@@ -154,7 +154,7 @@ public class ProfileCardService {
         if (!Validator.isNullOrBlank(profile.getLikeableMusicTaste())) {
             introCount++;
         }
-        boolean intro = introCount >= 2;
+        boolean intro = introCount >= PROFILE_INTRO_MIN_SIZE.getLimit();
 
 
         // 음악 취향
@@ -164,7 +164,7 @@ public class ProfileCardService {
         if (profile.getMood() != null) {
             musicTasteCount++;
         }
-        boolean musicTaste = musicTasteCount >= 1;
+        boolean musicTaste = musicTasteCount >= PROFILE_MUSIC_TASTE_MIN_SIZE.getLimit();
 
         return info && intro && musicTaste;
     }
