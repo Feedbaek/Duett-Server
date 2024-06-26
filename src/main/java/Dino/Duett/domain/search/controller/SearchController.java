@@ -21,7 +21,7 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
-    @Operation(summary = "비디오 검색결과 더보기", description = "유튜브 API를 이용하여 비디오를 검색합니다. 기본 검색 개수는 5개, 최대 검색 개수는 10개입니다.")
+    @Operation(summary = "비디오 검색결과 더보기", description = "유튜브 API를 이용하여 비디오를 검색합니다. 기본 검색 개수는 5개, 최대 검색 개수는 10개입니다.", tags = {"검색"})
     @GetMapping("/video")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색 성공"),

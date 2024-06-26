@@ -1,7 +1,7 @@
 package Dino.Duett.domain.mood.entity;
 
 import Dino.Duett.domain.image.entity.Image;
-import Dino.Duett.global.util.Validator;
+import Dino.Duett.global.utils.Validator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

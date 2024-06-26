@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Region {
-    private String address;
+public class Location {
     private double latitude;
     private double longitude;
 
-    public static Region of(String address, double latitude, double longitude) {
-        return new Region(address, latitude, longitude);
+    public static Location of(double latitude,
+                              double longitude) {
+        return new Location(
+                latitude,
+                longitude);
     }
 }

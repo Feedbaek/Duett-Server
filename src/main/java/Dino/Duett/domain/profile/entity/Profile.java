@@ -7,7 +7,7 @@ import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.entity.ProfileTag;
 import Dino.Duett.global.entity.BaseEntity;
-import Dino.Duett.global.util.Validator;
+import Dino.Duett.global.utils.Validator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,7 +31,7 @@ public class Profile extends BaseEntity {
     private String birthDate;
     @Enumerated(EnumType.STRING)
     private MbtiType mbti;
-    @Column(length = 30)
+    @Column(length = 50)
     private String oneLineIntroduction;
     @Column(length = 500)
     private String selfIntroduction;
@@ -39,7 +39,7 @@ public class Profile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
     @Embedded
-    private Region region;
+    private Location location;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_image_id")
@@ -54,8 +54,12 @@ public class Profile extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Music> musics = new ArrayList<>();
 
+    @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileUnlock> profileUnlocks = new ArrayList<>();
+
+
     @Builder
-    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Region region, Image profileImage) {
+    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Location location, Image profileImage) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -64,7 +68,7 @@ public class Profile extends BaseEntity {
         this.selfIntroduction = selfIntroduction;
         this.likeableMusicTaste = likeableMusicTaste;
         this.gender = gender;
-        this.region = region;
+        this.location = location;
         this.profileImage = profileImage;
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 @Schema(description = "프로필 정보 조회 전체 응답")
 @Builder
 @Getter
-public class ProfileResponse {
+public class ProfileResponse { // todo : 삭제 예정
     @Schema(description = "프로필 ID",example = "1", nullable = true)
     Long profileId;
     @Schema(description = "사용자의 이름", example = "name", nullable = true)

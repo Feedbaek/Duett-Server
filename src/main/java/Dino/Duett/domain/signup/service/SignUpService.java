@@ -4,6 +4,7 @@ import Dino.Duett.domain.authentication.VerificationCodeManager;
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.service.MemberService;
+import Dino.Duett.domain.profile.service.ProfileService;
 import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.domain.signup.dto.SignUpRes;
 import Dino.Duett.global.exception.CustomException;
@@ -21,6 +22,7 @@ public class SignUpService {
     private final VerificationCodeManager verificationCodeManager;
     private final GmailReader gmailReader;
     private final MemberService memberService;
+    private final ProfileService profileService;
 
     // 회원가입
     public SignUpRes signUp(SignUpReq signUpReq) throws CustomException {
@@ -31,7 +33,7 @@ public class SignUpService {
         Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
         MemberDto memberDto = memberService.makeMemberDto(member);
         // todo: 프로필 생성
-        // profileService.createProfile(signUpReq);
+        profileService.createProfile(signUpReq);
 
         // redis 인증 코드 삭제. 회원가입 처리 성공 시 인증 코드 삭제
         verificationCodeManager.deleteCode(signUpReq.getPhoneNumber());

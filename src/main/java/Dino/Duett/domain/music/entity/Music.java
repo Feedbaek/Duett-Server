@@ -2,7 +2,7 @@ package Dino.Duett.domain.music.entity;
 
 import Dino.Duett.domain.music.dto.request.MusicUpdateRequest;
 import Dino.Duett.global.entity.BaseEntity;
-import Dino.Duett.global.util.Validator;
+import Dino.Duett.global.utils.Validator;
 import jakarta.persistence.*;
 import lombok.*;
 

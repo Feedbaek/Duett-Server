@@ -33,14 +33,14 @@ public interface ProfileApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 정보 등록 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "400", description = "잘못된 인자 입력", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "400", description = "잘못된 인자 입력, 유효성 검사 실패", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
     })
     public JsonBody<Void> updateProfileInfo(@AuthenticationPrincipal final AuthMember authMember,
                                             @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest);
 
-    @Operation(summary = "내 소개 등록 및 수정하기", tags = {"마이페이지"})
+    @Operation(summary = "내 소개 조회하기", tags = {"마이페이지"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 소개 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -55,8 +55,8 @@ public interface ProfileApi {
             @ApiResponse(responseCode = "400", description = "잘못된 인자 입력", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "8000", description = "태그를 찾을 수 없음.(404)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "8002", description = "태그 최대 개수 초과(400)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "8000", description = "태그를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "8001", description = "태그 최대 개수 초과(400)", content = @Content(schema = @Schema(hidden = true))),
 
     })
     JsonBody<?> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
