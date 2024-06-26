@@ -49,6 +49,7 @@ public class Profile extends BaseEntity {
     private List<ProfileTag> profileTags = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "mood_id")
     private Mood mood;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -57,9 +58,8 @@ public class Profile extends BaseEntity {
     @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileUnlock> profileUnlocks = new ArrayList<>();
 
-
     @Builder
-    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Location location, Image profileImage) {
+    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -70,6 +70,10 @@ public class Profile extends BaseEntity {
         this.gender = gender;
         this.location = location;
         this.profileImage = profileImage;
+        this.profileTags = profileTags;
+        this.mood = mood;
+        this.musics = musics;
+        this.profileUnlocks = profileUnlocks;
     }
 
     public void updateMood(final Mood mood) {

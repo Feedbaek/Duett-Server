@@ -51,6 +51,7 @@ public class ProfileUnlockService {
 
         Page<ProfileUnlock> profileUnlocks = profileUnlockRepository.findAllByViewerProfile(profile, pageable);
         return profileUnlocks.map(profileUnlock -> ProfileCardBriefResponse.builder()
+                .profileId(profileUnlock.getViewedProfile().getId())
                 .name(profileUnlock.getViewedProfile().getName())
                 .birthDate(profileUnlock.getViewedProfile().getBirthDate())
                 .mbti(profileUnlock.getViewedProfile().getMbti())
