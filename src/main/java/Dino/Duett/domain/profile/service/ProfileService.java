@@ -19,6 +19,8 @@ import Dino.Duett.domain.profile.dto.response.ProfileIntroResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileMusicResponse;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.exception.ProfileException;
+import Dino.Duett.domain.profile.repository.ProfileRepository;
+import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.domain.tag.dto.response.TagByTypeResponse;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.domain.tag.service.ProfileTagService;
@@ -36,10 +38,23 @@ import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 public class ProfileService {
 
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
     private final MusicService musicService;
     private final MoodService moodService;
     private final ImageService imageService;
     private final ProfileTagService profileTagService;
+
+    @Transactional
+    public void createProfile(final SignUpReq signUpReq) { // todo: 프로필 생성 임시. 수정 바람
+        Member member = memberRepository.findByPhoneNumber(signUpReq.getPhoneNumber()).orElseThrow(MemberException.MemberNotFoundException::new);
+
+        // 프로필 생성
+        Profile profile = Profile.builder()
+                .name(signUpReq.getNickname())
+                .build();
+        profileRepository.save(profile);
+        member.updateProfile(profile);
+    }
 
     public ProfileHomeResponse getProfileHome(final Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);

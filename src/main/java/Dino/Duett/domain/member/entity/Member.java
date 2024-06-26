@@ -35,6 +35,10 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
+    public void updateProfile(Profile profile){
+        this.profile = profile;
+    }
+
     public int updateCoin(int coin) {
         if (this.coin - coin < 0) {
             throw new MemberException.MemberCoinNotEnoughException();

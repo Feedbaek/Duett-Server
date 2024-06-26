@@ -49,7 +49,9 @@ public class SecurityConfig {
         "/api/v1/authentication/**",
 
         // 에러 페이지
-        "/error"
+        "/error",
+        // 테스트  //todo: 나중에 삭제
+        "/test/**"
     };
 
 //    @Bean
