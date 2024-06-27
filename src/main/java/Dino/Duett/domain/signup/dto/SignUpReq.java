@@ -1,6 +1,7 @@
 package Dino.Duett.domain.signup.dto;
 
 
+import Dino.Duett.domain.profile.enums.GenderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,9 +20,9 @@ public class SignUpReq {
     private String name;
     @NotBlank
     private String kakaoId;
-    @NotBlank
+    @NotNull
     @Schema(example = "MAN")
-    private String gender;
+    private GenderType gender;
     @NotBlank
     private String birthDate;
     @NotNull

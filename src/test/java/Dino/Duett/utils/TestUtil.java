@@ -53,7 +53,7 @@ public class TestUtil {
         signUpReq.setVerificationCode("code");
         signUpReq.setName(MEMBER_NICKNAME);
         signUpReq.setKakaoId(MEMBER_KAKAO_ID);
-        signUpReq.setGender("MAN");
+        signUpReq.setGender(GenderType.MAN);
         signUpReq.setBirthDate("1997-10-31");
         signUpReq.setLocation(new double[]{1.1, 2.2});
         signUpReq.setProfileImage(multipartFile);

@@ -61,7 +61,7 @@ public class ProfileService {
                 .name(signUpReq.getName())
                 .birthDate(signUpReq.getBirthDate())
                 .oneLineIntroduction(signUpReq.getOneLineIntroduction())
-                .gender(GenderType.valueOf(signUpReq.getGender()))
+                .gender(signUpReq.getGender())
                 .location(location)
                 .profileImage(profileImage)
                 .build();

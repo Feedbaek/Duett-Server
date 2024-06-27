@@ -67,7 +67,7 @@ public class SignUpControllerTest {
                             .param("verificationCode", signUpReq.getVerificationCode())
                             .param("name", signUpReq.getName())
                             .param("kakaoId", signUpReq.getKakaoId())
-                            .param("gender", signUpReq.getGender())
+                            .param("gender", signUpReq.getGender().name())
                             .param("birthDate", signUpReq.getBirthDate())
                             .param("location", signUpReq.getLocation()[0] + "," + signUpReq.getLocation()[1])
                             .param("oneLineIntroduction", signUpReq.getOneLineIntroduction())
