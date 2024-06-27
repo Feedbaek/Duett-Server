@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
+import static Dino.Duett.global.enums.LimitConstants.*;
 
 
 @Service
@@ -89,7 +89,7 @@ public class ProfileCardService {
      * @param profileId 프로필 id
      * @return ProfileCardResponse
      */
-
+    @Transactional
     public ProfileCardResponse getProfileCardWithCoin(final Long memberId,
                                                       final Long profileId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
@@ -134,17 +134,39 @@ public class ProfileCardService {
      * @return boolean
      */
     private boolean isProfileComplete(final Profile profile) {
-        return // 내 정보
-                !Validator.isNullOrBlank(profile.getName()) &&
-                !Validator.isNullOrBlank(profile.getOneLineIntroduction()) &&
-                // 내 소개
-                profile.getMbti() != null &&
-                profileTagService.checkFeaturedProfileTagsCount(profile) &&
-                !Validator.isNullOrBlank(profile.getSelfIntroduction()) &&
-                !Validator.isNullOrBlank(profile.getLikeableMusicTaste()) &&
-                // 음악 취향
-                profile.getMusics().size() == MUSIC_MAX_LIMIT.getLimit() &&
-                profile.getMood() != null;
+        int introCount = 0;
+        int musicTasteCount = 0;
+
+        // 내 정보
+        boolean info = !Validator.isNullOrBlank(profile.getName()) &&
+                !Validator.isNullOrBlank(profile.getOneLineIntroduction());
+
+        // 내 소개
+        if (profile.getMbti() != null) {
+            introCount++;
+        }
+        if (profileTagService.checkFeaturedProfileTagsCount(profile)) {
+            introCount++;
+        }
+        if (!Validator.isNullOrBlank(profile.getSelfIntroduction())) {
+            introCount++;
+        }
+        if (!Validator.isNullOrBlank(profile.getLikeableMusicTaste())) {
+            introCount++;
+        }
+        boolean intro = introCount >= PROFILE_INTRO_MIN_SIZE.getLimit();
+
+
+        // 음악 취향
+        if (profile.getMusics().size() >= MUSIC_MAX_LIMIT.getLimit()) {
+            musicTasteCount++;
+        }
+        if (profile.getMood() != null) {
+            musicTasteCount++;
+        }
+        boolean musicTaste = musicTasteCount >= PROFILE_MUSIC_TASTE_MIN_SIZE.getLimit();
+
+        return info && intro && musicTaste;
     }
 
     /**

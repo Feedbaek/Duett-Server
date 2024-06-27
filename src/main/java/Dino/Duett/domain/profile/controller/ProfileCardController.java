@@ -28,7 +28,7 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
 //        return JsonBody.of(HttpStatus.OK.value(), "내 프로필 카드 조회 성공", profileCardService.getProfileCard(authMember.getId()));
 //    }
 
-    @Operation(summary = "자신의 프로필 정보가 모두 채워졌는지 조회", tags = {"프로필카드"})
+    @Operation(summary = "자신의 프로필 정보가 채워졌는지 조회", tags = {"프로필카드"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "자신의 프로필 정보가 모두 채워졌는지 조회"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -38,7 +38,7 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
     })
     @GetMapping("/profile-cards/completion-status")
     public JsonBody<Boolean> getProfileCardCompletionStatus(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "프로필의 정보가 모두 채워졌는지 조회 성공", profileCardService.getProfileCardCompletionStatus(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "프로필의 정보가 채워졌는지 조회 성공", profileCardService.getProfileCardCompletionStatus(authMember.getId()));
     }
 
     @GetMapping("/profile-cards/{profileId}/coin")
