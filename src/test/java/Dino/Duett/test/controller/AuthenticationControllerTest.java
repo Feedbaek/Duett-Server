@@ -59,7 +59,7 @@ public class AuthenticationControllerTest {
     public void checkMemberTestWithRegisteredMember(TestReporter testReporter) throws Exception {
         // given
         String phoneNumber = TestUtil.MEMBER_PHONE_NUMBER;
-        memberRepository.save(TestUtil.createMember());
+        memberRepository.save(TestUtil.makeMember());
         // when, then
         testReporter.publishEntry(mockMvc.perform(
                 get("/api/v1/authentication/member/exists")
