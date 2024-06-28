@@ -2,6 +2,8 @@ package Dino.Duett.utils;
 
 import Dino.Duett.config.login.jwt.JwtTokenProvider;
 import Dino.Duett.config.login.jwt.JwtTokenType;
+import Dino.Duett.domain.image.entity.Image;
+import Dino.Duett.domain.image.repository.ImageRepository;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.entity.Role;
 import Dino.Duett.domain.member.enums.MemberState;
@@ -36,6 +38,8 @@ public class TestUtil {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private ImageRepository imageRepository;
 
     /**
      * 테스트용 회원가입 요청 생성
@@ -47,13 +51,13 @@ public class TestUtil {
 
         signUpReq.setPhoneNumber(MEMBER_PHONE_NUMBER);
         signUpReq.setVerificationCode("code");
-        signUpReq.setNickname(MEMBER_NICKNAME);
+        signUpReq.setName(MEMBER_NICKNAME);
         signUpReq.setKakaoId(MEMBER_KAKAO_ID);
-        signUpReq.setSex("male");
-        signUpReq.setBirth("1997-10-31");
+        signUpReq.setGender(GenderType.MAN);
+        signUpReq.setBirthDate("1997-10-31");
         signUpReq.setLocation(new double[]{1.1, 2.2});
         signUpReq.setProfileImage(multipartFile);
-        signUpReq.setComment("comment");
+        signUpReq.setOneLineIntroduction("comment");
 
         return signUpReq;
     }
@@ -76,7 +80,7 @@ public class TestUtil {
      * 테스트용 멤버 생성. id 1의 role 사용해서 만듦. 멤버 id는 생성되지 않음.
      * @return Member
     * */
-    public static Member createMember() {
+    public static Member makeMember() {
         // 역할 생성
         Role role = Role.builder()
                 .id(1L)
@@ -146,5 +150,13 @@ public class TestUtil {
                         .build())
                 .build();
         return member;
+    }
+
+    public Image createImage() {
+        return imageRepository.save(Image.builder()
+                .name("image")
+                .extension("webp")
+                .uuid("uuid")
+                .build());
     }
 }

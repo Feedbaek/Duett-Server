@@ -1,6 +1,8 @@
 package Dino.Duett.test.controller;
 
 import Dino.Duett.domain.authentication.VerificationCodeManager;
+import Dino.Duett.domain.image.entity.Image;
+import Dino.Duett.domain.image.service.ImageService;
 import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.gmail.GmailReader;
 import Dino.Duett.utils.TestUtil;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,6 +40,10 @@ public class SignUpControllerTest {
     // 실제 GmailReader를 사용하지 않고 Mocking
     @MockBean
     private GmailReader gmailReader;
+    @MockBean
+    private ImageService imageService;
+    @Autowired
+    private TestUtil testUtil;
 
     @Test
     @DisplayName("회원가입 테스트")
@@ -46,29 +53,24 @@ public class SignUpControllerTest {
         // GmailReader에서 validate() 메서드에서 예외가 발생하지 않게 하기 위해 Mocking
         doAnswer(invocation -> null).when(gmailReader).validate(anyString(), anyString());
 
+        Image image = testUtil.createImage();
+        given(imageService.saveImage(any())).willReturn(image);
+
         SignUpReq signUpReq = TestUtil.makeSignUpReq();
         signUpReq.setVerificationCode(verificationCode);
-
-        // MockMultipartFile 객체를 생성하여 파일을 만듭니다.
-        MockMultipartFile profileImage = new MockMultipartFile(
-                "profileImage",
-                "profile.jpg",
-                MediaType.IMAGE_JPEG_VALUE,
-                "Profile Image Content".getBytes()
-        );
 
         // when, then
         testReporter.publishEntry(mockMvc.perform(
                     multipart("/api/v1/sign-up")
-                            .file(profileImage)
+                            .file((MockMultipartFile) signUpReq.getProfileImage())
                             .param("phoneNumber", signUpReq.getPhoneNumber())
-                            .param("verificationCode", verificationCode)
-                            .param("nickname", signUpReq.getNickname())
+                            .param("verificationCode", signUpReq.getVerificationCode())
+                            .param("name", signUpReq.getName())
                             .param("kakaoId", signUpReq.getKakaoId())
-                            .param("sex", signUpReq.getSex())
-                            .param("birth", signUpReq.getBirth())
+                            .param("gender", signUpReq.getGender().name())
+                            .param("birthDate", signUpReq.getBirthDate())
                             .param("location", signUpReq.getLocation()[0] + "," + signUpReq.getLocation()[1])
-                            .param("comment", signUpReq.getComment())
+                            .param("oneLineIntroduction", signUpReq.getOneLineIntroduction())
                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 )
                     .andExpect(status().isOk())

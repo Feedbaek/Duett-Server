@@ -1,19 +1,14 @@
 package Dino.Duett.domain.search.controller;
 
-import Dino.Duett.config.EnvBean;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.repository.MemberRepository;
-import Dino.Duett.domain.music.repository.MusicRepository;
-import Dino.Duett.domain.search.service.SearchService;
 import Dino.Duett.utils.TestUtil;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -38,7 +33,7 @@ public class SearchControllerTest {
         // given
         final String GET_API = "/api/v1/search/video";
 
-        Member member = testUtil.createMember();
+        Member member = testUtil.makeMember();
         memberRepository.save(member);
 
         // when

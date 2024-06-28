@@ -17,7 +17,9 @@ import Dino.Duett.domain.profile.dto.response.ProfileHomeResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileInfoResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileIntroResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileMusicResponse;
+import Dino.Duett.domain.profile.entity.Location;
 import Dino.Duett.domain.profile.entity.Profile;
+import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
 import Dino.Duett.domain.signup.dto.SignUpReq;
@@ -48,10 +50,22 @@ public class ProfileService {
     public void createProfile(final SignUpReq signUpReq) { // todo: 프로필 생성 임시. 수정 바람
         Member member = memberRepository.findByPhoneNumber(signUpReq.getPhoneNumber()).orElseThrow(MemberException.MemberNotFoundException::new);
 
+        // Location 생성
+        Location location = Location.of(signUpReq.getLocation()[0], signUpReq.getLocation()[1]);
+
+        // 프로필 이미지 생성
+        Image profileImage = imageService.saveImage(signUpReq.getProfileImage());
+
         // 프로필 생성
         Profile profile = Profile.builder()
-                .name(signUpReq.getNickname())
+                .name(signUpReq.getName())
+                .birthDate(signUpReq.getBirthDate())
+                .oneLineIntroduction(signUpReq.getOneLineIntroduction())
+                .gender(signUpReq.getGender())
+                .location(location)
+                .profileImage(profileImage)
                 .build();
+
         profileRepository.save(profile);
         member.updateProfile(profile);
     }
