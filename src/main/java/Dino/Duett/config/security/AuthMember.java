@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 public class AuthMember implements UserDetails {
-    private final Long id;
+    private final Long memberId;
     private final String phoneNumber;
     private final String kakaoId;
     private final String role;
@@ -18,8 +18,8 @@ public class AuthMember implements UserDetails {
     private final String verificationCode;
 
     @Builder
-    public AuthMember(Long id, String phoneNumber, String kakaoId, String role, String verificationCode) {
-        this.id = id;
+    public AuthMember(Long memberId, String phoneNumber, String kakaoId, String role, String verificationCode) {
+        this.memberId = memberId;
         this.phoneNumber = phoneNumber;
         this.kakaoId = kakaoId;
         this.role = role;
