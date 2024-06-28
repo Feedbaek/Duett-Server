@@ -1,5 +1,6 @@
 package Dino.Duett.domain.member.service;
 
+import Dino.Duett.domain.authentication.dto.CheckMemberDto;
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.entity.Role;
@@ -8,7 +9,6 @@ import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.member.repository.RoleRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,5 +57,9 @@ public class MemberService {
                 .state(member.getState().getState())
                 .role(member.getRole().getName())
                 .build();
+    }
+
+    public CheckMemberDto existsByPhoneNumber(String phoneNumber) {
+        return CheckMemberDto.of(memberRepository.existsByPhoneNumber(phoneNumber));
     }
 }

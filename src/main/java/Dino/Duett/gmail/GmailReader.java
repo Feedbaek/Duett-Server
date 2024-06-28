@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Properties;
+import java.util.*;
 
-@Slf4j
+@Slf4j(topic = "GmailReader")
 @Component
 public class GmailReader {
     private final EnvBean envBean;
@@ -79,13 +79,27 @@ public class GmailReader {
 
                 // 발신자 번호를 이용한 검색
                 Message[] messages = inbox.search(new FromStringTerm(phoneNumber));
+
+                // 날짜 기준으로 최신순 정렬
+                Arrays.sort(messages, (m1, m2) -> {
+                    try {
+                        return m2.getReceivedDate().compareTo(m1.getReceivedDate());
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
                 // 가장 최근 메일을 가져옴
                 Message lastMessage = getLastMessages(messages);
                 // 메일의 내용을 가져옴
                 String body = getBody(lastMessage);
                 // 메일 내용과 코드가 일치하는지 확인
                 if (!body.equals(code)) {
-                    throw new GmailException.EmailValidationFailedException();
+                    log.warn("Code does not match: " + body + " " + code);
+                    Map<String, String> err = new HashMap<>();
+                    err.put("body", body);
+                    err.put("code", code);
+                    throw new GmailException.EmailValidationFailedException(err);
                 }
             }
         } catch (GmailException e) {

@@ -12,52 +12,70 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
 
-    - name: Create application.yml
-      run: |
-        echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+      - name: Create application.yml
+        run: |
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
 
-    - name: Set yml file
-      uses: microsoft/variable-substitution@v1
-      with:
-        files: ./src/main/resources/application.yml, ./src/main/resources/application-gcs.yml
-      env:
-        spring.datasource.driver-class-name: ${{ secrets.BUILD_DATASOURCE_DRIVER_CLASS_NAME }}
-        spring.datasource.url: ${{ secrets.BUILD_DATASOURCE_URL }}
-        spring.jpa.hibernate.ddl-auto: ${{ secrets.BUILD_JPA_DDL_AUTO }}
+      - name: Set yml file
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application.yml, ./src/main/resources/application-gcs.yml, ./src/main/resources/application-youtube.yml
+        env:
+          spring.datasource.driver-class-name: ${{ secrets.BUILD_DATASOURCE_DRIVER_CLASS_NAME }}
+          spring.datasource.url: ${{ secrets.BUILD_DATASOURCE_URL }}
+          spring.datasource.username: root
+          spring.datasource.password: 1234
+          spring.jpa.hibernate.ddl-auto: ${{ secrets.BUILD_JPA_DDL_AUTO }}
 
-        server.port: ${{ secrets.SERVER_PORT }}
-        server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}
+          spring.data.redis.database: ${{ secrets.BUILD_REDIS_DATABASE }}
 
-        jwt.secret: ${{ secrets.JWT_SECRET }}
+          server.port: ${{ secrets.SERVER_PORT }}
+          server.ssl.key-store-password: ${{ secrets.KEYSTORE_PASSWORD }}
 
-        spring.cloud.gcp.storage.credentials.location: ${{ secrets.GCS_KEY_LOCATION }}
-        spring.cloud.gcp.storage.project-id: ${{ secrets.GCS_PROJECT_ID }}
-        spring.cloud.gcp.storage.bucket-name: ${{ secrets.GCS_BUCKET_NAME }}
-        spring.cloud.gcp.storage.bucket-dir: ${{ secrets.GCS_BUCKET_DIR }}
-        spring.cloud.gcp.storage.key-name: ${{ secrets.GCS_KEY_NAME }}
+          jwt.secret: ${{ secrets.JWT_SECRET }}
 
+          spring.cloud.gcp.storage.credentials.location: ${{ secrets.GCS_KEY_LOCATION }}
+          spring.cloud.gcp.storage.project-id: ${{ secrets.GCS_PROJECT_ID }}
+          spring.cloud.gcp.storage.bucket-name: ${{ secrets.GCS_BUCKET_NAME }}
+          spring.cloud.gcp.storage.bucket-dir: ${{ secrets.GCS_TEST_BUCKET_DIR }}
+          spring.cloud.gcp.storage.key-name: ${{ secrets.GCS_KEY_NAME }}
 
-    - name: Create-json
-      id: create-json
-      uses: jsdaniell/create-json@v1.2.2
-      with:
-        name: ${{ secrets.GCS_KEY_NAME }}
-        json: ${{ secrets.GCS_KEY_JSON }}
-        dir: ${{ secrets.GCS_KEY_DIR_LOCATION }}
+          youtube.api-key1: ${{ secrets.YOUTUBE_API_KEY_1 }}
+          youtube.api-key2: ${{ secrets.YOUTUBE_API_KEY_2 }}
+          youtube.api-key3: ${{ secrets.YOUTUBE_API_KEY_3 }}
+          youtube.api-key4: ${{ secrets.YOUTUBE_API_KEY_4 }}
+          youtube.api-key5: ${{ secrets.YOUTUBE_API_KEY_5 }}
+          youtube.api-key6: ${{ secrets.YOUTUBE_API_KEY_6 }}
+          youtube.api-key7: ${{ secrets.YOUTUBE_API_KEY_7 }}
+          youtube.api-key8: ${{ secrets.YOUTUBE_API_KEY_8 }}
+          youtube.api-key9: ${{ secrets.YOUTUBE_API_KEY_9 }}
+          youtube.api-key10: ${{ secrets.YOUTUBE_API_KEY_10 }}
+          youtube.api-key11: ${{ secrets.YOUTUBE_API_KEY_11 }}
+          youtube.api-key12: ${{ secrets.YOUTUBE_API_KEY_12 }}
+          youtube.api-key13: ${{ secrets.YOUTUBE_API_KEY_13 }}
+          youtube.api-key14: ${{ secrets.YOUTUBE_API_KEY_14 }}
 
-    - name: Keystore Save
-      run: echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./src/main/resources/keystore.p12
+      - name: Create-json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: ${{ secrets.GCS_KEY_NAME }}
+          json: ${{ secrets.GCS_KEY_JSON }}
+          dir: ${{ secrets.GCS_KEY_DIR_LOCATION }}
 
-    - name: Run chmod to make gradlew executable
-      run: chmod +x ./gradlew
+      - name: Keystore Save
+        run: echo "${{ secrets.KEYSTORE }}" | base64 --decode > ./src/main/resources/keystore.p12
 
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build

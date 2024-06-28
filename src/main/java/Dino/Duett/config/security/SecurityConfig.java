@@ -46,17 +46,20 @@ public class SecurityConfig {
 
         // 회원가입
         "/api/v1/sign-up",
+        "/api/v1/authentication/**",
 
         // 에러 페이지
-        "/error"
+        "/error",
+        // 테스트  //todo: 나중에 삭제
+        "/test/**"
     };
 
-    @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
-    public WebSecurityCustomizer configureH2ConsoleEnable() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console());
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
+//    public WebSecurityCustomizer configureH2ConsoleEnable() {
+//        return web -> web.ignoring()
+//                .requestMatchers(PathRequest.toH2Console());
+//    }
 
     @Bean
     protected SecurityFilterChain apiConfig(HttpSecurity http) throws Exception {
@@ -70,16 +73,22 @@ public class SecurityConfig {
                     .successHandler(successHandler) // 로그인 성공 핸들러
                     .failureHandler(failureHandler) // 로그인 실패 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용
-            .logout(logout -> logout
-                    .logoutUrl("/logout") // 로그아웃 url
-                    .deleteCookies("JSESSIONID") // 쿠키 삭제
-//                    .logoutSuccessUrl("/login") // 로그아웃 성공시 이동할 페이지
-                    .permitAll()) // 로그아웃 페이지는 모든 사용자 허용
 
+            .exceptionHandling(exception -> exception
+                    // 인증 실패 핸들러
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    })
+                    // 권한 없음 핸들러
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                    })
+            )
             // 허용 경로 설정
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(WHITE_LIST).permitAll() // 모든 사용자 허용 경로 (모든 메소드)
-                    .anyRequest().permitAll()
+                    //.requestMatchers("/**").permitAll()
+                    .anyRequest().authenticated()
             );
 
 

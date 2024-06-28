@@ -1,6 +1,8 @@
 package Dino.Duett.domain.signup.dto;
 
 
+import Dino.Duett.domain.profile.enums.GenderType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,19 +15,20 @@ public class SignUpReq {
     @NotBlank
     private String phoneNumber;
     @NotBlank
-    private String code;
+    private String verificationCode;
     @NotBlank
-    private String nickname;
+    private String name;
     @NotBlank
     private String kakaoId;
+    @NotNull
+    @Schema(example = "MAN")
+    private GenderType gender;
     @NotBlank
-    private String sex;
-    @NotBlank
-    private String birth;
+    private String birthDate;
     @NotNull
     private double[] location;
     @NotNull
     private MultipartFile profileImage;
     @NotBlank
-    private String comment;
+    private String oneLineIntroduction;
 }
