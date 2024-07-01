@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -17,6 +18,7 @@ public class SignUpReq {
     @NotBlank
     private String verificationCode;
     @NotBlank
+    //@Unique
     private String name;
     @NotBlank
     private String kakaoId;

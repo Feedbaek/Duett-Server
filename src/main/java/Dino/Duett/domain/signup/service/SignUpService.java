@@ -31,6 +31,7 @@ public class SignUpService {
         gmailReader.validate(signUpReq.getPhoneNumber(), signUpReq.getVerificationCode());
         // 회원가입 처리
         Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
+
         MemberDto memberDto = memberService.makeMemberDto(member);
         // todo: 프로필 생성
         profileService.createProfile(signUpReq);

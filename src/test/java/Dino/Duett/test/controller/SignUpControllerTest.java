@@ -75,5 +75,6 @@ public class SignUpControllerTest {
                 )
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString());
+
     }
 }

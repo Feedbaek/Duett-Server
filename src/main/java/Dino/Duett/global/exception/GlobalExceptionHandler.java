@@ -66,7 +66,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             TagException.ProfileTagMaxLimitException.class,
-            ProfileException.ProfileIncompleteException.class
+            ProfileException.ProfileIncompleteException.class,
+            ProfileException.ProfileUsernameExistException.class,
         }
     )
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {

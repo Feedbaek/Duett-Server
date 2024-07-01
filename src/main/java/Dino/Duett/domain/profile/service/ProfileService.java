@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 
 @Service
@@ -49,6 +51,11 @@ public class ProfileService {
     @Transactional
     public void createProfile(final SignUpReq signUpReq) { // todo: 프로필 생성 임시. 수정 바람
         Member member = memberRepository.findByPhoneNumber(signUpReq.getPhoneNumber()).orElseThrow(MemberException.MemberNotFoundException::new);
+
+        // if member's profile exist, check user's profile name is already exist
+        if (Objects.nonNull(member.getProfile()) && member.getProfile().getName().equals(signUpReq.getName())) {
+            throw new ProfileException.ProfileUsernameExistException();
+        }
 
         // Location 생성
         Location location = Location.of(signUpReq.getLocation()[0], signUpReq.getLocation()[1]);
