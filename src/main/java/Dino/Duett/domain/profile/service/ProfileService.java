@@ -52,8 +52,8 @@ public class ProfileService {
     public void createProfile(final SignUpReq signUpReq) { // todo: 프로필 생성 임시. 수정 바람
         Member member = memberRepository.findByPhoneNumber(signUpReq.getPhoneNumber()).orElseThrow(MemberException.MemberNotFoundException::new);
 
-        // if member's profile exist, check user's profile name is already exist
-        if (Objects.nonNull(member.getProfile()) && member.getProfile().getName().equals(signUpReq.getName())) {
+        // 프로파일 유저 중복 확인
+        if (profileRepository.existsByName(signUpReq.getName())) {
             throw new ProfileException.ProfileUsernameExistException();
         }
 

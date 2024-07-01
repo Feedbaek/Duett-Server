@@ -26,4 +26,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
             @Param("excludedProfileIds") List<Long> excludedProfileIds,
             PageRequest pageRequest
     );
+
+    boolean existsByName(String name);
 }

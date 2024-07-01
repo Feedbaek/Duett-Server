@@ -45,4 +45,14 @@ public class SignUpService {
                 .member(memberDto)
                 .build();
     }
+
+    // 회원가입 DB Mock
+    public SignUpRes signUpMock(SignUpReq signUpReq) throws CustomException {
+        Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
+        MemberDto memberDto = memberService.makeMemberDto(member);
+        profileService.createProfile(signUpReq);
+        return SignUpRes.builder()
+                .member(memberDto)
+                .build();
+    }
 }

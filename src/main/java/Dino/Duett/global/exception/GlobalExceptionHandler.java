@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             TagException.ProfileTagMaxLimitException.class,
             ProfileException.ProfileIncompleteException.class,
-            ProfileException.ProfileUsernameExistException.class,
+            ProfileException.ProfileUsernameExistException.class
         }
     )
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
@@ -108,5 +108,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGlobalInternalServerException(final CustomException e) {
         log.error(e.getErrorInfoLog());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.from(e));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(final Exception e) {
+        log.error("Global Exception - ", e);
+        final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.INTERNAL_SERVER_ERROR));
+        return ResponseEntity.internalServerError().body(response);
     }
 }

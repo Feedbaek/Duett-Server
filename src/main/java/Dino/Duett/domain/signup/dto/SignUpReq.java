@@ -18,7 +18,6 @@ public class SignUpReq {
     @NotBlank
     private String verificationCode;
     @NotBlank
-    //@Unique
     private String name;
     @NotBlank
     private String kakaoId;
