@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "profile")
@@ -113,20 +112,20 @@ public class Profile extends BaseEntity {
         }
     }
 
-    public void addSentLike(ProfileLike profileLike) {
-        this.sentLikes.add(profileLike);
-    }
-
-    public void addReceivedLike(ProfileLike profileLike) {
-        this.receivedLikes.add(profileLike);
-    }
-
-    public void removeSentLike(ProfileLike profileLike) {
-        this.sentLikes.remove(profileLike);
-    }
-
-    public void removeReceivedLike(ProfileLike profileLike) {
-        this.receivedLikes.remove(profileLike);
-    }
+//    public void addSentLike(ProfileLike profileLike) {
+//        this.sentLikes.add(profileLike);
+//    }
+//
+//    public void addReceivedLike(ProfileLike profileLike) {
+//        this.receivedLikes.add(profileLike);
+//    }
+//
+//    public void removeSentLike(ProfileLike profileLike) {
+//        this.sentLikes.remove(profileLike);
+//    }
+//
+//    public void removeReceivedLike(ProfileLike profileLike) {
+//        this.receivedLikes.remove(profileLike);
+//    }
 
 }
