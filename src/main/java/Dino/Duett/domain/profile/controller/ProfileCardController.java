@@ -36,12 +36,12 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
 
     })
-    @GetMapping("/profile-cards/completion-status")
+    @GetMapping("/profiles/completion-status")
     public JsonBody<Boolean> getProfileCardCompletionStatus(@AuthenticationPrincipal final AuthMember authMember){
         return JsonBody.of(HttpStatus.OK.value(), "프로필의 정보가 채워졌는지 조회 성공", profileCardService.getProfileCardCompletionStatus(authMember.getId()));
     }
 
-    @GetMapping("/profile-cards/{profileId}/coin")
+    @GetMapping("/profiles/{profileId}/coin")
     public JsonBody<ProfileCardResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
                                                                         @PathVariable final Long profileId){
         return JsonBody.of(HttpStatus.OK.value(),"코인을 사용해서 프로필카드 상세 단일 조회 성공", profileCardService.getProfileCardWithCoin(authMember.getId(), profileId));
@@ -55,13 +55,13 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5001", description = "프로필에 접근할 권한 없음(403)", content = @Content(schema = @Schema(hidden = true))),
     })
-    @GetMapping("/profile-cards/{profileId}")
+    @GetMapping("/profiles/{profileId}")
     public JsonBody<ProfileCardResponse> getProfileCardOfDetail(@AuthenticationPrincipal AuthMember authMember,
                                                                 @PathVariable final Long profileId){
         return JsonBody.of(HttpStatus.OK.value(),"프로필카드 상세 단일 조회 성공", profileCardService.getProfileCard(authMember.getId(), profileId));
     }
 
-    @GetMapping("/profile-cards/summary")
+    @GetMapping("/profiles/summary")
     public JsonBody<List<ProfileCardSummaryResponse>> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
                                                                                @RequestParam final int page,
                                                                                @RequestParam final int size,
