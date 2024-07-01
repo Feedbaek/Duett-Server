@@ -35,7 +35,7 @@ public class MemberServiceTest {
     @DisplayName("member 생성 테스트")
     public void createMemberTest() {
         // given
-        Member inputMember = TestUtil.makeMember(); //testing
+        Member inputMember = TestUtil.makeMember();
 
         given(memberRepository.existsByPhoneNumber(inputMember.getPhoneNumber())).willReturn(false);
         given(memberRepository.existsByKakaoId(inputMember.getKakaoId())).willReturn(false);
