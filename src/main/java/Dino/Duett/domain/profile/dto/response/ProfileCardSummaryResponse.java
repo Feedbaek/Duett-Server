@@ -2,7 +2,6 @@ package Dino.Duett.domain.profile.dto.response;
 
 import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.profile.enums.MbtiType;
-import Dino.Duett.domain.tag.dto.response.TagResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +22,7 @@ public class ProfileCardSummaryResponse {
     MbtiType mbti;
     @Schema(description = "한 줄 소개", example = "crush")
     String oneLineIntroduction;
-    @Schema(description = "사용자와의 거리", example = "1.5")
+    @Schema(description = "사용자와의 거리. 소수점 첫번째 자리까지 표시", example = "1.5")
     double distance;
     @Schema(description = "인생곡 리스트", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"url\": \"url\"}]")
     List<MusicResponse> lifeMusics;

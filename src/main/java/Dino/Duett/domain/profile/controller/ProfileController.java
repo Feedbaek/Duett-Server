@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController implements ProfileApi{ //todo: 이후에 API 문서 위치 통일
     private final ProfileService profileService;
 
-    @Operation(summary = "마이페이지 메인(유저 기본 정보, 프로필 진행 정도) 조회", tags = {"마이페이지"})
+    @Operation(summary = "마이페이지 메인(유저 기본 정보, 프로필 진행 정도) 조회", tags = {"마이페이지 - 홈"})
     @GetMapping("/profiles/home")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
@@ -41,7 +42,7 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
     }
 
 
-    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 조회", tags = {"마이페이지"})
+    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 조회", tags = {"마이페이지 - 음악 취향"})
     @GetMapping("/profiles/music-taste")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
@@ -53,8 +54,8 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
         return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 조회", profileService.getProfileMusic(authMember.getId()));
     }
 
-    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 한번에 추가, 수정, 삭제하기", tags = {"마이페이지"})
-    @PostMapping(value = "/profiles/music-taste", consumes = "multipart/form-data")
+    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 한번에 추가, 수정, 삭제하기", tags = {"마이페이지 - 음악 취향"})
+    @PostMapping(value = "/profiles/music-taste", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -73,9 +74,9 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
         return JsonBody.of(HttpStatus.OK.value(), "내 정보 조회 성공", profileService.getProfileInfo(authMember.getId()));
     }
 
-    @PatchMapping(value = "/profiles/info", consumes = "multipart/form-data")
+    @PatchMapping(value = "/profiles/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public JsonBody<Void> updateProfileInfo(@AuthenticationPrincipal final AuthMember authMember,
-                                        @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest) {
+                                            @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest) {
         profileService.updateProfileInfo(authMember.getId(), profileInfoRequest);
         return JsonBody.of(HttpStatus.OK.value(), "내 정보 수정 성공", null);
     }
@@ -87,7 +88,7 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
 
     @PatchMapping("/profiles/intro")
     public JsonBody<Void> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
-                                                             @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
+                                             @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
         profileService.updateProfileIntro(authMember.getId(), profileIntroRequest);
         return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정 성공", null);
     }

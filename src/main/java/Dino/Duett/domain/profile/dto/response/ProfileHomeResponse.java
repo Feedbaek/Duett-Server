@@ -13,7 +13,7 @@ public class ProfileHomeResponse {
     String profileImageUrl;
     @Schema(description = "사용자의 이름", example = "name")
     String name;
-    @Schema(description = "사용자의 생년월일", example = "2000.01.01")
+    @Schema(description = "사용자의 생년월일", example = "2000년 01월 01일")
     String birthDate;
     @Schema(description = "MBTI 유형", example = "ENTP")
     MbtiType mbti;

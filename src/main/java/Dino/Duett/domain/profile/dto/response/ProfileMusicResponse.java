@@ -13,9 +13,9 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileMusicResponse {
-    @Schema(description = "인생곡 리스트", example = "[{\"musicId\": 1, \"title\": \"title\", \"artist\": \"artist\", \"url\": \"unique-url-identifier\"}]")
+    @Schema(description = "인생곡 리스트", example = "[{\"musicId\": 1, \"title\": \"title\", \"artist\": \"artist\", \"url\": \"https://www.youtube.com/watch?v=UUID\"}]")
     private List<MusicResponse> lifeMusics;
-    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImageUrl\": \"https://duett-mood-image.s3.ap-northeast-2.amazonaws.com/1.jpg\"}")
+    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImageUrl\": \"https://duett.com/image.jpg\"}")
     private MoodResponse mood;
 
     public static ProfileMusicResponse of(final List<MusicResponse> lifeMusics, final MoodResponse moodResponse) {

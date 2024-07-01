@@ -19,6 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static Dino.Duett.global.enums.LimitConstants.*;
@@ -51,7 +54,7 @@ public class ProfileCardService {
      * @param memberId 사용자 id
      * @param page 페이지
      * @param size 사이즈
-     * @param radius 반경
+     * @param radius 반경(km)
      * @return List<ProfileCardSummaryResponse>
      */
 
@@ -60,12 +63,14 @@ public class ProfileCardService {
                                                                      final int size,
                                                                      double radius) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+        Profile viewerProfile = validateProfileIsNull(member.getProfile());
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Profile> profiles = profileRepository.findAllUsersWithinRadius(
                 member.getProfile().getLocation().getLatitude(),
                 member.getProfile().getLocation().getLatitude(),
                 radius,
                 member.getProfile().getGender().getOppositeGender(),
+                viewerProfile.getProfileUnlocks() != null ? viewerProfile.getProfileUnlocks().stream().map(profileUnlock -> profileUnlock.getViewedProfile().getId()).toList() : null,
                 pageRequest
         );
 
@@ -198,12 +203,53 @@ public class ProfileCardService {
      * @param profile2 프로필2
      * @return double
      */
+//    private double calculateDistance(final Profile profile1, final Profile profile2) {
+//        double distance = Math.sqrt(
+//                    Math.pow(profile1.getLocation().getLatitude() - profile2.getLocation().getLatitude(), 2) +
+//                        Math.pow(profile1.getLocation().getLongitude() - profile2.getLocation().getLongitude(), 2)
+//
+//        );
+//        DecimalFormat df = new DecimalFormat("#.##");
+//        return Double.parseDouble(df.format(distance));
+//    }
     private double calculateDistance(final Profile profile1, final Profile profile2) {
-        return Math.sqrt(
-                    Math.pow(profile1.getLocation().getLatitude() - profile2.getLocation().getLatitude(), 2) +
-                        Math.pow(profile1.getLocation().getLongitude() - profile2.getLocation().getLongitude(), 2)
+        final BigDecimal EARTH_RADIUS_KM = new BigDecimal("6371.0");
 
-        );
+        double lat1 = profile1.getLocation().getLatitude();
+        double lon1 = profile1.getLocation().getLongitude();
+        double lat2 = profile2.getLocation().getLatitude();
+        double lon2 = profile2.getLocation().getLongitude();
+
+        // Convert latitude and longitude to radians
+        BigDecimal lat1Rad = BigDecimal.valueOf(Math.toRadians(lat1));
+        BigDecimal lon1Rad = BigDecimal.valueOf(Math.toRadians(lon1));
+        BigDecimal lat2Rad = BigDecimal.valueOf(Math.toRadians(lat2));
+        BigDecimal lon2Rad = BigDecimal.valueOf(Math.toRadians(lon2));
+
+        // Calculate the differences in latitude and longitude
+        BigDecimal deltaLat = lat2Rad.subtract(lat1Rad);
+        BigDecimal deltaLon = lon2Rad.subtract(lon1Rad);
+
+        // Apply the Haversine formula
+        BigDecimal sinDeltaLatDiv2 = BigDecimal.valueOf(Math.sin(deltaLat.doubleValue() / 2));
+        BigDecimal sinDeltaLonDiv2 = BigDecimal.valueOf(Math.sin(deltaLon.doubleValue() / 2));
+
+        BigDecimal a = sinDeltaLatDiv2.multiply(sinDeltaLatDiv2)
+                .add(BigDecimal.valueOf(Math.cos(lat1Rad.doubleValue()))
+                        .multiply(BigDecimal.valueOf(Math.cos(lat2Rad.doubleValue())))
+                        .multiply(sinDeltaLonDiv2).multiply(sinDeltaLonDiv2));
+
+        BigDecimal sqrtA = BigDecimal.valueOf(Math.sqrt(a.doubleValue()));
+        BigDecimal sqrtOneMinusA = BigDecimal.valueOf(Math.sqrt(1.0 - a.doubleValue()));
+        BigDecimal c = BigDecimal.valueOf(2.0).multiply(BigDecimal.valueOf(Math.atan2(sqrtA.doubleValue(), sqrtOneMinusA.doubleValue())));
+
+        // Calculate the distance by multiplying with Earth's radius
+        BigDecimal distance = EARTH_RADIUS_KM.multiply(c, new MathContext(10, RoundingMode.HALF_UP));
+
+        // Round to one decimal place
+        distance = distance.setScale(1, RoundingMode.HALF_UP);
+
+        return distance.doubleValue();
     }
 
     private Profile validateProfileIsNull(Profile profile) {

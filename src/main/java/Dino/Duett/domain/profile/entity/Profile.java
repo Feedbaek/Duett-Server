@@ -8,6 +8,7 @@ import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.entity.ProfileTag;
 import Dino.Duett.global.entity.BaseEntity;
 import Dino.Duett.global.utils.Validator;
+import com.google.api.client.json.JsonPolymorphicTypeMap;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,6 +17,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "profile")
@@ -35,12 +38,13 @@ public class Profile extends BaseEntity {
     private String oneLineIntroduction;
     @Column(length = 500)
     private String selfIntroduction;
+    @Column(length = 500)
     private String likeableMusicTaste;
     @Enumerated(EnumType.STRING)
     private GenderType gender;
+
     @Embedded
     private Location location;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_image_id")
     private Image profileImage;
@@ -57,6 +61,12 @@ public class Profile extends BaseEntity {
 
     @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileUnlock> profileUnlocks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileLike> sentLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileLike> receivedLikes = new ArrayList<>();
 
     @Builder
     public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
@@ -102,4 +112,21 @@ public class Profile extends BaseEntity {
             this.likeableMusicTaste = likeableMusicTaste;
         }
     }
+
+    public void addSentLike(ProfileLike profileLike) {
+        this.sentLikes.add(profileLike);
+    }
+
+    public void addReceivedLike(ProfileLike profileLike) {
+        this.receivedLikes.add(profileLike);
+    }
+
+    public void removeSentLike(ProfileLike profileLike) {
+        this.sentLikes.remove(profileLike);
+    }
+
+    public void removeReceivedLike(ProfileLike profileLike) {
+        this.receivedLikes.remove(profileLike);
+    }
+
 }
