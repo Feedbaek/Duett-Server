@@ -47,6 +47,5 @@ public interface ProfileTagRepository extends JpaRepository<ProfileTag, Long> {
             @Param("profileId") Long profileId,
             @Param("type") TagType type,
             @Param("state") TagState state);
-
     List<ProfileTag> findByProfileIdAndState(Long profileId, TagState tagState);
 }

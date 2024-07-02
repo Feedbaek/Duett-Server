@@ -14,7 +14,7 @@ public class ProfileInfoResponse {
     String profileImageUrl;
     @Schema(description = "닉네임", example = "crush")
     String name;
-    @Schema(description = "생년월일", example = "2000.01.01")
+    @Schema(description = "생년월일", example = "2000년 01월 01일")
     String birthDate;
     @Schema(description = "성별", example = "여성")
     String gender;

@@ -31,6 +31,16 @@ public class ProfileException extends CustomException {
         }
     }
 
+    public static class ProfileUsernameExistException extends ProfileException {
+        public ProfileUsernameExistException(ErrorCode errorCode) {
+            super(errorCode);
+        }
+        public ProfileUsernameExistException() {
+            super(ErrorCode.PROFILE_USERNAME_EXIST);
+        }
+    }
+
+
     public static class ProfileIncompleteException extends ProfileException {
         public ProfileIncompleteException() {
             super(ErrorCode.PROFILE_INCOMPLETE);
