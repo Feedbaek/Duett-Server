@@ -36,6 +36,7 @@ public interface ProfileApi {
             @ApiResponse(responseCode = "400", description = "잘못된 인자 입력, 유효성 검사 실패", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "5003", description = "이미 존재하는 유저 네임(400)", content = @Content(schema = @Schema(hidden = true))),
     })
     public JsonBody<Void> updateProfileInfo(@AuthenticationPrincipal final AuthMember authMember,
                                             @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest);

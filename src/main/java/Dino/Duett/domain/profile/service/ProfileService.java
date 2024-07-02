@@ -155,6 +155,10 @@ public class ProfileService {
         Image image = profile.getProfileImage();
         MultipartFile imageFile = profileInfoRequest.getProfileImage();
 
+        if (profileRepository.existsByName(profileInfoRequest.getName())) {
+            throw new ProfileException.ProfileUsernameExistException();
+        }
+
         if (!Validator.isNullOrEmpty(imageFile)) {
             if (image != null) {
                 if(profileInfoRequest.getIsDeleteImage() == null || profileInfoRequest.getIsDeleteImage()) {
