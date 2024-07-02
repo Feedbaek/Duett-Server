@@ -9,7 +9,6 @@ import Dino.Duett.domain.message.dto.response.MessageDeleteResponse;
 import Dino.Duett.domain.message.dto.response.MessageResponse;
 import Dino.Duett.domain.message.entity.Message;
 import Dino.Duett.domain.message.repository.MessageRepository;
-import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.global.enums.LimitConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +30,7 @@ public class MessageService {
     // 사용자의 모든 메시지 조회
     @Transactional(readOnly = true)
     public List<MessageResponse> getAllMessages(Long receiverId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "created_date"));
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllByReceiverId(receiverId, pageable);
 
         return messageList.stream()
@@ -71,18 +70,15 @@ public class MessageService {
         return MessageResponse.of(sender.getId(), receiver.getId(), messageSendRequest.getContent());
     }
 
+    // 받은 메시지 삭제. 삭제된 메시지의 id만 반환
     @Transactional
     public MessageDeleteResponse deleteMessage(Long receiverId, MessageDeleteRequest messageDeleteRequest) {
-        List<Long> deleteMessageIds = new ArrayList<>();
+        Long[] deleteMessageIds = Arrays.stream(messageDeleteRequest.getMessageIds()).filter(
+                messageId -> messageRepository.findById(messageId).map(
+                        message -> message.getReceiver().getId().equals(receiverId)
+                ).orElse(false)
+        ).toArray(Long[]::new);
 
-        Arrays.stream(messageDeleteRequest.getMessageIds()).peek(messageId -> messageRepository.findById(messageId).ifPresent(
-                message -> {
-                    if (message.getReceiver().getId().equals(receiverId)) {
-                        messageRepository.delete(message);
-                        deleteMessageIds.add(messageId);
-                    }
-                }));
-
-        return MessageDeleteResponse.of(deleteMessageIds.toArray(Long[]::new));
+        return MessageDeleteResponse.of(deleteMessageIds);
     }
 }

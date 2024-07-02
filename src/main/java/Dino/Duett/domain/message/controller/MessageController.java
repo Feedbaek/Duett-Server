@@ -29,7 +29,7 @@ public class MessageController {
     @ApiResponse(responseCode = "200", description = "모든 메시지 조회 성공")
     public JsonBody<List<MessageResponse>> getAllMessages(
             @AuthenticationPrincipal final AuthMember authMember,
-            @RequestParam(required = false, defaultValue = "0") Integer page) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "모든 메시지 조회 성공", messageService.getAllMessages(authMember.getMemberId(), page));
     }
 

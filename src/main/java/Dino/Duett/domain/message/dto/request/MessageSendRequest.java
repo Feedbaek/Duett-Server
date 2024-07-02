@@ -1,5 +1,6 @@
 package Dino.Duett.domain.message.dto.request;
 
+import Dino.Duett.domain.message.entity.Message;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -14,4 +15,10 @@ public class MessageSendRequest {
     private Long receiverId;
     @NotBlank
     private String content;
+
+    @Builder
+    public MessageSendRequest(Long receiverId, String content) {
+        this.receiverId = receiverId;
+        this.content = content;
+    }
 }
