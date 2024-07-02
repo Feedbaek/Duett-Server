@@ -33,6 +33,7 @@ import java.util.List;
 @Component
 public class TestUtil {
     public static final String MEMBER_PHONE_NUMBER = "01012345678";
+    public static final String MEMBER_PHONE_NUMBER2 = "01087654321";
     public static final String MEMBER_KAKAO_ID = "kakaoId";
     public static final String MEMBER_NICKNAME = "nickname";
 

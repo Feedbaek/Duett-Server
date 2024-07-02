@@ -168,7 +168,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
         MbtiType mbti = MbtiType.values()[random.nextInt(MbtiType.values().length)];
 
         return Profile.builder()
-                .name(names.get(random.nextInt(names.size())))
+                .name(names.get(random.nextInt(names.size())) + "-" + UUID.randomUUID().toString().substring(0, 4))
                 .gender(gender)
                 .mbti(mbti)
                 .birthDate("2000년 10월 10일")
@@ -188,7 +188,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
         GenderType gender = GenderType.values()[random.nextInt(GenderType.values().length)];
 
         return Profile.builder()
-                .name(names.get(random.nextInt(names.size())))
+                .name(names.get(random.nextInt(names.size())) + "-" + UUID.randomUUID().toString().substring(0, 4))
                 .gender(gender)
                 .birthDate("2000년 10월 10일")
                 .location(Location.of(getRandomDouble(37.5593193,  37.5554931), getRandomDouble(126.8947961, 127.0495665)))

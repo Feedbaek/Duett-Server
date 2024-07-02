@@ -31,6 +31,7 @@ public class SignUpService {
         gmailReader.validate(signUpReq.getPhoneNumber(), signUpReq.getVerificationCode());
         // 회원가입 처리
         Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
+
         MemberDto memberDto = memberService.makeMemberDto(member);
         // todo: 프로필 생성
         profileService.createProfile(signUpReq);
@@ -40,6 +41,16 @@ public class SignUpService {
         // todo: gmail 인증 코드 삭제
         // gmailReader.deleteCode(signUpReq.getPhoneNumber());
 
+        return SignUpRes.builder()
+                .member(memberDto)
+                .build();
+    }
+
+    // 회원가입 DB Mock
+    public SignUpRes signUpMock(SignUpReq signUpReq) throws CustomException {
+        Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
+        MemberDto memberDto = memberService.makeMemberDto(member);
+        profileService.createProfile(signUpReq);
         return SignUpRes.builder()
                 .member(memberDto)
                 .build();

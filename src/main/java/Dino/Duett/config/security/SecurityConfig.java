@@ -45,7 +45,7 @@ public class SecurityConfig {
         "/swagger-resources/**",
 
         // 회원가입
-        "/api/v1/sign-up",
+        "/api/v1/sign-up", "/api/v1/sign-up/mock",
         "/api/v1/authentication/**",
 
         // 에러 페이지
