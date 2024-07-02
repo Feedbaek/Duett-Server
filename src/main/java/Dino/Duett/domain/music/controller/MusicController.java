@@ -36,7 +36,7 @@ public class MusicController {
     public JsonBody<Void> changeProfileMusic(@AuthenticationPrincipal final AuthMember authMember,
                                                     @RequestBody final MusicChangeRequest request){
         musicService.changeMusics(
-                authMember.getId(),
+                authMember.getMemberId(),
                 request.getCreateLifeMusics(),
                 request.getUpdateLifeMusics(),
                 request.getDeleteLifeMusics());

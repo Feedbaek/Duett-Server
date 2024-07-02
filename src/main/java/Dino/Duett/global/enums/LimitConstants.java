@@ -11,7 +11,9 @@ public enum LimitConstants {
     YOUTUBE_SEARCH_LIMIT(10),
     MUSIC_MAX_LIMIT(3),
     PROFILE_INTRO_MIN_SIZE(2),
-    PROFILE_MUSIC_TASTE_MIN_SIZE(1);
+    PROFILE_MUSIC_TASTE_MIN_SIZE(1),
+    MESSAGE_MAX_LIMIT(10),
+    ;
 
     private final int limit;
 }

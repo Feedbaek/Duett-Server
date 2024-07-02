@@ -34,7 +34,7 @@ public class MoodController {
     })
     public JsonBody<Void> changeProfileMusicAndMood(@AuthenticationPrincipal final AuthMember authMember,
                                                     @ModelAttribute final MoodRequest request) {
-        moodService.changeMood(authMember.getId(), request);
+        moodService.changeMood(authMember.getMemberId(), request);
         return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 추가, 수정, 삭제하기", null);
     }
 }

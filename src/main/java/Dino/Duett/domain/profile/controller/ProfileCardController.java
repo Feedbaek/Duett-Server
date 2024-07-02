@@ -38,13 +38,13 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
     })
     @GetMapping("/profiles/completion-status")
     public JsonBody<Boolean> getProfileCardCompletionStatus(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "프로필의 정보가 채워졌는지 조회 성공", profileCardService.getProfileCardCompletionStatus(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "프로필의 정보가 채워졌는지 조회 성공", profileCardService.getProfileCardCompletionStatus(authMember.getMemberId()));
     }
 
     @GetMapping("/profiles/{profileId}/coin")
     public JsonBody<ProfileCardResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
                                                                         @PathVariable final Long profileId){
-        return JsonBody.of(HttpStatus.OK.value(),"코인을 사용해서 프로필카드 상세 단일 조회 성공", profileCardService.getProfileCardWithCoin(authMember.getId(), profileId));
+        return JsonBody.of(HttpStatus.OK.value(),"코인을 사용해서 프로필카드 상세 단일 조회 성공", profileCardService.getProfileCardWithCoin(authMember.getMemberId(), profileId));
     }
 
     @Operation(summary = "프로필카드 상세 단일 조회", tags = {"프로필카드"})
@@ -58,7 +58,7 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
     @GetMapping("/profiles/{profileId}")
     public JsonBody<ProfileCardResponse> getProfileCardOfDetail(@AuthenticationPrincipal AuthMember authMember,
                                                                 @PathVariable final Long profileId){
-        return JsonBody.of(HttpStatus.OK.value(),"프로필카드 상세 단일 조회 성공", profileCardService.getProfileCard(authMember.getId(), profileId));
+        return JsonBody.of(HttpStatus.OK.value(),"프로필카드 상세 단일 조회 성공", profileCardService.getProfileCard(authMember.getMemberId(), profileId));
     }
 
     @GetMapping("/profiles/summary")
@@ -66,6 +66,6 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
                                                                                @RequestParam final int page,
                                                                                @RequestParam final int size,
                                                                                @RequestParam final double radius){
-        return JsonBody.of(HttpStatus.OK.value(), "반경 내의 프로필카드 요약 목록 조회 성공", profileCardService.getProfileCardsOfSummary(authMember.getId(), page, size, radius));
+        return JsonBody.of(HttpStatus.OK.value(), "반경 내의 프로필카드 요약 목록 조회 성공", profileCardService.getProfileCardsOfSummary(authMember.getMemberId(), page, size, radius));
     }
 }
