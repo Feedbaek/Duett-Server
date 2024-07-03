@@ -12,6 +12,7 @@ public enum LimitConstants {
     MUSIC_MAX_LIMIT(3),
     PROFILE_INTRO_MIN_SIZE(2),
     PROFILE_MUSIC_TASTE_MIN_SIZE(1),
+    PROFILE_MAX_LIMIT(10),
     MESSAGE_MAX_LIMIT(10),
     ;
 

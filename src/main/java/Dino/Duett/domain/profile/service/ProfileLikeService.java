@@ -13,9 +13,14 @@ import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.profile.repository.ProfileLikeRepository;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
 import Dino.Duett.domain.tag.service.ProfileTagService;
+import Dino.Duett.global.enums.LimitConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +62,7 @@ public class ProfileLikeService {
         }
     }
 
-    public List<ProfileCardBriefResponse> getLikedProfiles(Long memberId) {
+    public List<ProfileCardBriefResponse> getLikedProfiles(Long memberId, Integer page) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         List<ProfileLike> profileLikes = profileLikeRepository.findByMember(member);
         return profileLikes.stream()
@@ -65,10 +70,10 @@ public class ProfileLikeService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProfileCardBriefResponse> getMembersWhoLikedProfile(Long memberId) {
-        memberId=2L;
+    public List<ProfileCardBriefResponse> getMembersWhoLikedProfile(Long memberId, Integer page) {
+        Pageable pageable = PageRequest.of(page, LimitConstants.PROFILE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
         Member member = memberRepository.findById(memberId).orElseThrow();
-        List<ProfileLike> profileLikes = profileLikeRepository.findByLikedProfile(member.getProfile());
+        List<ProfileLike> profileLikes = profileLikeRepository.findByLikedProfile(member.getProfile(), pageable);
         return profileLikes.stream()
                 .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getMember().getProfile()))
                 .collect(Collectors.toList());

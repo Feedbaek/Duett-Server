@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface ProfileLikeRepository extends JpaRepository<ProfileLike, Long> {
     List<ProfileLike> findByMember(Member member);
-    List<ProfileLike> findByLikedProfile(Profile profile);
+    List<ProfileLike> findByLikedProfile(Profile profile, Pageable pageable);
     ProfileLike findByMemberAndLikedProfile(Member member, Profile likedProfile);
 }
 

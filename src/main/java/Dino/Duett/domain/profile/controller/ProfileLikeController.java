@@ -56,8 +56,10 @@ public class ProfileLikeController {
             @ApiResponse(responseCode = "5004", description = "자신의 프로필에 좋아요 불가(400)", content = @Content(schema = @Schema(hidden = true))),
     })
     // like profile
-    public JsonBody<List<ProfileCardBriefResponse>> getLikedProfiles(@AuthenticationPrincipal final AuthMember authMember) {
-        return JsonBody.of(HttpStatus.OK.value(), "내가 좋아요한 프로필 목록 조회 성공", profileLikeService.getLikedProfiles(authMember.getMemberId()));
+    public JsonBody<List<ProfileCardBriefResponse>> getLikedProfiles(
+            @AuthenticationPrincipal final AuthMember authMember,
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+        return JsonBody.of(HttpStatus.OK.value(), "내가 좋아요한 프로필 목록 조회 성공", profileLikeService.getLikedProfiles(authMember.getMemberId(), page));
     }
 
 
@@ -72,7 +74,9 @@ public class ProfileLikeController {
             @ApiResponse(responseCode = "5004", description = "자신의 프로필에 좋아요 불가(400)", content = @Content(schema = @Schema(hidden = true))),
     })
     // like profile
-    public JsonBody<List<ProfileCardBriefResponse>> getLikers(@AuthenticationPrincipal final AuthMember authMember) {
-        return JsonBody.of(HttpStatus.OK.value(), "내 프로필에 좋아요한 프로파일 목록 조회 성공", profileLikeService.getMembersWhoLikedProfile(authMember.getMemberId()));
+    public JsonBody<List<ProfileCardBriefResponse>> getLikers(
+            @AuthenticationPrincipal final AuthMember authMember,
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+        return JsonBody.of(HttpStatus.OK.value(), "내 프로필에 좋아요한 프로파일 목록 조회 성공", profileLikeService.getMembersWhoLikedProfile(authMember.getMemberId(), page));
     }
 }
