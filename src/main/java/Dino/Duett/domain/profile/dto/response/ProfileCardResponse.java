@@ -25,7 +25,7 @@ public class ProfileCardResponse {
     @Schema(description = "한 줄 소개", example = "crush")
     String oneLineIntroduction;
     @Schema(description = "사용자와의 거리", example = "1.5")
-    double distance;
+    Double distance;
     @Schema(description = "프로필 이미지 URL", example = "crush")
     String profileImageUrl;
     @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}, {\"name\": \"힙합\", \"state\": \"STANDARD\"}]")
@@ -40,4 +40,8 @@ public class ProfileCardResponse {
     String selfIntroduction;
     @Schema(description = "호감을 느낄만한 상대의 음악취향", example = "crush")
     String likeableMusicTaste;
+    @Schema(description = "좋아요", example = "true")
+    Boolean likeState;
+    @Schema(description = "코인", example = "0")
+    Integer coin;
 }

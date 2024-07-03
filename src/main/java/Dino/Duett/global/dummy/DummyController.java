@@ -164,7 +164,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
     private Profile makeDummyProfile(){
         List <String> names = List.of("김동현", "이현영", "박현제", "김민석", "이은규", "이윤성", "장광진", "김준휘");
 
-        GenderType gender = GenderType.values()[random.nextInt(GenderType.values().length)];
+        GenderType gender = GenderType.values()[random.nextInt(GenderType.values().length-1)];
         MbtiType mbti = MbtiType.values()[random.nextInt(MbtiType.values().length)];
 
         return Profile.builder()
@@ -179,13 +179,14 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
                 .likeableMusicTaste("좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.")
                 .mood(makeDummyMood())
                 .musics(makeDummyMusics())
+                .isProfileComplete(true)
                 .profileTags(new ArrayList<>())
                 .build();
     }
     private Profile makeDummyProfileAfterSignup(){
         List <String> names = List.of("김동현", "이현영", "박현제", "김민석", "이은규", "이윤성", "장광진", "김준휘");
 
-        GenderType gender = GenderType.values()[random.nextInt(GenderType.values().length)];
+        GenderType gender = GenderType.values()[random.nextInt(GenderType.values().length-1)];
 
         return Profile.builder()
                 .name(names.get(random.nextInt(names.size())) + "-" + UUID.randomUUID().toString().substring(0, 4))
@@ -193,6 +194,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
                 .birthDate("2000년 10월 10일")
                 .location(Location.of(getRandomDouble(37.5593193,  37.5554931), getRandomDouble(126.8947961, 127.0495665)))
                 .oneLineIntroduction("안녕하세요")
+                .isProfileComplete(false)
                 .build();
     }
     private Role makeDummyRole(){
@@ -211,11 +213,11 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
                 .role(makeDummyRole())
                 .profile(makeDummyProfile())
                 .build();
+
         memberRepository.save(member);
         profileTagService.changeProfileTags(member.getId(), makeDummyMusicTagRequests(), makeDummyHobbyTagRequests());
         return member;
     }
-
 
     private Image makeDummyMoodImage(){
         return Image.builder()

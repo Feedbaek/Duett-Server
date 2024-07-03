@@ -8,13 +8,11 @@ import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.entity.ProfileTag;
 import Dino.Duett.global.entity.BaseEntity;
 import Dino.Duett.global.utils.Validator;
-import com.google.api.client.json.JsonPolymorphicTypeMap;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +40,8 @@ public class Profile extends BaseEntity {
     private String likeableMusicTaste;
     @Enumerated(EnumType.STRING)
     private GenderType gender;
+    @Column(nullable = false)
+    private Boolean isProfileComplete;
 
     @Embedded
     private Location location;
@@ -62,14 +62,8 @@ public class Profile extends BaseEntity {
     @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileUnlock> profileUnlocks = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProfileLike> sentLikes = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProfileLike> receivedLikes = new ArrayList<>(); //todo: 좋아요 추후 추가
-
     @Builder
-    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
+    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Boolean isProfileComplete, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -78,6 +72,7 @@ public class Profile extends BaseEntity {
         this.selfIntroduction = selfIntroduction;
         this.likeableMusicTaste = likeableMusicTaste;
         this.gender = gender;
+        this.isProfileComplete = isProfileComplete;
         this.location = location;
         this.profileImage = profileImage;
         this.profileTags = profileTags;
@@ -86,8 +81,8 @@ public class Profile extends BaseEntity {
         this.profileUnlocks = profileUnlocks;
     }
 
-    public void updateMood(final Mood mood) {
-        this.mood = mood;
+    public void updateIsProfileComplete(final Boolean isProfileComplete) {
+        this.isProfileComplete = isProfileComplete;
     }
 
     public void updateProfileInfo(final Image image, final String name, final String oneLineIntroduction) {
@@ -113,20 +108,7 @@ public class Profile extends BaseEntity {
         }
     }
 
-//    public void addSentLike(ProfileLike profileLike) {
-//        this.sentLikes.add(profileLike);
-//    }
-//
-//    public void addReceivedLike(ProfileLike profileLike) {
-//        this.receivedLikes.add(profileLike);
-//    }
-//
-//    public void removeSentLike(ProfileLike profileLike) {
-//        this.sentLikes.remove(profileLike);
-//    }
-//
-//    public void removeReceivedLike(ProfileLike profileLike) {
-//        this.receivedLikes.remove(profileLike);
-//    }
-
+    public void addMood(final Mood mood) {
+        this.mood = mood;
+    }
 }

@@ -43,6 +43,7 @@ public class MoodService {
         }
         updateMood(mood, moodRequest);
     }
+
     @Transactional
     public void changeMood(final Long memberId, final MoodRequest moodRequest) {
         Member member = memberRepository.findById(memberId)
@@ -63,7 +64,7 @@ public class MoodService {
                 imageService.saveImage(moodRequest.getMoodImage())
         );
         moodRepository.save(mood);
-        profile.updateMood(mood);
+        profile.addMood(mood);
     }
 
     private void updateMood(final Mood mood, final MoodRequest moodRequest) {

@@ -13,10 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +22,7 @@ public class MoodController {
     private final MoodService moodService;
 
     @Operation(summary = "자신의 무드 등록 및 수정", tags = {"테스트"})
-    @PatchMapping(value = "/profiles/moods", consumes = "multipart/form-data")
+    @PostMapping(value = "/profiles/moods", consumes = "multipart/form-data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),

@@ -6,13 +6,11 @@ import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
-import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
-import Dino.Duett.domain.tag.dto.response.TagResponse;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.domain.tag.service.ProfileTagService;
 import Dino.Duett.global.utils.Validator;
@@ -39,6 +37,7 @@ public class ProfileCardService {
     private final ImageService imageService;
     private final ProfileTagService profileTagService;
     private final ProfileUnlockService profileUnlockService;
+    private final ProfileService profileService;
 
     /**
      * 프로필 카드 완성 여부 조회
@@ -48,7 +47,7 @@ public class ProfileCardService {
     public boolean getProfileCardCompletionStatus(final Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
-        return isProfileComplete(profile);
+        return profileService.isProfileComplete(profile);
     }
 
     /**
@@ -59,13 +58,14 @@ public class ProfileCardService {
      * @param radius 반경(km)
      * @return List<ProfileCardSummaryResponse>
      */
-
     public List<ProfileCardSummaryResponse> getProfileCardsOfSummary(final Long memberId,
-                                                                     final int page,
-                                                                     final int size,
-                                                                     double radius) {
+                                                                     final Integer page,
+                                                                     final Integer size,
+                                                                     Double radius,
+                                                                     Boolean checkProfileComplete) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile viewerProfile = validateProfileIsNull(member.getProfile());
+
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Profile> profiles = profileRepository.findAllUsersWithinRadius(
                 member.getProfile().getLocation().getLatitude(),
@@ -86,10 +86,11 @@ public class ProfileCardService {
                                 .distance(calculateDistance(member.getProfile(), profile))
                                 .lifeMusics(profile.getMusics().stream().map(MusicResponse::of).toList())
                                 .tags(profileTagService.getProfileTagsOnlyFeatured(profile.getId()))
+                                .coin(member.getCoin())
+                                .isProfileComplete(checkProfileComplete ? profileService.isProfileComplete(profile) : null)
                                 .build())
                 .toList();
     }
-
     /**
      * 프로필 카드 코인으로 조회
      * @param memberId 사용자 id
@@ -103,11 +104,12 @@ public class ProfileCardService {
         Profile viewerProfile = validateProfileIsNull(member.getProfile());
         Profile viewedProfile = profileRepository.findById(profileId).orElseThrow(ProfileException.ProfileNotFoundException::new);
         validateProfileIsComplete(viewerProfile);
+        validateProfileIsCompleteForOthers(viewedProfile);
 
         //member.updateCoin(COIN);//todo: mvp에서는 coin을 사용하지 않음
         profileUnlockService.createProfileUnlock(viewerProfile.getId(), viewedProfile.getId());
 
-        return convertToDto(viewedProfile);
+        return convertToDto(viewedProfile, member.getCoin(), calculateDistance(viewerProfile, viewedProfile));
     }
 
     /**
@@ -116,15 +118,15 @@ public class ProfileCardService {
      * @param profileId 조회할 프로필 id
      * @return ProfileCardResponse
      */
-
     public ProfileCardResponse getProfileCard(final Long memberId, final Long profileId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile viewerProfile = validateProfileIsNull(member.getProfile());
         Profile viewedProfile = profileRepository.findById(profileId).orElseThrow(ProfileException.ProfileNotFoundException::new);
 
+        validateProfileIsComplete(viewerProfile);
         validateProfileIsLocked(viewerProfile, viewedProfile);
 
-        return convertToDto(viewedProfile);
+        return convertToDto(viewedProfile,member.getCoin(), calculateDistance(viewerProfile, viewedProfile));
     }
 
     private void validateProfileIsLocked(final Profile viewerProfile, final Profile viewedProfile) {
@@ -135,55 +137,26 @@ public class ProfileCardService {
             throw new ProfileException.ProfileForbiddenException();
         }
     }
-    /**
-     * 자신의 프로필 완성 여부 확인
-     * @param profile 프로필
-     * @return boolean
-     */
-    private boolean isProfileComplete(final Profile profile) {
-        int introCount = 0;
-        int musicTasteCount = 0;
 
-        // 내 정보
-        boolean info = !Validator.isNullOrBlank(profile.getName()) &&
-                !Validator.isNullOrBlank(profile.getOneLineIntroduction());
-
-        // 내 소개
-        if (profile.getMbti() != null) {
-            introCount++;
-        }
-        if (profileTagService.checkFeaturedProfileTagsCount(profile)) {
-            introCount++;
-        }
-        if (!Validator.isNullOrBlank(profile.getSelfIntroduction())) {
-            introCount++;
-        }
-        if (!Validator.isNullOrBlank(profile.getLikeableMusicTaste())) {
-            introCount++;
-        }
-        boolean intro = introCount >= PROFILE_INTRO_MIN_SIZE.getLimit();
-
-
-        // 음악 취향
-        if (profile.getMusics().size() >= MUSIC_MAX_LIMIT.getLimit()) {
-            musicTasteCount++;
-        }
-        if (profile.getMood() != null) {
-            musicTasteCount++;
-        }
-        boolean musicTaste = musicTasteCount >= PROFILE_MUSIC_TASTE_MIN_SIZE.getLimit();
-
-        return info && intro && musicTaste;
-    }
 
     /**
      * 자신의 프로필 완성 여부 검증
      * @param profile 프로필
-     * @return boolean
      */
     private void validateProfileIsComplete(final Profile profile) {
-        if (!isProfileComplete(profile)) {
+        if (!profile.getIsProfileComplete()) {
             throw new ProfileException.ProfileIncompleteException();
+        }
+    }
+
+    /**
+     * 상대의 프로필 완성 여부 검증
+     * @param profile 프로필
+     */
+
+    private void validateProfileIsCompleteForOthers(final Profile profile) {
+        if(!profile.getIsProfileComplete()){
+            throw new ProfileException.ProfileForbiddenException();
         }
     }
 
@@ -205,16 +178,7 @@ public class ProfileCardService {
      * @param profile2 프로필2
      * @return double
      */
-//    private double calculateDistance(final Profile profile1, final Profile profile2) {
-//        double distance = Math.sqrt(
-//                    Math.pow(profile1.getLocation().getLatitude() - profile2.getLocation().getLatitude(), 2) +
-//                        Math.pow(profile1.getLocation().getLongitude() - profile2.getLocation().getLongitude(), 2)
-//
-//        );
-//        DecimalFormat df = new DecimalFormat("#.##");
-//        return Double.parseDouble(df.format(distance));
-//    }
-    public double calculateDistance(final Profile profile1, final Profile profile2) {
+    private double calculateDistance(final Profile profile1, final Profile profile2) {
         final BigDecimal EARTH_RADIUS_KM = new BigDecimal("6371.0");
 
         double lat1 = profile1.getLocation().getLatitude();
@@ -222,17 +186,14 @@ public class ProfileCardService {
         double lat2 = profile2.getLocation().getLatitude();
         double lon2 = profile2.getLocation().getLongitude();
 
-        // Convert latitude and longitude to radians
         BigDecimal lat1Rad = BigDecimal.valueOf(Math.toRadians(lat1));
         BigDecimal lon1Rad = BigDecimal.valueOf(Math.toRadians(lon1));
         BigDecimal lat2Rad = BigDecimal.valueOf(Math.toRadians(lat2));
         BigDecimal lon2Rad = BigDecimal.valueOf(Math.toRadians(lon2));
 
-        // Calculate the differences in latitude and longitude
         BigDecimal deltaLat = lat2Rad.subtract(lat1Rad);
         BigDecimal deltaLon = lon2Rad.subtract(lon1Rad);
 
-        // Apply the Haversine formula
         BigDecimal sinDeltaLatDiv2 = BigDecimal.valueOf(Math.sin(deltaLat.doubleValue() / 2));
         BigDecimal sinDeltaLonDiv2 = BigDecimal.valueOf(Math.sin(deltaLon.doubleValue() / 2));
 
@@ -245,10 +206,8 @@ public class ProfileCardService {
         BigDecimal sqrtOneMinusA = BigDecimal.valueOf(Math.sqrt(1.0 - a.doubleValue()));
         BigDecimal c = BigDecimal.valueOf(2.0).multiply(BigDecimal.valueOf(Math.atan2(sqrtA.doubleValue(), sqrtOneMinusA.doubleValue())));
 
-        // Calculate the distance by multiplying with Earth's radius
         BigDecimal distance = EARTH_RADIUS_KM.multiply(c, new MathContext(10, RoundingMode.HALF_UP));
 
-        // Round to one decimal place
         distance = distance.setScale(1, RoundingMode.HALF_UP);
 
         return distance.doubleValue();
@@ -261,34 +220,26 @@ public class ProfileCardService {
         return profile;
     }
 
-    private ProfileCardResponse convertToDto(Profile profile) {
+    private ProfileCardResponse convertToDto(Profile profile, Integer coin, Double distance) {
         return ProfileCardResponse.builder()
                 .profileId(profile.getId())
                 .name(profile.getName())
                 .birthDate(profile.getBirthDate())
                 .mbti(profile.getMbti())
+                .distance(distance)
                 .oneLineIntroduction(profile.getOneLineIntroduction())
                 .profileImageUrl(profile.getProfileImage() != null ? imageService.getUrl(profile.getProfileImage()) : null)
                 .musicTags(profileTagService.getProfileTags(profile.getId(), TagType.MUSIC))
                 .hobbyTags(profileTagService.getProfileTags(profile.getId(), TagType.HOBBY))
                 .lifeMusics(profile.getMusics().stream().map(MusicResponse::of).toList())
-                .mood(MoodResponse.of(
+                .mood(profile.getMood() != null ? (MoodResponse.of(
                         profile.getMood().getTitle(),
                         profile.getMood().getArtist(),
-                        profile.getMood().getMoodImage() != null ? imageService.getUrl(profile.getMood().getMoodImage()) : null))
+                        profile.getMood().getMoodImage() != null ? imageService.getUrl(profile.getMood().getMoodImage()) : null)) : null)
                 .selfIntroduction(profile.getSelfIntroduction())
                 .likeableMusicTaste(profile.getLikeableMusicTaste())
-                .build();
-    }
-
-    public ProfileCardBriefResponse convertToBriefDto(Profile profile) {
-        return ProfileCardBriefResponse.builder()
-                .profileId(profile.getId())
-                .name(profile.getName())
-                .birthDate(profile.getBirthDate())
-                .mbti(profile.getMbti())
-                .lifeMusic(profile.getMusics().stream().findFirst().map(MusicResponse::of).orElse(null))
-                .tags(profileTagService.getProfileTags(profile.getId(), TagType.MUSIC).stream().map(TagResponse::getName).toList())
+                .likeState(false) // todo: 좋아요 구현 후 수정. 일단은 false 반환하는 걸로 설정
+                .coin(coin)
                 .build();
     }
 }

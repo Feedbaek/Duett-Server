@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 
 import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
+import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_MIN_SIZE;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class ProfileService {
     private final ProfileTagService profileTagService;
 
     @Transactional
-    public void createProfile(final SignUpReq signUpReq) { // todo: 프로필 생성 임시. 수정 바람
+    public void createProfile(final SignUpReq signUpReq) {
         Member member = memberRepository.findByPhoneNumber(signUpReq.getPhoneNumber()).orElseThrow(MemberException.MemberNotFoundException::new);
 
         // 프로파일 유저 중복 확인
@@ -71,6 +72,7 @@ public class ProfileService {
                 .gender(signUpReq.getGender())
                 .location(location)
                 .profileImage(profileImage)
+                .isProfileComplete(false)
                 .build();
 
         profileRepository.save(profile);
@@ -173,6 +175,8 @@ public class ProfileService {
                 profileInfoRequest.getName(),
                 profileInfoRequest.getOneLineIntroduction()
         );
+
+        updateProfileCompleteStatusOnFirstFill(profile);
     }
 
     public ProfileIntroResponse getProfileIntro(final Long memberId){
@@ -189,7 +193,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public void updateProfileIntro(final Long memberId, final ProfileIntroRequest profileIntroRequest){
+    public ProfileIntroResponse updateProfileIntro(final Long memberId, final ProfileIntroRequest profileIntroRequest){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
 
@@ -200,6 +204,16 @@ public class ProfileService {
         );
 
         profileTagService.changeProfileTags(memberId, profileIntroRequest.getMusicTags(), profileIntroRequest.getHobbyTags());
+
+        updateProfileCompleteStatusOnFirstFill(profile);
+
+        return ProfileIntroResponse.builder()
+                .mbti(profile.getMbti())
+                .musicTags(profileTagService.getProfileTags(profile.getId(), TagType.MUSIC))
+                .hobbyTags(profileTagService.getProfileTags(profile.getId(), TagType.HOBBY))
+                .selfIntroduction(profile.getSelfIntroduction())
+                .likeableMusicTaste(profile.getLikeableMusicTaste())
+                .build();
     }
 
     public ProfileMusicResponse getProfileMusic(final Long memberId) {
@@ -239,6 +253,8 @@ public class ProfileService {
                         profile.getMood() != null ? imageService.getUrl(profile.getMood().getMoodImage()) : null
                 )
         );
+
+        updateProfileCompleteStatusOnFirstFill(profile);
     }
 
     private Profile validateProfileIsNull(Profile profile) {
@@ -254,5 +270,49 @@ public class ProfileService {
         return TagByTypeResponse.of(
                 profileTagService.getProfileTagsWithAllTags(profile.getId(), TagType.MUSIC),
                 profileTagService.getProfileTagsWithAllTags(profile.getId(), TagType.HOBBY));
+    }
+
+    /**
+     * 자신의 프로필 완성 여부 확인
+     * @param profile 프로필
+     * @return boolean
+     */
+    protected boolean isProfileComplete(final Profile profile) {
+        // 내 정보
+        boolean info = !Validator.isNullOrBlank(profile.getName()) &&
+                !Validator.isNullOrBlank(profile.getOneLineIntroduction());
+
+        // 내 소개
+        int introCount = 0;
+        if (profile.getMbti() != null) {
+            introCount++;
+        }
+        if (profileTagService.checkFeaturedProfileTagsCount(profile)) {
+            introCount++;
+        }
+        if (!Validator.isNullOrBlank(profile.getSelfIntroduction())) {
+            introCount++;
+        }
+        if (!Validator.isNullOrBlank(profile.getLikeableMusicTaste())) {
+            introCount++;
+        }
+        boolean intro = introCount >= PROFILE_INTRO_MIN_SIZE.getLimit();
+
+        // 음악 취향
+        boolean musicTaste = profile.getMusics().size() >= MUSIC_MAX_LIMIT.getLimit();
+
+        return info && intro && musicTaste;
+    }
+
+    /**
+     * 프로필 정보가 처음으로 채워졌을 때 프로필 완성 여부를 업데이트
+     * @param profile 프로필
+     */
+    private void updateProfileCompleteStatusOnFirstFill(Profile profile) {
+        if(isProfileComplete(profile)){
+            if(!profile.getIsProfileComplete())
+                return;
+            profile.updateIsProfileComplete(true);
+        }
     }
 }
