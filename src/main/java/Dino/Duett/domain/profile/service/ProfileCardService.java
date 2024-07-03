@@ -6,11 +6,13 @@ import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
+import Dino.Duett.domain.tag.dto.response.TagResponse;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.domain.tag.service.ProfileTagService;
 import Dino.Duett.global.utils.Validator;
@@ -212,7 +214,7 @@ public class ProfileCardService {
 //        DecimalFormat df = new DecimalFormat("#.##");
 //        return Double.parseDouble(df.format(distance));
 //    }
-    private double calculateDistance(final Profile profile1, final Profile profile2) {
+    public double calculateDistance(final Profile profile1, final Profile profile2) {
         final BigDecimal EARTH_RADIUS_KM = new BigDecimal("6371.0");
 
         double lat1 = profile1.getLocation().getLatitude();
@@ -276,6 +278,17 @@ public class ProfileCardService {
                         profile.getMood().getMoodImage() != null ? imageService.getUrl(profile.getMood().getMoodImage()) : null))
                 .selfIntroduction(profile.getSelfIntroduction())
                 .likeableMusicTaste(profile.getLikeableMusicTaste())
+                .build();
+    }
+
+    public ProfileCardBriefResponse convertToBriefDto(Profile profile) {
+        return ProfileCardBriefResponse.builder()
+                .profileId(profile.getId())
+                .name(profile.getName())
+                .birthDate(profile.getBirthDate())
+                .mbti(profile.getMbti())
+                .lifeMusic(profile.getMusics().stream().findFirst().map(MusicResponse::of).orElse(null))
+                .tags(profileTagService.getProfileTags(profile.getId(), TagType.MUSIC).stream().map(TagResponse::getName).toList())
                 .build();
     }
 }

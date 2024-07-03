@@ -70,7 +70,8 @@ public class GlobalExceptionHandler {
             MemberException.DuplicateKakaoIdException.class,
             MemberException.DuplicatePhoneNumberException.class,
             ProfileException.ProfileIncompleteException.class,
-            ProfileException.ProfileUsernameExistException.class
+            ProfileException.ProfileUsernameExistException.class,
+            ProfileException.ProfileSelfLikeException.class
         }
     )
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {

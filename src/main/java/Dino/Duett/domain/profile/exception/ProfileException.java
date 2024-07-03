@@ -40,6 +40,15 @@ public class ProfileException extends CustomException {
         }
     }
 
+    public static class ProfileSelfLikeException extends ProfileException {
+        public ProfileSelfLikeException(ErrorCode errorCode) {
+            super(errorCode);
+        }
+        public ProfileSelfLikeException() {
+            super(ErrorCode.PROFILE_SELF_LIKE);
+        }
+    }
+
 
     public static class ProfileIncompleteException extends ProfileException {
         public ProfileIncompleteException() {
