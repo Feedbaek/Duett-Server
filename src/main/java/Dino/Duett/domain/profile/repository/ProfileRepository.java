@@ -14,6 +14,7 @@ import java.util.List;
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
     @Query("SELECT u FROM Profile u WHERE " +
             "u.gender = :oppositeGender AND " +
+            "u.isProfileComplete = true AND " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(u.location.latitude)) * " +
             "cos(radians(u.location.longitude) - radians(:longitude)) + " +
             "sin(radians(:latitude)) * sin(radians(u.location.latitude)))) < :radius AND " +

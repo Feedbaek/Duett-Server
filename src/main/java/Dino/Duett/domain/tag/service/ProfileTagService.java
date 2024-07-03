@@ -49,9 +49,11 @@ public class ProfileTagService {
                 .toList();
     }
 
-    public List<String> getProfileTagsOnlyFeatured(final Long profileId) {
+    public List<TagResponse> getProfileTagsOnlyFeatured(final Long profileId) {
         return profileTagRepository.findByProfileIdAndState(profileId, TagState.FEATURED).stream()
-                .map(profileTag -> profileTag.getTag().getName())
+                .map(tag -> TagResponse.of(
+                        tag.getTag().getName(),
+                        tag.getState()))
                 .toList();
     }
 

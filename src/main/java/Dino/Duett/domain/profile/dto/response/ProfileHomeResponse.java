@@ -18,9 +18,9 @@ public class ProfileHomeResponse {
     @Schema(description = "MBTI 유형", example = "ENTP")
     MbtiType mbti;
     @Schema(description = "내 정보 입력 완료 개수", example = "2")
-    int infoCount;
+    Integer infoCount;
     @Schema(description = "내 소개 입력 완료 개수", example = "2")
-    int introCount;
+    Integer introCount;
     @Schema(description = "내 음악 취향 입력 완료 개수", example = "1")
-    int musicCount;
+    Integer musicCount;
 }
