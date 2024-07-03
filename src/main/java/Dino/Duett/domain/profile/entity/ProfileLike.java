@@ -18,11 +18,11 @@ public class ProfileLike extends BaseEntity {
     @Column(name = "profile_like_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liked_profile_id")
     private Profile likedProfile;
 
