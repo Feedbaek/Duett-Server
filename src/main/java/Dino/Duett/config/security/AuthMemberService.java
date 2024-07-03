@@ -33,7 +33,7 @@ public class AuthMemberService implements UserDetailsService {
         gmailReader.validate(phoneNumber, verificationCode);
 
         return AuthMember.builder()
-                .id(member.getId())
+                .memberId(member.getId())
                 .phoneNumber(member.getPhoneNumber())
                 .verificationCode(passwordEncoder.encode(verificationCode))
                 .kakaoId(member.getKakaoId())

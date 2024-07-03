@@ -18,8 +18,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -36,8 +34,8 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         verificationCodeManager.deleteCode(authMember.getPhoneNumber());
 
         // 토큰 생성
-        String accessToken = jwtTokenProvider.createToken(authMember.getId(), JwtTokenType.ACCESS_TOKEN);
-        String refreshToken = jwtTokenProvider.createToken(authMember.getId(), JwtTokenType.REFRESH_TOKEN);
+        String accessToken = jwtTokenProvider.createToken(authMember.getMemberId(), JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = jwtTokenProvider.createToken(authMember.getMemberId(), JwtTokenType.REFRESH_TOKEN);
 
         // 토큰 DTO 생성
         TokenDto tokens = TokenDto.of(accessToken, refreshToken);

@@ -115,7 +115,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(final Exception e) {
-        log.error("Global Exception - ", e);
+        log.error("Global Exception - {}", e.getMessage());
+        e.printStackTrace();
         final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.INTERNAL_SERVER_ERROR));
         return ResponseEntity.internalServerError().body(response);
     }
