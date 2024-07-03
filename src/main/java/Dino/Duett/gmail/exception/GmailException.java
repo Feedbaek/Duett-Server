@@ -33,10 +33,10 @@ public class GmailException extends CustomException {
 
     public static class MessageNotFoundException extends GmailException {
         public MessageNotFoundException() {
-            super(ErrorCode.MESSAGE_NOT_FOUND);
+            super(ErrorCode.MAIL_NOT_FOUND);
         }
         public MessageNotFoundException(Map<String, String> property) {
-            super(ErrorCode.MESSAGE_NOT_FOUND, property);
+            super(ErrorCode.MAIL_NOT_FOUND, property);
         }
     }
 }

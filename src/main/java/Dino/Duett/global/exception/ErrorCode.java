@@ -31,7 +31,7 @@ public enum ErrorCode {
     // 3000: Gmail
     INVALID_CONTENT_TYPE(3000, "올바르지 않은 메일 형식"),
     EMAIL_VALIDATION_FAILED(3001, "이메일 유효성 검사 실패"),
-    MESSAGE_NOT_FOUND(3002, "메일을 찾을 수 없습니다"),
+    MAIL_NOT_FOUND(3002, "메일을 찾을 수 없습니다"),
 
     // 4000: Image
     IMAGE_NOT_FOUND(4000, "이미지를 찾을 수 없습니다"),

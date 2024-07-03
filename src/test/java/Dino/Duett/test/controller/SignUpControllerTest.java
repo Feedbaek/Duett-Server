@@ -35,8 +35,6 @@ public class SignUpControllerTest {
     private MockMvc mockMvc;
     @Autowired
     VerificationCodeManager verificationCodeManager;
-    @Autowired
-    ObjectMapper objectMapper;
     // 실제 GmailReader를 사용하지 않고 Mocking
     @MockBean
     private GmailReader gmailReader;

@@ -38,7 +38,7 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
     })
     public JsonBody<ProfileHomeResponse> getProfileHome(@AuthenticationPrincipal final AuthMember authMember) {
-        return JsonBody.of(HttpStatus.OK.value(), "마이페이지 프로필 진행 정도 조회", profileService.getProfileHome(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "마이페이지 프로필 진행 정도 조회", profileService.getProfileHome(authMember.getMemberId()));
     }
 
 
@@ -51,7 +51,7 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
     })
     public JsonBody<ProfileMusicResponse> getProfileMusicAndMood(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 조회", profileService.getProfileMusic(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 조회", profileService.getProfileMusic(authMember.getMemberId()));
     }
 
     @Operation(summary = "자신의 음악 취향(인생곡과 무드) 한번에 추가, 수정, 삭제하기", tags = {"마이페이지 - 음악 취향"})
@@ -65,36 +65,36 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
     })
     public JsonBody<Void> changeProfileMusicAndMood(@AuthenticationPrincipal final AuthMember authMember,
                                                     @ModelAttribute final ProfileMusicRequest request){
-        profileService.updateProfileMusic(authMember.getId(), request);
+        profileService.updateProfileMusic(authMember.getMemberId(), request);
         return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 추가, 수정, 삭제하기", null);
     }
 
     @GetMapping("/profiles/info")
     public JsonBody<ProfileInfoResponse> getProfileInfo(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "내 정보 조회 성공", profileService.getProfileInfo(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "내 정보 조회 성공", profileService.getProfileInfo(authMember.getMemberId()));
     }
 
     @PatchMapping(value = "/profiles/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public JsonBody<Void> updateProfileInfo(@AuthenticationPrincipal final AuthMember authMember,
-                                            @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest) {
-        profileService.updateProfileInfo(authMember.getId(), profileInfoRequest);
+                                        @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest) {
+        profileService.updateProfileInfo(authMember.getMemberId(), profileInfoRequest);
         return JsonBody.of(HttpStatus.OK.value(), "내 정보 수정 성공", null);
     }
 
     @GetMapping("/profiles/intro")
     public JsonBody<ProfileIntroResponse> getProfileIntro(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "내 소개 조회 성공", profileService.getProfileIntro(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "내 소개 조회 성공", profileService.getProfileIntro(authMember.getMemberId()));
     }
 
     @PatchMapping("/profiles/intro")
-    public JsonBody<ProfileIntroResponse> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
+    public JsonBody<Void> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
                                              @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
-        ;
-        return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정 성공", profileService.updateProfileIntro(authMember.getId(), profileIntroRequest));
+        profileService.updateProfileIntro(authMember.getMemberId(), profileIntroRequest);
+        return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정 성공", null);
     }
 
     @GetMapping("/profiles/tags")
     public JsonBody<TagByTypeResponse> getAllTags(@AuthenticationPrincipal final AuthMember authMember) {
-        return JsonBody.of(HttpStatus.OK.value(), "유저 태그 조회 성공", profileService.getProfileTagsWithAllTagsByMemberId(authMember.getId()));
+        return JsonBody.of(HttpStatus.OK.value(), "유저 태그 조회 성공", profileService.getProfileTagsWithAllTagsByMemberId(authMember.getMemberId()));
     }
 }

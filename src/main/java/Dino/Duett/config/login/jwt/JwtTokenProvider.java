@@ -76,7 +76,7 @@ public class JwtTokenProvider {
 
         // AuthMember 객체 생성
         AuthMember authMember = AuthMember.builder()
-                .id(member.getId())
+                .memberId(member.getId())
                 .phoneNumber(member.getPhoneNumber())
                 .kakaoId(member.getKakaoId())
                 .role(member.getRole().getName())
