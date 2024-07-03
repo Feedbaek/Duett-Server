@@ -88,7 +88,7 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
 
     @PatchMapping("/profiles/intro")
     public JsonBody<Void> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
-                                                             @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
+                                             @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
         profileService.updateProfileIntro(authMember.getMemberId(), profileIntroRequest);
         return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정 성공", null);
     }

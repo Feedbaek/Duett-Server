@@ -33,6 +33,7 @@ public interface ProfileCardApi {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "5001", description = "프로필 접근 권한 없음(403)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5002", description = "자신의 프로필이 채워지지 않음(400)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2005", description = "코인 부족(402)", content = @Content(schema = @Schema(hidden = true))),
     })
@@ -44,9 +45,12 @@ public interface ProfileCardApi {
             @ApiResponse(responseCode = "200", description = "프로필카드 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),})
+            @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
+   })
+
     public JsonBody<List<ProfileCardSummaryResponse>> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
-                                                                               @RequestParam final int page,
-                                                                               @RequestParam final int size,
-                                                                               @RequestParam final double radius);
+                                                                               @RequestParam final Integer page,
+                                                                               @RequestParam final Integer size,
+                                                                               @RequestParam final Double radius,
+                                                                               @RequestParam final Boolean checkProfileComplete);
 }

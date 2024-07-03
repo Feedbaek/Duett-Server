@@ -28,7 +28,7 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
 //        return JsonBody.of(HttpStatus.OK.value(), "내 프로필 카드 조회 성공", profileCardService.getProfileCard(authMember.getId()));
 //    }
 
-    @Operation(summary = "자신의 프로필 정보가 채워졌는지 조회", tags = {"프로필카드"})
+    @Operation(summary = "자신의 프로필 정보가 채워졌는지 조회", tags = {"테스트"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "자신의 프로필 정보가 모두 채워졌는지 조회"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -63,9 +63,10 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
 
     @GetMapping("/profiles/summary")
     public JsonBody<List<ProfileCardSummaryResponse>> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
-                                                                               @RequestParam final int page,
-                                                                               @RequestParam final int size,
-                                                                               @RequestParam final double radius){
-        return JsonBody.of(HttpStatus.OK.value(), "반경 내의 프로필카드 요약 목록 조회 성공", profileCardService.getProfileCardsOfSummary(authMember.getMemberId(), page, size, radius));
+                                                                               @RequestParam(defaultValue = "0") final Integer page,
+                                                                               @RequestParam(defaultValue = "10") final Integer size,
+                                                                               @RequestParam final Double radius,
+                                                                               @RequestParam(defaultValue = "false") final Boolean checkProfileComplete){
+        return JsonBody.of(HttpStatus.OK.value(), "반경 내의 프로필카드 요약 목록 조회 성공", profileCardService.getProfileCardsOfSummary(authMember.getMemberId(), page, size, radius, checkProfileComplete));
     }
 }
