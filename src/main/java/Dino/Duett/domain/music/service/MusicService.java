@@ -11,6 +11,7 @@ import Dino.Duett.domain.music.entity.Music;
 import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.music.repository.MusicRepository;
 import Dino.Duett.domain.profile.entity.Profile;
+import Dino.Duett.domain.profile.repository.ProfileRepository;
 import Dino.Duett.global.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 public class MusicService {
     private final MusicRepository musicRepository;
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
 
     public List<MusicResponse> getMusics(final Profile profile) {
         return MusicResponse.of(profile.getMusics());
@@ -76,11 +78,11 @@ public class MusicService {
                 .map(request -> Music.of(
                         request.getTitle(),
                         request.getArtist(),
-                        request.getUrl()))
+                        request.getUrl(),
+                        profile)) // Profile is set in the constructor
                 .toList();
-
         musicRepository.saveAll(musics);
-        profile.getMusics().addAll(musics);
+        musics.forEach(profile::addMusic);
     }
 
     private void updateMusics(final List<MusicUpdateRequest> requests) {
@@ -94,9 +96,8 @@ public class MusicService {
     private void deleteMusics(final Profile profile, final List<MusicDeleteRequest> requests) {
         for(MusicDeleteRequest request : requests) {
             Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
-
-            profile.getMusics().remove(music);
-            musicRepository.deleteById(music.getId());
+            profile.deleteMusic(music);
+            musicRepository.delete(music);
         }
     }
 }

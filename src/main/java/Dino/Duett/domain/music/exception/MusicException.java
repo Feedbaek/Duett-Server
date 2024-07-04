@@ -28,4 +28,6 @@ public class MusicException extends CustomException {
             super(ErrorCode.MUSIC_MAX_LIMIT, property);
         }
     }
+
+    
 }
