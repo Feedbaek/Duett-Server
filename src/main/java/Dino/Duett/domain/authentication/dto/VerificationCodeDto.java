@@ -10,5 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class VerificationCodeDto {
     @NotBlank
+    private boolean exists;
+    @NotBlank
     private String code;
 }

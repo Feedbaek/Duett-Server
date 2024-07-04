@@ -28,8 +28,10 @@ public class VerificationCodeManager {
     }
 
     public VerificationCodeDto requestCodeDto(String phoneNumber) {
+
         String code = generateVerificationCode(phoneNumber);
         return VerificationCodeDto.builder()
+                .exists(false)
                 .code(code)
                 .build();
     }
