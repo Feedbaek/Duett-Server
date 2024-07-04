@@ -30,9 +30,4 @@ public class ProfileCardSummaryResponse {
     List<MusicResponse> lifeMusics;
     @Schema(description = "태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}]")
     List<TagResponse> tags;
-    @Schema(description = "코인", example = "0")
-    Integer coin;
-    @Schema(description = "자신의 프로필이 채워졌는지 여부. 쿼리 스트링에 checkProfileComplete가 true일 경우에만 제공", example = "true")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    Boolean isProfileComplete;
 }

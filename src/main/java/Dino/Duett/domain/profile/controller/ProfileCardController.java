@@ -3,6 +3,8 @@ package Dino.Duett.domain.profile.controller;
 import Dino.Duett.config.security.AuthMember;
 import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileLockResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileUnlockResponse;
 import Dino.Duett.domain.profile.service.ProfileCardService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +45,9 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
     }
 
     @GetMapping("/profiles/{profileId}/coin")
-    public JsonBody<ProfileCardResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
+    public JsonBody<ProfileUnlockResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
                                                                         @PathVariable final Long profileId){
-        return JsonBody.of(HttpStatus.OK.value(),"코인을 사용해서 프로필카드 상세 단일 조회 성공", profileCardService.getProfileCardWithCoin(authMember.getMemberId(), profileId));
+        return JsonBody.of(HttpStatus.OK.value(),"코인을 사용해서 프로필카드 상세 단일 조회 성공", profileCardService.getUnlockedProfileCardWithCoin(authMember.getMemberId(), profileId));
     }
 
     @Operation(summary = "프로필카드 상세 단일 조회", tags = {"프로필카드"})
@@ -56,17 +59,23 @@ public class ProfileCardController implements ProfileCardApi { //todo: 이후에
             @ApiResponse(responseCode = "5001", description = "프로필에 접근할 권한 없음(403)", content = @Content(schema = @Schema(hidden = true))),
     })
     @GetMapping("/profiles/{profileId}")
-    public JsonBody<ProfileCardResponse> getProfileCardOfDetail(@AuthenticationPrincipal AuthMember authMember,
-                                                                @PathVariable final Long profileId){
-        return JsonBody.of(HttpStatus.OK.value(),"프로필카드 상세 단일 조회 성공", profileCardService.getProfileCard(authMember.getMemberId(), profileId));
+    public JsonBody<ProfileUnlockResponse> getProfileCardOfDetail(@AuthenticationPrincipal AuthMember authMember,
+                                                                  @PathVariable final Long profileId){
+        return JsonBody.of(HttpStatus.OK.value(),"프로필카드 상세 단일 조회 성공", profileCardService.getUnlockedProfileCard(authMember.getMemberId(), profileId));
     }
 
     @GetMapping("/profiles/summary")
-    public JsonBody<List<ProfileCardSummaryResponse>> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
-                                                                               @RequestParam(defaultValue = "0") final Integer page,
-                                                                               @RequestParam(defaultValue = "10") final Integer size,
-                                                                               @RequestParam final Double radius,
-                                                                               @RequestParam(defaultValue = "false") final Boolean checkProfileComplete){
-        return JsonBody.of(HttpStatus.OK.value(), "반경 내의 프로필카드 요약 목록 조회 성공", profileCardService.getProfileCardsOfSummary(authMember.getMemberId(), page, size, radius, checkProfileComplete));
+    public JsonBody<ProfileLockResponse> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
+                                                                  @RequestParam(defaultValue = "0") final Integer page,
+                                                                  @RequestParam(defaultValue = "10") final Integer size,
+                                                                  @RequestParam final Double radius,
+                                                                  @RequestParam(defaultValue = "false") final Boolean checkProfileComplete) {
+
+        return JsonBody.of(HttpStatus.OK.value(), "반경 내의 프로필카드 요약 목록 조회 성공", profileCardService.getLockedProfileCards(
+                authMember.getMemberId(),
+                page,
+                size,
+                radius,
+                checkProfileComplete));
     }
 }
