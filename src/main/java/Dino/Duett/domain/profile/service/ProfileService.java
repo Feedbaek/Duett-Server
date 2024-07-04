@@ -193,7 +193,8 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileIntroResponse updateProfileIntro(final Long memberId, final ProfileIntroRequest profileIntroRequest){
+    public ProfileIntroResponse updateProfileIntro(final Long memberId,
+                                                   final ProfileIntroRequest profileIntroRequest){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
 
