@@ -86,8 +86,8 @@ public class MusicService {
     private void updateMusics(final List<MusicUpdateRequest> requests) {
          for(MusicUpdateRequest request : requests) {
             Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
-
             music.updateMusic(request);
+            musicRepository.save(music);
         }
     }
 

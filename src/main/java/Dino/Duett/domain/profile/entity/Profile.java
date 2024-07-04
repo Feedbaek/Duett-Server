@@ -62,6 +62,9 @@ public class Profile extends BaseEntity {
     @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileUnlock> profileUnlocks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "likedProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileLike> profileLikes = new ArrayList<>();
+
     @Builder
     public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Boolean isProfileComplete, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
         this.id = id;

@@ -35,13 +35,13 @@ public class Music extends BaseEntity {
     }
 
     public void updateMusic(MusicUpdateRequest musicUpdateRequest) {
-        if (Validator.isNullOrBlank(musicUpdateRequest.getTitle())){
+        if (!Validator.isNullOrBlank(musicUpdateRequest.getTitle())){
             this.title = musicUpdateRequest.getTitle();
         }
-        if (Validator.isNullOrBlank(musicUpdateRequest.getArtist())) {
+        if (!Validator.isNullOrBlank(musicUpdateRequest.getArtist())) {
             this.artist = musicUpdateRequest.getArtist();
         }
-        if (Validator.isNullOrBlank(musicUpdateRequest.getUrl())) {
+        if (!Validator.isNullOrBlank(musicUpdateRequest.getUrl())) {
             this.url = musicUpdateRequest.getUrl();
         }
     }
