@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 @Schema(description = "음악 등록 요청")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class MusicCreateRequest {
     @Schema(description = "음악 제목", name = "title")
     @Size(max = 100)

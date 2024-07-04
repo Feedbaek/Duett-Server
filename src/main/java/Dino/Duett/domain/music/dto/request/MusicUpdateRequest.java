@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 @Schema(description = "음악 수정 요청")
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MusicUpdateRequest {
     @Schema(description = "음악 id", name = "musicId")
     private Long musicId;
@@ -24,10 +24,10 @@ public class MusicUpdateRequest {
     private String artist;
     @Schema(description = "유튜브 URL", example = "url")
     private String url;
-    public MusicUpdateRequest of(Long musicId,
-                                 String title,
-                                 String artist,
-                                 String url) {
+    public MusicUpdateRequest of(final Long musicId,
+                                 final String title,
+                                 final String artist,
+                                 final String url) {
         return new MusicUpdateRequest(
                 musicId,
                 title,

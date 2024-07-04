@@ -56,7 +56,7 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "mood_id")
     private Mood mood;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Music> musics = new ArrayList<>();
 
     @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -113,5 +113,19 @@ public class Profile extends BaseEntity {
 
     public void addMood(final Mood mood) {
         this.mood = mood;
+    }
+
+    public void addMusic(final Music music) {
+        if(this.musics == null){
+            this.musics = new ArrayList<>();
+        }
+        this.musics.add(music);
+    }
+
+    public void deleteMusic(final Music music) {
+        if(!this.musics.contains(music)) {
+            return;
+        }
+        this.musics.remove(music);
     }
 }

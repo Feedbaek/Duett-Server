@@ -71,7 +71,9 @@ public class GlobalExceptionHandler {
             MemberException.DuplicatePhoneNumberException.class,
             ProfileException.ProfileIncompleteException.class,
             ProfileException.ProfileUsernameExistException.class,
-            ProfileException.ProfileSelfLikeException.class
+            ProfileException.ProfileSelfLikeException.class,
+            ProfileException.ProfileUsernameExistException.class,
+            MusicException.MusicMaxLimitException.class
         }
     )
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {

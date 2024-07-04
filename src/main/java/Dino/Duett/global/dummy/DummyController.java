@@ -10,7 +10,10 @@ import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.entity.Mood;
+import Dino.Duett.domain.music.dto.request.MusicChangeRequest;
+import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
 import Dino.Duett.domain.music.entity.Music;
+import Dino.Duett.domain.music.service.MusicService;
 import Dino.Duett.domain.profile.entity.Location;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.enums.GenderType;
@@ -39,6 +42,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
     private final MemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
     private final ProfileTagService profileTagService;
+    private final MusicService musicService;
     private final Random random = new Random();
     private final EnvBean envBean;
 
@@ -156,9 +160,23 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
             List<String> artists = List.of("이영지", "Attention", "어느날 머리에서 뿔이 자랐다", "Architect", "Falling Slowly", "I Don't Think That I Like Her");
             List<Integer> randomNumbers = getUniqueRandomIntegers(titles.size(), 1);
 
-            musics.add(Music.of(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "https://www.youtube.com/watch?v=LnhE5-ONvOc"));
+            musics.add(Music.of(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "https://www.youtube.com/watch?v=LnhE5-ONvOc", null));
         }
         return musics;
+    }
+
+    private List<MusicCreateRequest> makeDummyMusicRequests() {
+        List<MusicCreateRequest> requests = new ArrayList<>();
+
+        for(int i = 0 ; i < 3; i++) {
+            List<String> titles = List.of("Small girl", "뉴진스", "투모로우바이투게더", "Livingstone", "Glen Hansard & Marketa Irglova", "Charlie Puth");
+            List<String> artists = List.of("이영지", "Attention", "어느날 머리에서 뿔이 자랐다", "Architect", "Falling Slowly", "I Don't Think That I Like Her");
+            List<Integer> randomNumbers = getUniqueRandomIntegers(titles.size(), 1);
+            MusicCreateRequest musicCreateRequest = new MusicCreateRequest(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "https://www.youtube.com/watch?v=LnhE5-ONvOc");
+            requests.add(musicCreateRequest);
+        }
+
+        return requests;
     }
 
     private Profile makeDummyProfile(){
@@ -178,7 +196,6 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
                 .selfIntroduction("안녕하세요. 반갑습니다! 안녕하세요. 반갑습니다! 안녕하세요. 반갑습니다! 안녕하세요. 반갑습니다! 안녕하세요. 반갑습니다!")
                 .likeableMusicTaste("좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.좋아하는 음악은 없습니다.")
                 .mood(makeDummyMood())
-                .musics(makeDummyMusics())
                 .isProfileComplete(true)
                 .profileTags(new ArrayList<>())
                 .build();
@@ -192,7 +209,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
                 .name(names.get(random.nextInt(names.size())) + "-" + UUID.randomUUID().toString().substring(0, 4))
                 .gender(gender)
                 .birthDate("2000년 10월 10일")
-                .location(Location.of(getRandomDouble(37.5593193,  37.5554931), getRandomDouble(126.8947961, 127.0495665)))
+                .location(Location.of(getRandomDouble(37.5593193, 37.5554931), getRandomDouble(126.8947961, 127.0495665)))
                 .oneLineIntroduction("안녕하세요")
                 .isProfileComplete(false)
                 .build();
@@ -216,6 +233,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
 
         memberRepository.save(member);
         profileTagService.changeProfileTags(member.getId(), makeDummyMusicTagRequests(), makeDummyHobbyTagRequests());
+        musicService.changeMusics(member.getId(), makeDummyMusicRequests(), null, null);
         return member;
     }
 
