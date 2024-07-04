@@ -7,10 +7,12 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "음악 수정 요청")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class MusicUpdateRequest {
     @Schema(description = "음악 id", name = "musicId")
     private Long musicId;

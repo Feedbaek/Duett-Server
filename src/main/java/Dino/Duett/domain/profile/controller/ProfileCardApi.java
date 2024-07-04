@@ -3,6 +3,8 @@ package Dino.Duett.domain.profile.controller;
 import Dino.Duett.config.security.AuthMember;
 import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileLockResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileUnlockResponse;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,8 +39,8 @@ public interface ProfileCardApi {
             @ApiResponse(responseCode = "5002", description = "자신의 프로필이 채워지지 않음(400)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2005", description = "코인 부족(402)", content = @Content(schema = @Schema(hidden = true))),
     })
-    public JsonBody<ProfileCardResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
-                                                                        @PathVariable final Long profileId);
+    public JsonBody<ProfileUnlockResponse> getProfileCardOfDetailWithCoin(@AuthenticationPrincipal AuthMember authMember,
+                                                                          @PathVariable final Long profileId);
 
     @Operation(summary = "반경 내의 프로필카드 요약 목록 조회하기", tags = {"프로필카드"})
     @ApiResponses(value = {
@@ -48,9 +50,9 @@ public interface ProfileCardApi {
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(400)", content = @Content(schema = @Schema(hidden = true))),
    })
 
-    public JsonBody<List<ProfileCardSummaryResponse>> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
-                                                                               @RequestParam final Integer page,
-                                                                               @RequestParam final Integer size,
-                                                                               @RequestParam final Double radius,
-                                                                               @RequestParam final Boolean checkProfileComplete);
+    public JsonBody<ProfileLockResponse> getProfileCardsOfSummary(@AuthenticationPrincipal AuthMember authMember,
+                                                                  @RequestParam final Integer page,
+                                                                  @RequestParam final Integer size,
+                                                                  @RequestParam final Double radius,
+                                                                  @RequestParam final Boolean checkProfileComplete);
 }

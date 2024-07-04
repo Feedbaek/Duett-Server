@@ -54,7 +54,7 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
         return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 조회", profileService.getProfileMusic(authMember.getMemberId()));
     }
 
-    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 한번에 추가, 수정, 삭제하기", tags = {"마이페이지 - 음악 취향"})
+    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 한번에 추가, 수정, 삭제하기", tags = {"테스트"})
     @PostMapping(value = "/profiles/music-taste", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
@@ -87,10 +87,9 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
     }
 
     @PatchMapping("/profiles/intro")
-    public JsonBody<Void> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
+    public JsonBody<ProfileIntroResponse> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
                                              @Validated @RequestBody final ProfileIntroRequest profileIntroRequest){
-        profileService.updateProfileIntro(authMember.getMemberId(), profileIntroRequest);
-        return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정 성공", null);
+        return JsonBody.of(HttpStatus.OK.value(), "내 소개 등록 및 수정 성공", profileService.updateProfileIntro(authMember.getMemberId(),profileIntroRequest));
     }
 
     @GetMapping("/profiles/tags")

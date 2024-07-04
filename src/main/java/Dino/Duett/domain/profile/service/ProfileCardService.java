@@ -6,16 +6,15 @@ import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
-import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileLockResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileUnlockResponse;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.exception.ProfileException;
-import Dino.Duett.domain.profile.repository.ProfileLikeRepository;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.domain.tag.service.ProfileTagService;
-import Dino.Duett.global.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 
-import static Dino.Duett.global.enums.LimitConstants.*;
-
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +32,11 @@ import static Dino.Duett.global.enums.LimitConstants.*;
 public class ProfileCardService {
 
     private final ProfileRepository profileRepository;
-    private final ProfileLikeRepository profileLikeRepository;
     private final MemberRepository memberRepository;
     private final ImageService imageService;
     private final ProfileTagService profileTagService;
     private final ProfileUnlockService profileUnlockService;
     private final ProfileService profileService;
-
 
     /**
      * 프로필 카드 완성 여부 조회
@@ -54,6 +49,64 @@ public class ProfileCardService {
         return profileService.isProfileComplete(profile);
     }
 
+
+    /**
+     * 잠긴 프로필 카드 목록 조회
+     * @param memberId
+     * @param page
+     * @param size
+     * @param radius
+     * @param checkProfileComplete
+     * @return ProfileLockResponse
+     */
+    @Transactional
+    public ProfileLockResponse getLockedProfileCards(final Long memberId,
+                                                     final Integer page,
+                                                     final Integer size,
+                                                     final Double radius,
+                                                     final Boolean checkProfileComplete) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+        Profile viewerProfile = validateProfileIsNull(member.getProfile());
+        return ProfileLockResponse.of(
+                getProfileCardsOfSummary(
+                memberId,
+                page,
+                size,
+                radius
+                ),
+                member.getCoin(),
+                checkProfileComplete ? profileService.isProfileComplete(viewerProfile) : null
+        );
+    }
+
+    /**
+     * 프로필 카드 상세 조회
+     * @param memberId 사용자 id
+     * @param profileId 프로필 id
+     */
+    @Transactional
+    public ProfileUnlockResponse getUnlockedProfileCard(final Long memberId, final Long profileId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+        return ProfileUnlockResponse.of(
+                getProfileCard(memberId, profileId),
+                member.getCoin());
+    }
+
+
+    /**
+     * 코인을 사용해서 프로필 카드 상세 조회
+     * @param memberId 사용자 id
+     * @param profileId 프로필 id
+     */
+    @Transactional
+    public ProfileUnlockResponse getUnlockedProfileCardWithCoin(final Long memberId, final Long profileId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+        return ProfileUnlockResponse.of(
+                getProfileCardWithCoin(memberId, profileId),
+                member.getCoin());
+    }
+
+
     /**
      * 프로필 카드 요약 조회
      * @param memberId 사용자 id
@@ -65,8 +118,7 @@ public class ProfileCardService {
     public List<ProfileCardSummaryResponse> getProfileCardsOfSummary(final Long memberId,
                                                                      final Integer page,
                                                                      final Integer size,
-                                                                     Double radius,
-                                                                     Boolean checkProfileComplete) {
+                                                                     final Double radius) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile viewerProfile = validateProfileIsNull(member.getProfile());
 
@@ -90,8 +142,6 @@ public class ProfileCardService {
                                 .distance(calculateDistance(member.getProfile(), profile))
                                 .lifeMusics(profile.getMusics().stream().map(MusicResponse::of).toList())
                                 .tags(profileTagService.getProfileTagsOnlyFeatured(profile.getId()))
-                                .coin(member.getCoin())
-                                .isProfileComplete(checkProfileComplete ? profileService.isProfileComplete(profile) : null)
                                 .build())
                 .toList();
     }
@@ -113,7 +163,7 @@ public class ProfileCardService {
         //member.updateCoin(COIN);//todo: mvp에서는 coin을 사용하지 않음
         profileUnlockService.createProfileUnlock(viewerProfile.getId(), viewedProfile.getId());
 
-        return convertToDto(viewedProfile, member, member.getCoin(), calculateDistance(viewerProfile, viewedProfile));
+        return convertToDto(viewedProfile, calculateDistance(viewerProfile, viewedProfile));
     }
 
     /**
@@ -130,7 +180,7 @@ public class ProfileCardService {
         validateProfileIsComplete(viewerProfile);
         validateProfileIsLocked(viewerProfile, viewedProfile);
 
-        return convertToDto(viewedProfile, member, member.getCoin(), calculateDistance(viewerProfile, viewedProfile));
+        return convertToDto(viewedProfile, calculateDistance(viewerProfile, viewedProfile));
     }
 
     private void validateProfileIsLocked(final Profile viewerProfile, final Profile viewedProfile) {
@@ -224,8 +274,7 @@ public class ProfileCardService {
         return profile;
     }
 
-    private ProfileCardResponse convertToDto(Profile profile, Member member, Integer coin, Double distance) {
-
+    private ProfileCardResponse convertToDto(Profile profile, Double distance) {
         return ProfileCardResponse.builder()
                 .profileId(profile.getId())
                 .name(profile.getName())
@@ -243,19 +292,7 @@ public class ProfileCardService {
                         profile.getMood().getMoodImage() != null ? imageService.getUrl(profile.getMood().getMoodImage()) : null)) : null)
                 .selfIntroduction(profile.getSelfIntroduction())
                 .likeableMusicTaste(profile.getLikeableMusicTaste())
-                .likeState(profileLikeRepository.existsByMemberAndLikedProfile(member, profile)) // todo: 좋아요 구현 후 수정. 일단은 false 반환하는 걸로 설정
-                .coin(coin)
-                .build();
-    }
-
-    public ProfileCardBriefResponse convertToBriefDto(Profile profile) {
-        return ProfileCardBriefResponse.builder()
-                .profileId(profile.getId())
-                .name(profile.getName())
-                .birthDate(profile.getBirthDate())
-                .mbti(profile.getMbti())
-                .lifeMusic(profile.getMusics().stream().findFirst().map(MusicResponse::of).orElse(null))
-                .tags(profileTagService.getProfileTagsOnlyFeatured(profile.getId()))
+                .likeState(false) // todo: 좋아요 구현 후 수정. 일단은 false 반환하는 걸로 설정
                 .build();
     }
 }
