@@ -3,7 +3,6 @@ package Dino.Duett.domain.profile.service;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
-import Dino.Duett.domain.profile.dto.response.LikedProfileResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileCardSummaryResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileInfoResponse;

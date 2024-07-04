@@ -169,26 +169,6 @@ public class TestUtil {
         return member;
     }
 
-    public static Member createMemberWithProfile2() {
-        Role role = Role.builder()
-                .id(1L)
-                .name(RoleName.USER.name())
-                .build();
-        Member member = Member.builder()
-                .phoneNumber("010-8765-4321")
-                .kakaoId("kakaoId2")
-                .coin(0)
-                .state(MemberState.ACTIVE)
-                .role(role)
-                .profile(Profile.builder()
-                        .name("test2")
-                        .gender(GenderType.MAN)
-                        .birthDate("1999.01.01")
-                        .build())
-                .build();
-        return member;
-    }
-
     public Image createImage() {
         return imageRepository.save(Image.builder()
                 .name("image")

@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController implements ProfileApi{ //todo: 이후에 API 문서 위치 통일
     private final ProfileService profileService;
 
-    @GetMapping("/profiles/home")    @Operation(summary = "마이페이지 메인(유저 기본 정보, 프로필 진행 정도) 조회", tags = {"마이페이지 - 홈"})
-
+    @GetMapping("/profiles/home")
+    @Operation(summary = "마이페이지 메인(유저 기본 정보, 프로필 진행 정도) 조회", tags = {"마이페이지 - 홈"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
