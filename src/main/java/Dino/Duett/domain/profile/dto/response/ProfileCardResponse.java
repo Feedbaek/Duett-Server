@@ -42,6 +42,4 @@ public class ProfileCardResponse {
     String likeableMusicTaste;
     @Schema(description = "좋아요", example = "true")
     Boolean likeState;
-    @Schema(description = "코인", example = "0")
-    Integer coin;
 }

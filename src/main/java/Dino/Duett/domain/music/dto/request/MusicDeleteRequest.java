@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "음악 수정 요청")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class MusicDeleteRequest {
     @Schema(description = "음악 id", name = "musicId")
     @NotEmpty

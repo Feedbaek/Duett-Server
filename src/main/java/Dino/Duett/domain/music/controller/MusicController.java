@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MusicController {
     private final MusicService musicService;
 
-    @Operation(summary = "자신의 인생곡 한번에 추가, 수정, 삭제하기", tags = {"테스트"})
+    @Operation(summary = "자신의 인생곡 한번에 추가, 수정, 삭제하기", tags = {"마이페이지 - 음악 취향"})
     @PostMapping("/profiles/musics")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),

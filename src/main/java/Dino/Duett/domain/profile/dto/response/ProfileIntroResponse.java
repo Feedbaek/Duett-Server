@@ -3,8 +3,6 @@ package Dino.Duett.domain.profile.dto.response;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.dto.response.TagResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
