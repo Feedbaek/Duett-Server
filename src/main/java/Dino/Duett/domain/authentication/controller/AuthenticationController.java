@@ -23,9 +23,9 @@ public class AuthenticationController {
     @GetMapping(value = "/code")
     public JsonBody<VerificationCodeDto> requestCode(@NotBlank @RequestParam("phoneNumber") String phoneNumber) {
 
-        if (memberService.existsByPhoneNumber(phoneNumber).isExists()) {
-            return JsonBody.of(400, "이미 존재하는 전화번호입니다.", VerificationCodeDto.builder().exists(true).build());
-        }
+//        if (memberService.existsByPhoneNumber(phoneNumber).isExists()) {
+//            return JsonBody.of(400, "이미 존재하는 전화번호입니다.", VerificationCodeDto.builder().exists(true).build());
+//        }
         return JsonBody.of(200, "인증 코드 요청 성공", verificationCodeManager.requestCodeDto(phoneNumber));
     }
 
