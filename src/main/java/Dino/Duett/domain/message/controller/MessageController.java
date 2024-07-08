@@ -23,14 +23,24 @@ import java.util.List;
 public class MessageController {
     private final MessageService messageService;
 
-    // 모든 메시지 조회
-    @GetMapping("/all")
-    @Operation(summary = "모든 메시지 조회. paging 처리되어있음", tags = {"메시지"})
-    @ApiResponse(responseCode = "200", description = "모든 메시지 조회 성공")
-    public JsonBody<List<MessageResponse>> getAllMessages(
+    // 수신한 모든 메시지 조회
+    @GetMapping("/receive/all")
+    @Operation(summary = "수신한 모든 메시지 조회. paging 처리되어있음", tags = {"메시지"})
+    @ApiResponse(responseCode = "200", description = "모든 수신 메시지 조회 성공")
+    public JsonBody<List<MessageResponse>> getAllReceiveMessages(
             @AuthenticationPrincipal final AuthMember authMember,
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
-        return JsonBody.of(HttpStatus.OK.value(), "모든 메시지 조회 성공", messageService.getAllMessages(authMember.getMemberId(), page));
+        return JsonBody.of(HttpStatus.OK.value(), "모든 수신 메시지 조회 성공", messageService.getAllReceiveMessages(authMember.getMemberId(), page));
+    }
+
+    // 발신한 모든 메시지 조회
+    @GetMapping("/send/all")
+    @Operation(summary = "발신한 모든 메시지 조회. paging 처리되어있음", tags = {"메시지"})
+    @ApiResponse(responseCode = "200", description = "모든 발신 메시지 조회 성공")
+    public JsonBody<List<MessageResponse>> getAllSendMessages(
+            @AuthenticationPrincipal final AuthMember authMember,
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+        return JsonBody.of(HttpStatus.OK.value(), "모든 발신 메시지 조회 성공", messageService.getAllSendMessages(authMember.getMemberId(), page));
     }
 
     // 메시지 전송

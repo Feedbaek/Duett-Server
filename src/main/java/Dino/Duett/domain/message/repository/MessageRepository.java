@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllByReceiverId(Long memberId, Pageable page);
+    List<Message> findAllBySenderId(Long memberId, Pageable page);
 }

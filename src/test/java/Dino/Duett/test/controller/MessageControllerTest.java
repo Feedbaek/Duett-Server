@@ -31,8 +31,8 @@ public class MessageControllerTest {
     private TestUtil testUtil;
 
     @Test
-    @DisplayName("모든 메시지 조회 테스트")
-    public void getAllMessagesTest(TestReporter testReporter) throws Exception {
+    @DisplayName("모든 수신 메시지 조회 테스트")
+    public void getAllReceiveMessagesTest(TestReporter testReporter) throws Exception {
         // given
         // 메시지 생성
         Member sender = testUtil.createTestMember();
@@ -43,12 +43,34 @@ public class MessageControllerTest {
 
         // when
         // 모든 메시지 조회 요청
-        testReporter.publishEntry(mockMvc.perform(get("/api/v1/message/all")
+        testReporter.publishEntry(mockMvc.perform(get("/api/v1/message/receive/all")
                 .header("Authorization", "Bearer " + receiverToken))
 
         // then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].senderId").value(sender.getId()))
+                .andReturn().getResponse().getContentAsString());
+    }
+
+    @Test
+    @DisplayName("모든 발신 메시지 조회 테스트")
+    public void getAllSendMessagesTest(TestReporter testReporter) throws Exception {
+        // given
+        // 메시지 생성
+        Member sender = testUtil.createTestMember();
+        Member receiver = testUtil.createTestMember();
+        Message message = testUtil.createTestMessage(sender, receiver);
+        // 토큰 생성
+        String receiverToken = testUtil.createAccessToken(sender.getId());
+
+        // when
+        // 모든 메시지 조회 요청
+        testReporter.publishEntry(mockMvc.perform(get("/api/v1/message/send/all")
+                        .header("Authorization", "Bearer " + receiverToken))
+
+                // then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].receiverId").value(receiver.getId()))
                 .andReturn().getResponse().getContentAsString());
     }
 
