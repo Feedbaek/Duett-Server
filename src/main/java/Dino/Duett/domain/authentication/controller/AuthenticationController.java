@@ -28,6 +28,11 @@ public class AuthenticationController {
 //        }
         return JsonBody.of(200, "인증 코드 요청 성공", verificationCodeManager.requestCodeDto(phoneNumber));
     }
+    @Operation(summary = "사용자 회원가입 여부 확인")
+    @GetMapping(value = "/member/exists")
+    public JsonBody<CheckMemberDto> checkMember(@NotBlank @RequestParam("phoneNumber") String phoneNumber) {
+        return JsonBody.of(200, "사용자 회원가입 여부 확인 성공", memberService.existsByPhoneNumber(phoneNumber));
+    }
 
     @Operation(summary = "사용자 회원가입 여부 확인 - kakaoID")
     @GetMapping(value = "/member/exists/kakao")
