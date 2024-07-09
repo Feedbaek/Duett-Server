@@ -126,7 +126,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGlobalException(final Exception e) {
         log.error("Global Exception - {}", e.getMessage());
         e.printStackTrace();
-        final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.INTERNAL_SERVER_ERROR));
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "Exception";
+        String errorMessage = e.getMessage();
+        errors.put(fieldName, errorMessage);
+
+        final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.INTERNAL_SERVER_ERROR, errors));
         return ResponseEntity.internalServerError().body(response);
     }
 }

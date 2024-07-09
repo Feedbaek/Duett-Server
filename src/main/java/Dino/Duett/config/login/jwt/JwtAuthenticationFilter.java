@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 //해당 클래스는 JwtTokenProvider가 검증을 끝낸 Jwt로부터 유저 정보를 조회해와서 UserPasswordAuthenticationFilter 로 전달합니다.
 @Component
@@ -71,7 +73,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setStatus(response.getStatus());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        CustomException customException = CustomException.from(errorCode);
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "Exception";
+        String errorMessage = e.getMessage();
+        errors.put(fieldName, errorMessage);
+        CustomException customException = CustomException.of(errorCode, errors);
         ErrorResponse errorResponse = ErrorResponse.from(customException);
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(errorResponse));
