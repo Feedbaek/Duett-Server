@@ -10,7 +10,10 @@ import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +32,7 @@ public class MessageController {
     @ApiResponse(responseCode = "200", description = "모든 수신 메시지 조회 성공")
     public JsonBody<List<MessageResponse>> getAllReceiveMessages(
             @AuthenticationPrincipal final AuthMember authMember,
-            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") @PositiveOrZero Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "모든 수신 메시지 조회 성공", messageService.getAllReceiveMessages(authMember.getMemberId(), page));
     }
 
@@ -39,7 +42,7 @@ public class MessageController {
     @ApiResponse(responseCode = "200", description = "모든 발신 메시지 조회 성공")
     public JsonBody<List<MessageResponse>> getAllSendMessages(
             @AuthenticationPrincipal final AuthMember authMember,
-            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") @PositiveOrZero Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "모든 발신 메시지 조회 성공", messageService.getAllSendMessages(authMember.getMemberId(), page));
     }
 

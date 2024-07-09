@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -58,7 +59,7 @@ public class ProfileLikeController {
     // like profile
     public JsonBody<List<ProfileCardBriefResponse>> getLikedProfiles(
             @AuthenticationPrincipal final AuthMember authMember,
-            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+            @RequestParam(name = "page", required = false, defaultValue = "0") @PositiveOrZero Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "내가 좋아요한 프로필 목록 조회 성공", profileLikeService.getLikedProfiles(authMember.getMemberId(), page));
     }
 
@@ -75,7 +76,8 @@ public class ProfileLikeController {
     })
     public JsonBody<List<ProfileCardBriefResponse>> getLikers(
             @AuthenticationPrincipal final AuthMember authMember,
-            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+            @RequestParam(name = "page", required = false, defaultValue = "0")
+            @PositiveOrZero Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "내 프로필에 좋아요한 프로파일 목록 조회 성공", profileLikeService.getMembersWhoLikedProfile(authMember.getMemberId(), page));
     }
 }
