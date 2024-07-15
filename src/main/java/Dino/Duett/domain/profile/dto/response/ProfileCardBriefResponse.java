@@ -21,7 +21,7 @@ public class ProfileCardBriefResponse {
     String birthDate;
     @Schema(description = "MBTI 유형", example = "ENTP")
     MbtiType mbti;
-    @Schema(description = "인생곡", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"url\": \"url\"}]")
+    @Schema(description = "인생곡", example = "[{\"title\": \"title\", \"artist\": \"artist\"]")
     MusicResponse lifeMusic;
     @Schema(description = "태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}]")
     List<TagResponse> tags;

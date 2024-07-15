@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 
@@ -27,7 +28,6 @@ import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 public class MusicService {
     private final MusicRepository musicRepository;
     private final MemberRepository memberRepository;
-    private final ProfileRepository profileRepository;
 
     public List<MusicResponse> getMusics(final Profile profile) {
         return MusicResponse.of(profile.getMusics());
@@ -42,12 +42,13 @@ public class MusicService {
             createMusics(profile, createMusics);
         }
         if(!Validator.isNullOrEmpty(updateMusics)) {
-            updateMusics(updateMusics);
+            updateMusics(profile, updateMusics);
         }
         if(!Validator.isNullOrEmpty(deleteMusics)){
             deleteMusics(profile, deleteMusics);
         }
     }
+
     @Transactional
     public void changeMusics(final Long memberId,
                              final List<MusicCreateRequest> createMusics,
@@ -60,7 +61,7 @@ public class MusicService {
             createMusics(profile, createMusics);
         }
         if(!Validator.isNullOrEmpty(updateMusics)) {
-            updateMusics(updateMusics);
+            updateMusics(profile, updateMusics);
         }
         if(!Validator.isNullOrEmpty(deleteMusics)){
             deleteMusics(profile, deleteMusics);
@@ -79,23 +80,31 @@ public class MusicService {
                         request.getTitle(),
                         request.getArtist(),
                         request.getUrl(),
-                        profile)) // Profile is set in the constructor
+                        profile))
                 .toList();
         musicRepository.saveAll(musics);
         musics.forEach(profile::addMusic);
     }
 
-    private void updateMusics(final List<MusicUpdateRequest> requests) {
-         for(MusicUpdateRequest request : requests) {
+    private void updateMusics(final Profile profile, final List<MusicUpdateRequest> requests) {
+        for(MusicUpdateRequest request : requests) {
             Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
+            validateMusicForbidden(music, profile);
             music.updateMusic(request);
             musicRepository.save(music);
+        }
+    }
+
+    private void validateMusicForbidden(final Music music, final Profile profile){
+        if (!music.getProfile().getId().equals(profile.getId())) {
+            throw new MusicException.MusicForbiddenException(Map.of("MusicId", String.valueOf(music.getId())));
         }
     }
 
     private void deleteMusics(final Profile profile, final List<MusicDeleteRequest> requests) {
         for(MusicDeleteRequest request : requests) {
             Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
+            validateMusicForbidden(music, profile);
             profile.deleteMusic(music);
             musicRepository.delete(music);
         }

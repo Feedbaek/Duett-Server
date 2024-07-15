@@ -1,5 +1,6 @@
 package Dino.Duett.domain.music.exception;
 
+import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.global.exception.CustomException;
 import Dino.Duett.global.exception.ErrorCode;
 
@@ -28,6 +29,13 @@ public class MusicException extends CustomException {
             super(ErrorCode.MUSIC_MAX_LIMIT, property);
         }
     }
-
+    public static class MusicForbiddenException extends MusicException {
+        public MusicForbiddenException() {
+            super(ErrorCode.MUSIC_FORBIDDEN);
+        }
+        public MusicForbiddenException(Map<String, String> property) {
+            super(ErrorCode.MUSIC_FORBIDDEN, property);
+        }
+    }
     
 }
