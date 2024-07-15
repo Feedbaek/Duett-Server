@@ -53,6 +53,7 @@ public enum ErrorCode {
     // 6000: Music
     MUSIC_NOT_FOUND(6000, "음악을 찾을 수 없습니다"),
     MUSIC_MAX_LIMIT(6001, "음악 최대 개수 초과"),
+    MUSIC_FORBIDDEN(6002, "음악 접근 권한이 없습니다"),
 
     // 7000: Mood
     MOOD_NOT_FOUND(7000, "무드를 찾을 수 없습니다."),

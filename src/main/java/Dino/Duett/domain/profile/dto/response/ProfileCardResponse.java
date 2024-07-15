@@ -18,7 +18,7 @@ public class ProfileCardResponse {
     Long profileId;
     @Schema(description = "사용자의 이름", example = "name")
     String name;
-    @Schema(description = "사용자의 생년월일", example = "2000.01.01")
+    @Schema(description = "사용자의 생년월일", example = "2000년 01월 01일")
     String birthDate;
     @Schema(description = "MBTI 유형", example = "ENTP")
     MbtiType mbti;
@@ -34,7 +34,7 @@ public class ProfileCardResponse {
     List<TagResponse> hobbyTags;
     @Schema(description = "인생곡 리스트", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"url\": \"url\"}]")
     List<MusicResponse> lifeMusics;
-    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImage\": \"https://duett-mood-image/image.jpg\", \"isDeleteImage\": \"true\" }")
+    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImageUrl\": \"https://duett-mood-image/image.jpg\"}")
     MoodResponse mood;
     @Schema(description = "긴 자기 소개", example = "crush")
     String selfIntroduction;

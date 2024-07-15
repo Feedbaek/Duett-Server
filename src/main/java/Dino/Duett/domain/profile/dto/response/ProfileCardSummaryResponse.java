@@ -3,7 +3,6 @@ package Dino.Duett.domain.profile.dto.response;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.dto.response.TagResponse;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
