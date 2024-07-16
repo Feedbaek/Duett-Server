@@ -10,6 +10,7 @@ import Dino.Duett.global.dto.JsonBody;
 import Dino.Duett.global.dto.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +25,7 @@ public class AuthenticationController {
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
 
+
     @Operation(summary = "인증 코드 요청")
     @GetMapping(value = "/code")
     public JsonBody<VerificationCodeDto> requestCode(@NotBlank @RequestParam("phoneNumber") String phoneNumber) {
@@ -36,8 +38,8 @@ public class AuthenticationController {
 
     @Operation(summary = "Jwt Refresh 요청")
     @GetMapping(value = "/reissue")
-    public JsonBody<TokenDto> refresh( @AuthenticationPrincipal final AuthMember authMember ) {
-        return JsonBody.of(200, "토큰 재발급 성공", jwtTokenProvider.refresh(authMember.getMemberId()));
+    public JsonBody<TokenDto> refresh( @AuthenticationPrincipal final AuthMember authMember, HttpServletRequest request) {
+        return JsonBody.of(200, "토큰 재발급 성공", jwtTokenProvider.refresh(authMember.getMemberId(), jwtTokenProvider.resolveToken(request)));
     }
 
     @Operation(summary = "사용자 회원가입 여부 확인")
