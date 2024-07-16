@@ -110,10 +110,10 @@ public class JwtTokenProvider {
         return jws.getBody().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
     }
 
-    public TokenDto refresh() { // TODO : Update Redis
+    public TokenDto refresh(Long memberId) { // TODO : Update Redis
         // create new access & refresh token
-        String accessToken = createToken(1L, JwtTokenType.ACCESS_TOKEN);
-        String refreshToken = createToken(1L, JwtTokenType.REFRESH_TOKEN);
+        String accessToken = createToken(memberId, JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = createToken(memberId, JwtTokenType.REFRESH_TOKEN);
         return TokenDto.of(accessToken, refreshToken);
     }
 }
