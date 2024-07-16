@@ -65,7 +65,7 @@ public class ProfileLikeService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         List<ProfileLike> profileLikes = profileLikeRepository.findByMember(member);
         return profileLikes.stream()
-                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getLikedProfile()))
+                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getLikedProfile(), profileLike.getCreatedDate()))
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +74,7 @@ public class ProfileLikeService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         List<ProfileLike> profileLikes = profileLikeRepository.findByLikedProfile(member.getProfile(), pageable);
         return profileLikes.stream()
-                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getMember().getProfile()))
+                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getMember().getProfile(), profileLike.getCreatedDate()))
                 .collect(Collectors.toList());
     }
 }
