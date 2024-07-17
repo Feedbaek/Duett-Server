@@ -30,7 +30,7 @@ public class MessageService {
     // 사용자의 모든 수신 메시지 조회
     @Transactional(readOnly = true)
     public List<MessageResponse> getAllReceiveMessages(Long receiverId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllByReceiverId(receiverId, pageable);
 
         return messageList.stream()
@@ -44,7 +44,7 @@ public class MessageService {
     // 사용자의 모든 발신 메시지 조회
     @Transactional(readOnly = true)
     public List<MessageResponse> getAllSendMessages(Long senderId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllBySenderId(senderId, pageable);
         Member sender = memberRepository.findById(senderId).orElseThrow(MemberException.MemberNotFoundException::new);
         return messageList.stream()

@@ -17,7 +17,6 @@ public class MessageResponse {
     private final Long receiverId;
     @NotBlank
     private final String content;
-    @NotNull
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String senderName;
 }
