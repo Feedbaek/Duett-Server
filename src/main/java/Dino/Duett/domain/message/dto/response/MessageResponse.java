@@ -1,6 +1,6 @@
 package Dino.Duett.domain.message.dto.response;
 
-import Dino.Duett.domain.message.entity.Message;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -17,4 +17,6 @@ public class MessageResponse {
     private final Long receiverId;
     @NotBlank
     private final String content;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final String senderName;
 }

@@ -30,26 +30,28 @@ public class MessageService {
     // 사용자의 모든 수신 메시지 조회
     @Transactional(readOnly = true)
     public List<MessageResponse> getAllReceiveMessages(Long receiverId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllByReceiverId(receiverId, pageable);
 
         return messageList.stream()
                 .map(message -> {
-                    Long senderId = message.getSender().getId();
-                    return MessageResponse.of(senderId, receiverId, message.getContent());
+                    Member sender = message.getSender();
+                    String senderName = message.getSendType() == 0 ? sender.getPhoneNumber() : sender.getKakaoId();
+                    return MessageResponse.of(sender.getId(), receiverId, message.getContent(), senderName);
                 }).toList();
     }
 
     // 사용자의 모든 발신 메시지 조회
     @Transactional(readOnly = true)
     public List<MessageResponse> getAllSendMessages(Long senderId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllBySenderId(senderId, pageable);
-
+        Member sender = memberRepository.findById(senderId).orElseThrow(MemberException.MemberNotFoundException::new);
         return messageList.stream()
                 .map(message -> {
                     Long receiverId = message.getReceiver().getId();
-                    return MessageResponse.of(senderId, receiverId, message.getContent());
+                    String senderName = message.getSendType() == 0 ? sender.getPhoneNumber() : sender.getKakaoId();
+                    return MessageResponse.of(senderId, receiverId, message.getContent(), senderName);
                 }).toList();
     }
 
@@ -77,20 +79,25 @@ public class MessageService {
                 .content(messageSendRequest.getContent())
                 .sender(sender)
                 .receiver(receiver)
+                .sendType(messageSendRequest.getSendType())
                 .build();
         messageRepository.save(message);
 
-        return MessageResponse.of(sender.getId(), receiver.getId(), messageSendRequest.getContent());
+        return MessageResponse.of(sender.getId(), receiver.getId(), messageSendRequest.getContent(), null);
     }
 
     // 받은 메시지 삭제. 삭제된 메시지의 id만 반환
     @Transactional
     public MessageDeleteResponse deleteMessage(Long receiverId, MessageDeleteRequest messageDeleteRequest) {
+        // messageDeleteRequest의 messageIds 중 receiverId가 일치하는 message만 삭제
         Long[] deleteMessageIds = Arrays.stream(messageDeleteRequest.getMessageIds()).filter(
-                messageId -> messageRepository.findById(messageId).map(
-                        message -> message.getReceiver().getId().equals(receiverId)
-                ).orElse(false)
+                messageId -> {
+                    Optional<Message> message = messageRepository.findById(messageId);
+                    return message.isPresent() && message.get().getSender().getId().equals(receiverId);
+                }
         ).toArray(Long[]::new);
+
+        //messageRepository.deleteAllByIdIn(deleteMessageIds);
 
         return MessageDeleteResponse.of(deleteMessageIds);
     }

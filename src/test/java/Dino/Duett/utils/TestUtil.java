@@ -200,6 +200,7 @@ public class TestUtil {
                 .content("test content")
                 .sender(sender)
                 .receiver(receiver)
+                .sendType(1)
                 .build());
     }
 
