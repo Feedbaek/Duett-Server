@@ -57,7 +57,7 @@ public class MessageController {
     }
 
     // 받은 메시지 삭제
-    @DeleteMapping("/delete")
+    @DeleteMapping("")
     @Operation(summary = "받은 메시지 삭제", tags = {"메시지"})
     @ApiResponse(responseCode = "200", description = "받은 메시지 삭제 성공")
     public JsonBody<MessageDeleteResponse> deleteMessage(
