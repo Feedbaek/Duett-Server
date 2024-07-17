@@ -24,6 +24,7 @@ import Dino.Duett.domain.tag.service.ProfileTagService;
 import Dino.Duett.global.dto.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
     private final MusicService musicService;
     private final Random random = new Random();
     private final EnvBean envBean;
+    private final StringRedisTemplate redisTemplate;
 
     @PostMapping("/signup-member")
     @Operation(description = "회원가입 후 초기 상태로 로그인(이미지 제외)", tags = {"테스트"})
@@ -54,7 +56,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
 
         String accessToken = tokenProvider.createToken(member.getId(), JwtTokenType.ACCESS_TOKEN);
         String refreshToken = tokenProvider.createToken(member.getId(), JwtTokenType.REFRESH_TOKEN);
-
+        redisTemplate.opsForValue().set(refreshToken, member.getId().toString());
         return ResponseEntity.ok(TokenDto.of(accessToken, refreshToken));
     }
 
@@ -78,7 +80,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
 
         String accessToken = tokenProvider.createToken(member.getId(), JwtTokenType.ACCESS_TOKEN);
         String refreshToken = tokenProvider.createToken(member.getId(), JwtTokenType.REFRESH_TOKEN);
-
+        redisTemplate.opsForValue().set(refreshToken, member.getId().toString());
         return ResponseEntity.ok(TokenDto.of(accessToken, refreshToken));
     }
 

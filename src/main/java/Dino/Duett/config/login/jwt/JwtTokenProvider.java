@@ -111,10 +111,11 @@ public class JwtTokenProvider {
         return jws.getBody().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
     }
 
-    public TokenDto refresh(Long memberId, String token) { // TODO : Update Redis
-        // create new access & refresh token
+    public TokenDto refresh(Long memberId, String token) {
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(token))) {
+            throw new MemberException.InvalidTokenException();
+        }
         redisTemplate.delete(token);
-
         String accessToken = createToken(memberId, JwtTokenType.ACCESS_TOKEN);
         String refreshToken = createToken(memberId, JwtTokenType.REFRESH_TOKEN);
         redisTemplate.opsForValue().set(refreshToken, memberId.toString());
