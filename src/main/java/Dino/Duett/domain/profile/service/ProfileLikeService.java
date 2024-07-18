@@ -65,16 +65,16 @@ public class ProfileLikeService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         List<ProfileLike> profileLikes = profileLikeRepository.findByMember(member);
         return profileLikes.stream()
-                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getLikedProfile()))
+                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getLikedProfile(), profileLike.getCreatedDate()))
                 .collect(Collectors.toList());
     }
 
     public List<ProfileCardBriefResponse> getMembersWhoLikedProfile(Long memberId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.PROFILE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+        Pageable pageable = PageRequest.of(page, LimitConstants.PROFILE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         Member member = memberRepository.findById(memberId).orElseThrow();
         List<ProfileLike> profileLikes = profileLikeRepository.findByLikedProfile(member.getProfile(), pageable);
         return profileLikes.stream()
-                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getMember().getProfile()))
+                .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getMember().getProfile(), profileLike.getCreatedDate()))
                 .collect(Collectors.toList());
     }
 }

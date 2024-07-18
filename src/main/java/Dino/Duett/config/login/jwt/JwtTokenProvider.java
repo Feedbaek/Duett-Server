@@ -5,6 +5,7 @@ import Dino.Duett.config.security.AuthMemberService;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
+import Dino.Duett.global.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -107,5 +108,12 @@ public class JwtTokenProvider {
 
     public boolean isAccessToken(Jws<Claims> jws) {
         return jws.getBody().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
+    }
+
+    public TokenDto refresh() { // TODO : Update Redis
+        // create new access & refresh token
+        String accessToken = createToken(1L, JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = createToken(1L, JwtTokenType.REFRESH_TOKEN);
+        return TokenDto.of(accessToken, refreshToken);
     }
 }

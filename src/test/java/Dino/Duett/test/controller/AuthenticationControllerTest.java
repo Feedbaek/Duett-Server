@@ -44,11 +44,11 @@ public class AuthenticationControllerTest {
     @DisplayName("사용자 회원가입 여부 확인 테스트")
     public void checkMemberTest(TestReporter testReporter) throws Exception {
         // given
-        String phoneNumber = TestUtil.MEMBER_PHONE_NUMBER;
+        String kakaoId = TestUtil.MEMBER_KAKAO_ID;
         // when, then
         testReporter.publishEntry(mockMvc.perform(
-                get("/api/v1/authentication/member/exists")
-                        .param("phoneNumber", phoneNumber))
+                get("/api/v1/authentication/member/exists/kakao")
+                        .param("kakaoId", kakaoId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.exists").exists())
                 .andReturn().getResponse().getContentAsString());
@@ -58,12 +58,12 @@ public class AuthenticationControllerTest {
     @DisplayName("사용자 회원가입 여부 확인 테스트 - 회원가입된 사용자")
     public void checkMemberTestWithRegisteredMember(TestReporter testReporter) throws Exception {
         // given
-        String phoneNumber = TestUtil.MEMBER_PHONE_NUMBER;
+        String kakaoId = TestUtil.MEMBER_KAKAO_ID;
         memberRepository.save(TestUtil.makeMember());
         // when, then
         testReporter.publishEntry(mockMvc.perform(
-                get("/api/v1/authentication/member/exists")
-                        .param("phoneNumber", phoneNumber))
+                get("/api/v1/authentication/member/exists/kakao")
+                        .param("kakaoId", kakaoId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.exists").value(true))
                 .andReturn().getResponse().getContentAsString());

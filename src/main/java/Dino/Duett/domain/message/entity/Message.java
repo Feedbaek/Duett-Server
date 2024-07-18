@@ -28,11 +28,15 @@ public class Message extends BaseEntity {
     @JoinColumn(name = "receiver_id")
     private Member receiver;
 
+    @Column(nullable = false)
+    private Integer sendType;
+
     @Builder
-    public Message(final Long id, final String content, final Member sender, final Member receiver) {
+    public Message(final Long id, final String content, final Member sender, final Member receiver, final Integer  sendType) {
         this.id = id;
         this.content = content;
         this.sender = sender;
         this.receiver = receiver;
+        this.sendType = sendType;
     }
 }

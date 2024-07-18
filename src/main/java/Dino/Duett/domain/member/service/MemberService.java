@@ -9,6 +9,7 @@ import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.member.repository.RoleRepository;
+import Dino.Duett.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
     private final RoleRepository roleRepository;
 
     // 멤버 엔티티 생성
@@ -61,5 +63,13 @@ public class MemberService {
 
     public CheckMemberDto existsByPhoneNumber(String phoneNumber) {
         return CheckMemberDto.of(memberRepository.existsByPhoneNumber(phoneNumber));
+    }
+
+    public CheckMemberDto existsByKakaoId(String kakaoId) {
+        return CheckMemberDto.of(memberRepository.existsByKakaoId(kakaoId));
+    }
+
+    public CheckMemberDto existsByMemberName(String memberName) {
+        return CheckMemberDto.of(profileRepository.existsByName(memberName));
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -297,7 +298,7 @@ public class ProfileCardService {
                 .build();
     }
 
-    public ProfileCardBriefResponse convertToBriefDto(Profile profile) {
+    public ProfileCardBriefResponse convertToBriefDto(Profile profile, LocalDateTime likeDate) {
         return ProfileCardBriefResponse.builder()
                 .profileId(profile.getId())
                 .name(profile.getName())
@@ -305,6 +306,7 @@ public class ProfileCardService {
                 .mbti(profile.getMbti())
                 .lifeMusic(profile.getMusics().stream().findFirst().map(MusicResponse::of).orElse(null))
                 .tags(profileTagService.getProfileTagsOnlyFeatured(profile.getId()))
+                .likeDate(likeDate)
                 .build();
     }
 }

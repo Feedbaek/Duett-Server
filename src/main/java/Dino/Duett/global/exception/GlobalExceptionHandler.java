@@ -1,6 +1,8 @@
 package Dino.Duett.global.exception;
 
+import Dino.Duett.domain.image.exception.ImageException;
 import Dino.Duett.domain.member.exception.MemberException;
+import Dino.Duett.domain.message.exception.MessageException;
 import Dino.Duett.domain.mood.exception.MoodException;
 import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.profile.exception.ProfileException;
@@ -58,7 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     // 잘못된 형식의 데이터 전송
-    @ExceptionHandler(HttpMessageConversionException.class)
+    @ExceptionHandler({HttpMessageConversionException.class})
     protected ResponseEntity<ErrorResponse> handleHttpMessageConversionException(final HttpMessageConversionException e) {
         log.error("HttpMessageConversionException", e);
         final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.BAD_REQUEST));
@@ -83,8 +85,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             MusicException.MusicNotFoundException.class,
             ProfileException.ProfileNotFoundException.class,
+            MemberException.MemberNotFoundException.class,
             TagException.TagNotFoundException.class,
-            MoodException.MoodNotFoundException.class
+            MoodException.MoodNotFoundException.class,
+            ImageException.ImageNotFoundException.class,
+            MessageException.MessageNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleGlobalNotFoundException(final CustomException e) {
         log.error(e.getErrorInfoLog());
@@ -93,7 +98,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler({
-            ProfileException.ProfileForbiddenException.class
+            ProfileException.ProfileForbiddenException.class,
+            MoodException.MoodForbiddenException.class
     })
     public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
         log.error(e.getErrorInfoLog());
@@ -120,7 +126,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGlobalException(final Exception e) {
         log.error("Global Exception - {}", e.getMessage());
         e.printStackTrace();
-        final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.INTERNAL_SERVER_ERROR));
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "Exception";
+        String errorMessage = e.getMessage();
+        errors.put(fieldName, errorMessage);
+
+        final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.INTERNAL_SERVER_ERROR, errors));
         return ResponseEntity.internalServerError().body(response);
     }
 }
