@@ -6,18 +6,25 @@ import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.message.dto.request.MessageDeleteRequest;
 import Dino.Duett.domain.message.dto.request.MessageSendRequest;
 import Dino.Duett.domain.message.dto.response.MessageDeleteResponse;
+import Dino.Duett.domain.message.dto.response.MessageReceiveResponse;
 import Dino.Duett.domain.message.dto.response.MessageResponse;
+import Dino.Duett.domain.message.dto.response.MessageSendResponse;
 import Dino.Duett.domain.message.entity.Message;
 import Dino.Duett.domain.message.repository.MessageRepository;
+import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
+import Dino.Duett.domain.profile.service.ProfileCardService;
 import Dino.Duett.global.enums.LimitConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -26,30 +33,35 @@ import java.util.*;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
+    private final ProfileCardService profileCardService;
 
     // 사용자의 모든 수신 메시지 조회
     @Transactional(readOnly = true)
-    public List<MessageResponse> getAllReceiveMessages(Long receiverId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+    public List<MessageReceiveResponse> getAllReceiveMessages(Long receiverId, Integer page) {
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllByReceiverId(receiverId, pageable);
 
         return messageList.stream()
                 .map(message -> {
-                    Long senderId = message.getSender().getId();
-                    return MessageResponse.of(senderId, receiverId, message.getContent());
+                    Member sender = message.getSender();
+                    ProfileCardBriefResponse senderProfile =  profileCardService.convertToBriefDto(sender.getProfile(), sender.getCreatedDate());
+                    String senderName = message.getSendType() == 0 ? sender.getPhoneNumber() : sender.getKakaoId();
+                    return MessageReceiveResponse.of(senderProfile, receiverId, message.getContent(), senderName, message.getCreatedDate());
                 }).toList();
     }
 
     // 사용자의 모든 발신 메시지 조회
     @Transactional(readOnly = true)
-    public List<MessageResponse> getAllSendMessages(Long senderId, Integer page) {
-        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.ASC, "createdDate"));
+    public List<MessageSendResponse> getAllSendMessages(Long senderId, Integer page) {
+        Pageable pageable = PageRequest.of(page, LimitConstants.MESSAGE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "createdDate"));
         List<Message> messageList =  messageRepository.findAllBySenderId(senderId, pageable);
-
+        Member sender = memberRepository.findById(senderId).orElseThrow(MemberException.MemberNotFoundException::new);
         return messageList.stream()
                 .map(message -> {
-                    Long receiverId = message.getReceiver().getId();
-                    return MessageResponse.of(senderId, receiverId, message.getContent());
+                    Member receiver = message.getReceiver();
+                    ProfileCardBriefResponse receiverProfile =  profileCardService.convertToBriefDto(receiver.getProfile(), receiver.getCreatedDate());
+                    String senderName = message.getSendType() == 0 ? sender.getPhoneNumber() : sender.getKakaoId();
+                    return MessageSendResponse.of(senderId, receiverProfile, message.getContent(), senderName, message.getCreatedDate());
                 }).toList();
     }
 
@@ -77,6 +89,7 @@ public class MessageService {
                 .content(messageSendRequest.getContent())
                 .sender(sender)
                 .receiver(receiver)
+                .sendType(messageSendRequest.getSendType())
                 .build();
         messageRepository.save(message);
 
@@ -86,12 +99,23 @@ public class MessageService {
     // 받은 메시지 삭제. 삭제된 메시지의 id만 반환
     @Transactional
     public MessageDeleteResponse deleteMessage(Long receiverId, MessageDeleteRequest messageDeleteRequest) {
+        // messageDeleteRequest의 messageIds 중 receiverId가 일치하는 message만 삭제
         Long[] deleteMessageIds = Arrays.stream(messageDeleteRequest.getMessageIds()).filter(
-                messageId -> messageRepository.findById(messageId).map(
-                        message -> message.getReceiver().getId().equals(receiverId)
-                ).orElse(false)
+                messageId -> {
+                    Optional<Message> message = messageRepository.findById(messageId);
+                    return message.isPresent() && message.get().getSender().getId().equals(receiverId);
+                }
         ).toArray(Long[]::new);
 
+        //messageRepository.deleteAllByIdIn(deleteMessageIds);
+
         return MessageDeleteResponse.of(deleteMessageIds);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void deleteOldMessagesScheduler() {
+        LocalDate cutoffDate = LocalDateTime.now().toLocalDate().minusWeeks(2);
+        messageRepository.deleteByCreatedDateBefore(cutoffDate.atStartOfDay());
     }
 }

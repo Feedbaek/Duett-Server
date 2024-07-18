@@ -17,10 +17,13 @@ import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.domain.tag.entity.Tag;
 import Dino.Duett.domain.tag.enums.TagType;
+import Dino.Duett.global.dummy.DummyController;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -57,6 +60,8 @@ public class TestUtil {
     private MemberRepository memberRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private DummyController dummyController;
 
     /**
      * 테스트용 회원가입 요청 생성
@@ -155,7 +160,7 @@ public class TestUtil {
                 .id(1L)
                 .name(RoleName.USER.name())
                 .build();
-        Member member = Member.builder()
+        return Member.builder()
                 .phoneNumber("010-1234-5678")
                 .kakaoId("kakaoId")
                 .coin(0)
@@ -164,9 +169,9 @@ public class TestUtil {
                 .profile(Profile.builder()
                         .gender(GenderType.MAN)
                         .birthDate("1999.01.01")
+                        .isProfileComplete(true)
                         .build())
                 .build();
-        return member;
     }
 
     public Image createImage() {
@@ -200,7 +205,12 @@ public class TestUtil {
                 .content("test content")
                 .sender(sender)
                 .receiver(receiver)
+                .sendType(1)
                 .build());
+    }
+
+    public Member createTestMemberWithProfile() {
+        return dummyController.createDummyMember();
     }
 
     public String toJson(Object object) throws IOException {

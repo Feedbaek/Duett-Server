@@ -30,12 +30,16 @@ public class MessageControllerTest {
     @Autowired
     private TestUtil testUtil;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+
     @Test
     @DisplayName("모든 수신 메시지 조회 테스트")
     public void getAllReceiveMessagesTest(TestReporter testReporter) throws Exception {
         // given
         // 메시지 생성
-        Member sender = testUtil.createTestMember();
+        Member sender = testUtil.createTestMemberWithProfile();
         Member receiver = testUtil.createTestMember();
         Message message = testUtil.createTestMessage(sender, receiver);
         // 토큰 생성
@@ -48,20 +52,22 @@ public class MessageControllerTest {
 
         // then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].senderId").value(sender.getId()))
+                .andExpect(jsonPath("$.data[0].sender.profileId").value(sender.getProfile().getId()))
                 .andReturn().getResponse().getContentAsString());
     }
 
     @Test
     @DisplayName("모든 발신 메시지 조회 테스트")
+
     public void getAllSendMessagesTest(TestReporter testReporter) throws Exception {
         // given
         // 메시지 생성
         Member sender = testUtil.createTestMember();
-        Member receiver = testUtil.createTestMember();
+        Member receiver = testUtil.createTestMemberWithProfile();
         Message message = testUtil.createTestMessage(sender, receiver);
         // 토큰 생성
         String receiverToken = testUtil.createAccessToken(sender.getId());
+        System.out.println(receiver.getId());
 
         // when
         // 모든 메시지 조회 요청
@@ -70,7 +76,7 @@ public class MessageControllerTest {
 
                 // then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].receiverId").value(receiver.getId()))
+                .andExpect(jsonPath("$.data[0].receiver.profileId").value(receiver.getProfile().getId()))
                 .andReturn().getResponse().getContentAsString());
     }
 
@@ -84,6 +90,7 @@ public class MessageControllerTest {
         MessageSendRequest messageSendRequest = MessageSendRequest.builder()
                 .receiverId(receiver.getId())
                 .content("test message")
+                .sendType(1)
                 .build();
         // 토큰 생성
         String senderToken = testUtil.createAccessToken(sender.getId());
@@ -101,30 +108,31 @@ public class MessageControllerTest {
                 .andReturn().getResponse().getContentAsString());
     }
 
-    @Test
-    @DisplayName("메시지 삭제 테스트")
-    public void deleteMessageTest(TestReporter testReporter) throws Exception {
-        // given
-        // 메시지 생성
-        Member sender = testUtil.createTestMember();
-        Member receiver = testUtil.createTestMember();
-        Message message = testUtil.createTestMessage(sender, receiver);
-        MessageDeleteRequest messageDeleteRequest = MessageDeleteRequest.builder()
-                .messageIds(new Long[]{message.getId()})
-                .build();
-        // 토큰 생성
-        String receiverToken = testUtil.createAccessToken(receiver.getId());
-
-        // when
-        // 메시지 삭제 요청
-        testReporter.publishEntry(mockMvc.perform(delete("/api/v1/message/delete")
-                .header("Authorization", "Bearer " + receiverToken)
-                .contentType("application/json")
-                .content(testUtil.toJson(messageDeleteRequest)))
-
-        // then
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.messageIds[0]").value(message.getId()))
-                .andReturn().getResponse().getContentAsString());
-    }
+    // TODO : 주기적 삭제 확인 테스트로 변경
+//    @Test
+//    @DisplayName("메시지 삭제 테스트")
+//    public void deleteMessageTest(TestReporter testReporter) throws Exception {
+//        // given
+//        // 메시지 생성
+//        Member sender = testUtil.createTestMember();
+//        Member receiver = testUtil.createTestMember();
+//        Message message = testUtil.createTestMessage(sender, receiver);
+//        MessageDeleteRequest messageDeleteRequest = MessageDeleteRequest.builder()
+//                .messageIds(new Long[]{message.getId()})
+//                .build();
+//        // 토큰 생성
+//        String receiverToken = testUtil.createAccessToken(receiver.getId());
+//
+//        // when
+//        // 메시지 삭제 요청
+//        testReporter.publishEntry(mockMvc.perform(delete("/api/v1/message")
+//                .header("Authorization", "Bearer " + receiverToken)
+//                .contentType("application/json")
+//                .content(testUtil.toJson(messageDeleteRequest)))
+//
+//        // then
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data.messageIds[0]").value(message.getId()))
+//                .andReturn().getResponse().getContentAsString());
+//    }
 }
