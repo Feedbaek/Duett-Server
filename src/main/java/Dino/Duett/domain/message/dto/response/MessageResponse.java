@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Schema(description = "메세지 응답")
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-@NoArgsConstructor(force = true) // 기본 생성자 추가
 public class MessageResponse {
     @Schema(description = "보낸 사람 ID", example = "1")
     @NotNull
