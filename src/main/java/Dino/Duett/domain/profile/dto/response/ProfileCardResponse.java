@@ -16,6 +16,8 @@ import java.util.List;
 public class ProfileCardResponse {
     @Schema(description = "프로필 ID", example = "1")
     Long profileId;
+    @Schema(description = "멤버 ID", example = "1")
+    Long memberId;
     @Schema(description = "사용자의 이름", example = "name")
     String name;
     @Schema(description = "사용자의 생년월일", example = "2000년 01월 01일")
