@@ -221,7 +221,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
                 .build();
     }
 
-    private Member createDummyMember(){
+    public Member createDummyMember(){
         Member member = Member.builder()
                 .phoneNumber(UUID.randomUUID().toString().substring(0, 11))
                 .kakaoId(UUID.randomUUID().toString().substring(0, 8))
