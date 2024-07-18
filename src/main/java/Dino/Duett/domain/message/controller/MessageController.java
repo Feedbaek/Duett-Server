@@ -4,7 +4,9 @@ import Dino.Duett.config.security.AuthMember;
 import Dino.Duett.domain.message.dto.request.MessageDeleteRequest;
 import Dino.Duett.domain.message.dto.request.MessageSendRequest;
 import Dino.Duett.domain.message.dto.response.MessageDeleteResponse;
+import Dino.Duett.domain.message.dto.response.MessageReceiveResponse;
 import Dino.Duett.domain.message.dto.response.MessageResponse;
+import Dino.Duett.domain.message.dto.response.MessageSendResponse;
 import Dino.Duett.domain.message.service.MessageService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +32,7 @@ public class MessageController {
     @GetMapping("/receive/all")
     @Operation(summary = "수신한 모든 메시지 조회. paging 처리되어있음", tags = {"메시지"})
     @ApiResponse(responseCode = "200", description = "모든 수신 메시지 조회 성공")
-    public JsonBody<List<MessageResponse>> getAllReceiveMessages(
+    public JsonBody<List<MessageReceiveResponse>> getAllReceiveMessages(
             @AuthenticationPrincipal final AuthMember authMember,
             @RequestParam(name = "page", required = false, defaultValue = "0") @PositiveOrZero Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "모든 수신 메시지 조회 성공", messageService.getAllReceiveMessages(authMember.getMemberId(), page));
@@ -40,7 +42,7 @@ public class MessageController {
     @GetMapping("/send/all")
     @Operation(summary = "발신한 모든 메시지 조회. paging 처리되어있음", tags = {"메시지"})
     @ApiResponse(responseCode = "200", description = "모든 발신 메시지 조회 성공")
-    public JsonBody<List<MessageResponse>> getAllSendMessages(
+    public JsonBody<List<MessageSendResponse>> getAllSendMessages(
             @AuthenticationPrincipal final AuthMember authMember,
             @RequestParam(name = "page", required = false, defaultValue = "0") @PositiveOrZero Integer page) {
         return JsonBody.of(HttpStatus.OK.value(), "모든 발신 메시지 조회 성공", messageService.getAllSendMessages(authMember.getMemberId(), page));
