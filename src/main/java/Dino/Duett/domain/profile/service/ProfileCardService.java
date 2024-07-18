@@ -52,11 +52,11 @@ public class ProfileCardService {
 
     /**
      * 잠긴 프로필 카드 목록 조회
-     * @param memberId
-     * @param page
-     * @param size
-     * @param radius
-     * @param checkProfileComplete
+     * @param memberId 사용자 id
+     * @param page 페이지
+     * @param size 사이즈
+     * @param radius 반경(km)
+     * @param checkProfileComplete 사용자 프로필 완성 여부를 확인할지 여부
      * @return ProfileLockResponse
      */
     @Transactional
@@ -277,6 +277,7 @@ public class ProfileCardService {
     private ProfileCardResponse convertToDto(Profile profile, Member member, Double distance) {
         return ProfileCardResponse.builder()
                 .profileId(profile.getId())
+                .memberId(memberRepository.findByProfileId(profile.getId()).orElseThrow(MemberException.MemberNotFoundException::new).getId())
                 .name(profile.getName())
                 .birthDate(profile.getBirthDate())
                 .mbti(profile.getMbti())
