@@ -31,8 +31,10 @@ public class GmailReaderTest {
     @DisplayName("email 인증 성공 테스트")
     public void validateTest() {
         // given
-        String phoneNumber = "01044206790";
-        String code = "ㅡ";
+//        String phoneNumber = "01044206790";
+//        String code = "ㅡ";
+        String phoneNumber = "01045801821";
+        String code = "610df830-4832-4248-acc5-5479cfb1bc06";
         given(env.getEmailUsername()).willReturn(System.getenv("EMAIL_USERNAME"));
         given(env.getEmailPassword()).willReturn(System.getenv("EMAIL_PASSWORD"));
 
