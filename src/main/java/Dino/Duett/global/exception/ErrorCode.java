@@ -46,7 +46,7 @@ public enum ErrorCode {
     // 5000: Profile
     PROFILE_NOT_FOUND(5000, "프로필을 찾을 수 없습니다."),
     PROFILE_FORBIDDEN(5001, "프로필 접근 권한이 없습니다."),
-    PROFILE_INCOMPLETE(5002, "프로필의 모든 필드를 채워야합니다."),
+    PROFILE_INCOMPLETE(5002, "프로필의 특정 필드를 모두 채워야합니다."),
     PROFILE_USERNAME_EXIST(5003, "이미 존재하는 유저 아이디입니다."),
     PROFILE_SELF_LIKE(5004, "자신의 프로필은 좋아요할 수 없습니다."),
 

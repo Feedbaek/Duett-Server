@@ -4,6 +4,7 @@ import Dino.Duett.domain.image.service.ImageService;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
+import Dino.Duett.domain.message.repository.MessageRepository;
 import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.profile.dto.response.*;
@@ -34,6 +35,7 @@ public class ProfileCardService {
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final ProfileLikeRepository profileLikeRepository;
+    private final MessageRepository messageRepository;
     private final ImageService imageService;
     private final ProfileTagService profileTagService;
     private final ProfileUnlockService profileUnlockService;
@@ -146,6 +148,7 @@ public class ProfileCardService {
                                 .build())
                 .toList();
     }
+
     /**
      * 프로필 카드 코인으로 조회
      * @param memberId 사용자 id
@@ -177,20 +180,48 @@ public class ProfileCardService {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile viewerProfile = validateProfileIsNull(member.getProfile());
         Profile viewedProfile = profileRepository.findById(profileId).orElseThrow(ProfileException.ProfileNotFoundException::new);
-
+        Member sender = memberRepository.findByProfileId(profileId).orElseThrow(MemberException.MemberNotFoundException::new);
         validateProfileIsComplete(viewerProfile);
-        validateProfileIsLocked(viewerProfile, viewedProfile);
+        validateUnlockedProfileOrReceivedMessage(viewerProfile, viewedProfile, member, sender);
 
         return convertToDto(viewedProfile, member, calculateDistance(viewerProfile, viewedProfile));
     }
 
-    private void validateProfileIsLocked(final Profile viewerProfile, final Profile viewedProfile) {
-        boolean isProfileUnlocked = viewerProfile.getProfileUnlocks().stream()
-                .anyMatch(profileUnlock -> profileUnlock.getViewedProfile().getId().equals(viewedProfile.getId()));
-
-        if (!isProfileUnlocked) {
+    /**
+     * 프로필 잠금 해제 여부 혹은 쪽지 수신자 여부 검증
+     * @param viewerProfile 잠금해제 하는 유저의 프로필
+     * @param viewedProfile 잠금해제 당하는 유저의 프로필
+     * @param receiver 쪽지 수신자
+     * @param sender 쪽지 발신자
+     */
+    private void validateUnlockedProfileOrReceivedMessage(final Profile viewerProfile,
+                                                          final Profile viewedProfile,
+                                                          final Member receiver,
+                                                          final Member sender){
+        if(!(checkProfileIsLocked(viewerProfile, viewedProfile) || checkMemberReceivedMessage(receiver, sender))){
             throw new ProfileException.ProfileForbiddenException();
         }
+    }
+
+    /**
+     * 프로필 잠금해제 여부 확인
+     * @param viewerProfile 잠금해제 하는 유저의 프로필
+     * @param viewedProfile 잠금해제 당하는 유저의 프로필
+     * @return boolean
+     */
+    private boolean checkProfileIsLocked(final Profile viewerProfile, final Profile viewedProfile) {
+        return viewerProfile.getProfileUnlocks().stream()
+                .anyMatch(profileUnlock -> profileUnlock.getViewedProfile().getId().equals(viewedProfile.getId()));
+    }
+
+    /**
+     * 프로필 잠금해제 여부 확인
+     * @param receiver 수신자
+     * @param sender 발신자
+     * @return boolean
+     */
+    private boolean checkMemberReceivedMessage(final Member receiver, final Member sender){
+        return messageRepository.existsByReceiverIdAndSenderId(receiver.getId(), sender.getId());
     }
 
 
