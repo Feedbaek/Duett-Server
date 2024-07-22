@@ -1,5 +1,7 @@
 package Dino.Duett.domain.signup.service;
 
+import Dino.Duett.config.login.jwt.JwtTokenProvider;
+import Dino.Duett.config.login.jwt.JwtTokenType;
 import Dino.Duett.domain.authentication.VerificationCodeManager;
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.domain.member.entity.Member;
@@ -7,6 +9,7 @@ import Dino.Duett.domain.member.service.MemberService;
 import Dino.Duett.domain.profile.service.ProfileService;
 import Dino.Duett.domain.signup.dto.SignUpReq;
 import Dino.Duett.domain.signup.dto.SignUpRes;
+import Dino.Duett.global.dto.TokenDto;
 import Dino.Duett.global.exception.CustomException;
 import Dino.Duett.gmail.GmailReader;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class SignUpService {
     private final GmailReader gmailReader;
     private final MemberService memberService;
     private final ProfileService profileService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
     public SignUpRes signUp(SignUpReq signUpReq) throws CustomException {
@@ -41,8 +45,14 @@ public class SignUpService {
         // todo: gmail 인증 코드 삭제
         // gmailReader.deleteCode(signUpReq.getPhoneNumber());
 
+        // token 발급
+        String accessToken = jwtTokenProvider.createToken(member.getId(), JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = jwtTokenProvider.createToken(member.getId(), JwtTokenType.REFRESH_TOKEN);
+        TokenDto tokens = TokenDto.of(accessToken, refreshToken);
+
         return SignUpRes.builder()
                 .member(memberDto)
+                .token(tokens)
                 .build();
     }
 
