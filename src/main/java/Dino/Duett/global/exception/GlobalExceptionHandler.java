@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     // 잘못된 형식의 데이터 전송
-    @ExceptionHandler({HttpMessageConversionException.class})
+    @ExceptionHandler(HttpMessageConversionException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageConversionException(final HttpMessageConversionException e) {
         log.error("HttpMessageConversionException", e);
         final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.BAD_REQUEST));

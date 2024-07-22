@@ -12,4 +12,5 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllByReceiverId(Long memberId, Pageable page);
     List<Message> findAllBySenderId(Long memberId, Pageable page);
     void deleteByCreatedDateBefore(LocalDateTime date);
+    boolean existsByReceiverIdAndSenderId(Long receiverId, Long senderId);
 }
