@@ -30,7 +30,7 @@ public class AuthMemberService implements UserDetailsService {
         // 로그인 인증 코드
         String verificationCode = verificationCodeManager.getCode(phoneNumber);
         // gmail 인증 코드
-        // gmailReader.validate(phoneNumber, verificationCode);
+        gmailReader.validate(phoneNumber, verificationCode);
 
         return AuthMember.builder()
                 .memberId(member.getId())
