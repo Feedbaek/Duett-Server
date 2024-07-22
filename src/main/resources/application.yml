@@ -57,7 +57,5 @@ jwt:
   refresh-token-time: 864000000  # 10일
 
 email:
-  username: lee201732
-  password: rhis ayxg xxdn gdca
-#  username: ${EMAIL_USERNAME}
-#  password: ${EMAIL_PASSWORD}
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
