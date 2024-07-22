@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,7 +34,7 @@ public class JwtTokenProvider {
     private long accessTokenTime;
     @Value("${jwt.refresh-token-time}")
     private long refreshTokenTime;
-
+    private final StringRedisTemplate redisTemplate;
     private final MemberRepository memberRepository;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
@@ -110,10 +111,15 @@ public class JwtTokenProvider {
         return jws.getBody().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
     }
 
-    public TokenDto refresh() { // TODO : Update Redis
-        // create new access & refresh token
-        String accessToken = createToken(1L, JwtTokenType.ACCESS_TOKEN);
-        String refreshToken = createToken(1L, JwtTokenType.REFRESH_TOKEN);
+    public TokenDto refresh(Long memberId, String token) {
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(token))) {
+            throw new MemberException.InvalidTokenException();
+        }
+        redisTemplate.delete(token);
+        String accessToken = createToken(memberId, JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = createToken(memberId, JwtTokenType.REFRESH_TOKEN);
+        redisTemplate.opsForValue().set(refreshToken, memberId.toString());
+
         return TokenDto.of(accessToken, refreshToken);
     }
 }
