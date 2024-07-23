@@ -48,7 +48,17 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    // 멤버 dto 생성
+    @Transactional
+    public void deleteMember(String phoneNumber) throws MemberException {
+        // delete member
+        if (!memberRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new MemberException.MemberNotFoundException();
+        }
+        // send mail
+        memberRepository.deleteByPhoneNumber(phoneNumber);
+    }
+
+        // 멤버 dto 생성
     @Transactional
     public MemberDto makeMemberDto(Member member) {
         return MemberDto.builder()

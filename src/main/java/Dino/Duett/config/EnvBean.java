@@ -11,6 +11,8 @@ public class EnvBean {
     private String emailUsername;
     @Value("${email.password}")
     private String emailPassword;
+    @Value("${email.withdrawal}")
+    private String emailWithdrawal;
     @Value("${spring.cloud.gcp.storage.project-id}")
     private String projectId;
     @Value("${spring.cloud.gcp.storage.key-name}")
