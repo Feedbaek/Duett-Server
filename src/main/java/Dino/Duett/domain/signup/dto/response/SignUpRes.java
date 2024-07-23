@@ -1,4 +1,4 @@
-package Dino.Duett.domain.signup.dto;
+package Dino.Duett.domain.signup.dto.response;
 
 import Dino.Duett.domain.member.dto.MemberDto;
 import Dino.Duett.global.dto.TokenDto;

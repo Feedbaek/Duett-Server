@@ -3,6 +3,8 @@ package Dino.Duett.gmail;
 import Dino.Duett.config.EnvBean;
 import Dino.Duett.gmail.exception.GmailException;
 import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.search.FromStringTerm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -106,6 +108,33 @@ public class GmailReader {
             throw e;
         } catch (Exception e) {
             log.error("Failed to read email");
+            e.printStackTrace();
+            throw new GmailException.EmailValidationFailedException();
+        }
+    }
+
+    public void sendWithdrawalEmail(String phoneNumber, String reason) {
+        // 회원탈퇴 이유 이메일 전송
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(envBean.getEmailUsername(), envBean.getEmailPassword());
+            }
+        });
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(envBean.getEmailUsername()));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(envBean.getEmailWithdrawal()));
+            message.setSubject("Duett 회원 탈퇴 안내 - " + phoneNumber);
+            message.setText(reason);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            log.error("Failed to send email");
             e.printStackTrace();
             throw new GmailException.EmailValidationFailedException();
         }

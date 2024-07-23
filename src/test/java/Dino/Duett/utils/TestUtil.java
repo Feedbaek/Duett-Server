@@ -14,16 +14,14 @@ import Dino.Duett.domain.message.entity.Message;
 import Dino.Duett.domain.message.repository.MessageRepository;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.enums.GenderType;
-import Dino.Duett.domain.signup.dto.SignUpReq;
+import Dino.Duett.domain.signup.dto.request.SignUpReq;
 import Dino.Duett.domain.tag.entity.Tag;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.global.dummy.DummyController;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

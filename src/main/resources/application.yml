@@ -59,3 +59,4 @@ jwt:
 email:
   username: ${EMAIL_USERNAME}
   password: ${EMAIL_PASSWORD}
+  withdrawal: ${EMAIL_WITHDRAWAL}
