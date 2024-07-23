@@ -114,7 +114,7 @@ public class GmailReader {
     }
 
     public void sendWithdrawalEmail(String phoneNumber, String reason) {
-        // 이메일 전송
+        // 회원탈퇴 이유 이메일 전송
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");

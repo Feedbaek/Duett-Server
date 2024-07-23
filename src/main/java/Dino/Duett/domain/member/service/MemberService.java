@@ -50,11 +50,9 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(String phoneNumber) throws MemberException {
-        // delete member
         if (!memberRepository.existsByPhoneNumber(phoneNumber)) {
             throw new MemberException.MemberNotFoundException();
         }
-        // send mail
         memberRepository.deleteByPhoneNumber(phoneNumber);
     }
 

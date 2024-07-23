@@ -25,7 +25,6 @@ public class SignUpService {
     private final GmailReader gmailReader;
     private final MemberService memberService;
     private final ProfileService profileService;
-    private final StringRedisTemplate redisTemplate;
 
     // 회원가입
     public SignUpRes signUp(SignUpReq signUpReq) throws CustomException {
@@ -48,7 +47,6 @@ public class SignUpService {
                 .member(memberDto)
                 .build();
     }
-
 
     // 회원가입 DB Mock
     public SignUpRes signUpMock(SignUpReq signUpReq) throws CustomException {
