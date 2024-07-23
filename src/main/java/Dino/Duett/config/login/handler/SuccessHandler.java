@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,8 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final VerificationCodeManager verificationCodeManager;
     private final ObjectMapper objectMapper;
+    private final StringRedisTemplate redisTemplate;
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -36,6 +39,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         // 토큰 생성
         String accessToken = jwtTokenProvider.createToken(authMember.getMemberId(), JwtTokenType.ACCESS_TOKEN);
         String refreshToken = jwtTokenProvider.createToken(authMember.getMemberId(), JwtTokenType.REFRESH_TOKEN);
+        redisTemplate.opsForValue().set(refreshToken, authMember.getMemberId().toString());
 
         // 토큰 DTO 생성
         TokenDto tokens = TokenDto.of(accessToken, refreshToken);
