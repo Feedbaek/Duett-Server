@@ -62,8 +62,9 @@ public class ProfileLikeService {
     }
 
     public List<ProfileCardBriefResponse> getLikedProfiles(Long memberId, Integer page) {
+        Pageable pageable = PageRequest.of(page, LimitConstants.PROFILE_MAX_LIMIT.getLimit(), Sort.by(Sort.Direction.DESC, "modifiedDate"));
         Member member = memberRepository.findById(memberId).orElseThrow();
-        List<ProfileLike> profileLikes = profileLikeRepository.findByMember(member);
+        List<ProfileLike> profileLikes = profileLikeRepository.findByMember(member, pageable);
         return profileLikes.stream()
                 .map(profileLike -> profileCardService.convertToBriefDto(profileLike.getLikedProfile(), profileLike.getCreatedDate()))
                 .collect(Collectors.toList());
