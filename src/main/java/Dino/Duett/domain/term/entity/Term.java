@@ -14,9 +14,10 @@ public class Term {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
     private Long version;
-    private String writer;
     private LocalDate createdDate;
 
     @Enumerated(EnumType.STRING)
@@ -28,10 +29,9 @@ public class Term {
     }
 
     @Builder
-    public Term(String content, Long version, String writer, TermsType type) {
+    public Term(String content, Long version, TermsType type) {
         this.content = content;
         this.version = version;
-        this.writer = writer;
         this.type = type;
         this.createdDate = LocalDate.now();
     }

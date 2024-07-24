@@ -1,14 +1,17 @@
 package Dino.Duett.domain.term.service;
 
-import Dino.Duett.domain.term.dto.request.TermCreateRequest;
 import Dino.Duett.domain.term.dto.response.TermResponse;
 import Dino.Duett.domain.term.entity.Term;
 import Dino.Duett.domain.term.repository.TermRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
@@ -18,21 +21,19 @@ import java.util.Optional;
 public class TermService {
     private final TermRepository termRepository;
 
-    public void createSignUpTerms(TermCreateRequest termCreateRequest) {
+    public void createSignUpTerms() throws IOException {
         Term term = Term.builder()
                 .type(Term.TermsType.SIGN_UP)
-                .content(termCreateRequest.getContent())
-                .writer(termCreateRequest.getWriter())
+                .content(readFileContent("signup-policy.txt"))
                 .version(getNextVersion(Term.TermsType.SIGN_UP))
                 .build();
         termRepository.save(term);
     }
 
-    public void createPrivacyPolicyTerms(TermCreateRequest termCreateRequest) {
+    public void createPrivacyPolicyTerms() throws IOException {
         Term term = Term.builder()
                 .type(Term.TermsType.PRIVACY_POLICY)
-                .content(termCreateRequest.getContent())
-                .writer(termCreateRequest.getWriter())
+                .content(readFileContent("privacy-policy.txt"))
                 .version(getNextVersion(Term.TermsType.PRIVACY_POLICY))
                 .build();
         termRepository.save(term);
@@ -56,5 +57,11 @@ public class TermService {
     private Long getNextVersion(Term.TermsType type) {
         Optional<Term> latestTerm = termRepository.findTopByTypeOrderByCreatedDateDesc(type);
         return latestTerm.map(t -> t.getVersion() + 1).orElse(1L);
+    }
+
+    public String readFileContent(String fileName) throws IOException {
+        ClassPathResource resource = new ClassPathResource(fileName);
+        Path path = resource.getFile().toPath();
+        return Files.readString(path);
     }
 }

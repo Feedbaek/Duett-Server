@@ -1,6 +1,5 @@
 package Dino.Duett.domain.term.controller;
 
-import Dino.Duett.domain.term.dto.request.TermCreateRequest;
 import Dino.Duett.domain.term.dto.response.TermResponse;
 import Dino.Duett.domain.term.entity.Term;
 import Dino.Duett.domain.term.service.TermService;
@@ -9,11 +8,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Tag(name = "Term", description = "회원가입 API")
 @RestController
@@ -37,8 +37,8 @@ public class TermController {
             @ApiResponse(responseCode = "200", description = "회원가입 약관 생성 성공"),
     })
     @PostMapping(value = "/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public JsonBody<Void> createSignUpTerm(@Valid  @RequestBody TermCreateRequest termCreateRequest) {
-        termService.createSignUpTerms(termCreateRequest);
+    public JsonBody<Void> createSignUpTerm() throws IOException {
+        termService.createSignUpTerms();
         return JsonBody.of(200, "회원가입 약관 생성 성공", null);
     }
     @Operation(summary = "개인정보 처리방침 약관 생성")
@@ -46,8 +46,8 @@ public class TermController {
             @ApiResponse(responseCode = "200", description = "개인정보 처리방침 약관 생성 성공"),
     })
     @PostMapping(value = "/privacy-policy", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public JsonBody<Void> createPrivacyPolicyTerm(@Valid  @RequestBody TermCreateRequest termCreateRequest) {
-        termService.createPrivacyPolicyTerms(termCreateRequest);
+    public JsonBody<Void> createPrivacyPolicyTerm() throws IOException {
+        termService.createPrivacyPolicyTerms();
         return JsonBody.of(200, "개인정보 처리방침 약관 생성 성공", null);
     }
 }
