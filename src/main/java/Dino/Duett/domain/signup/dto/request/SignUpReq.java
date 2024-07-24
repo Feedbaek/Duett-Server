@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 public class SignUpReq {
@@ -31,4 +33,6 @@ public class SignUpReq {
     private MultipartFile profileImage;
     @NotBlank
     private String oneLineIntroduction;
+    @Nullable
+    private Boolean snsAgree = false;
 }
