@@ -11,7 +11,6 @@ import Dino.Duett.domain.music.entity.Music;
 import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.music.repository.MusicRepository;
 import Dino.Duett.domain.profile.entity.Profile;
-import Dino.Duett.domain.profile.repository.ProfileRepository;
 import Dino.Duett.global.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -105,7 +104,7 @@ public class MusicService {
         for(MusicDeleteRequest request : requests) {
             Music music = musicRepository.findById(request.getMusicId()).orElseThrow(MusicException.MusicNotFoundException::new);
             validateMusicForbidden(music, profile);
-            profile.deleteMusic(music);
+            profile.removeMusic(music);
             musicRepository.delete(music);
         }
     }

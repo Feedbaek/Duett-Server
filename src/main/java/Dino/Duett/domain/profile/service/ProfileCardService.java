@@ -128,7 +128,7 @@ public class ProfileCardService {
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Profile> profiles = profileRepository.findAllUsersWithinRadius(
                 member.getProfile().getLocation().getLatitude(),
-                member.getProfile().getLocation().getLatitude(),
+                member.getProfile().getLocation().getLongitude(),
                 radius,
                 member.getProfile().getGender().getOppositeGender(),
                 viewerProfile.getProfileUnlocks() != null ? viewerProfile.getProfileUnlocks().stream().map(profileUnlock -> profileUnlock.getViewedProfile().getId()).toList() : null,
