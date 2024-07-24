@@ -1,5 +1,6 @@
 package Dino.Duett.domain.term.entity;
 
+import Dino.Duett.domain.term.enums.TermType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,15 +22,10 @@ public class Term {
     private LocalDate createdDate;
 
     @Enumerated(EnumType.STRING)
-    private TermsType type;
-
-    public enum TermsType {
-        SIGN_UP,
-        PRIVACY_POLICY
-    }
+    private TermType type;
 
     @Builder
-    public Term(String content, Long version, TermsType type) {
+    public Term(String content, Long version, TermType type) {
         this.content = content;
         this.version = version;
         this.type = type;

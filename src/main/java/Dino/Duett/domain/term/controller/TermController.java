@@ -2,6 +2,7 @@ package Dino.Duett.domain.term.controller;
 
 import Dino.Duett.domain.term.dto.response.TermResponse;
 import Dino.Duett.domain.term.entity.Term;
+import Dino.Duett.domain.term.enums.TermType;
 import Dino.Duett.domain.term.service.TermService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ public class TermController {
     })
     @GetMapping(value = "")
     public JsonBody<TermResponse> getLatestTerm() {
-        return JsonBody.of(200, "약관 조회 성공", termService.getLatestTerms(Term.TermsType.SIGN_UP));
+        return JsonBody.of(200, "약관 조회 성공", termService.getLatestTerms(TermType.SIGN_UP));
     }
 
     @Operation(summary = "회원가입 약관 생성")
