@@ -36,7 +36,7 @@ public class SignUpService {
         verificationCodeManager.verifyCode(signUpReq.getPhoneNumber(), signUpReq.getVerificationCode());
         gmailReader.validate(signUpReq.getPhoneNumber(), signUpReq.getVerificationCode());
         // 회원가입 처리
-        Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
+        Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId(), signUpReq.getSnsAgree());
 
         MemberDto memberDto = memberService.makeMemberDto(member);
         // todo: 프로필 생성
@@ -55,16 +55,6 @@ public class SignUpService {
         return SignUpRes.builder()
                 .member(memberDto)
                 .token(tokens)
-                .build();
-    }
-
-    // 회원가입 DB Mock
-    public SignUpRes signUpMock(SignUpReq signUpReq) throws CustomException {
-        Member member = memberService.createMember(signUpReq.getPhoneNumber(), signUpReq.getKakaoId());
-        MemberDto memberDto = memberService.makeMemberDto(member);
-        profileService.createProfile(signUpReq);
-        return SignUpRes.builder()
-                .member(memberDto)
                 .build();
     }
 }

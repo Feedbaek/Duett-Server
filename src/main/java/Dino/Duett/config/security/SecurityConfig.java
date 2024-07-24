@@ -47,6 +47,7 @@ public class SecurityConfig {
         // 회원가입
         "/api/v1/sign-up", "/api/v1/sign-up/mock",
         "/api/v1/authentication/**",
+        "/api/v1/term/**",
 
         // 에러 페이지
         "/error",
