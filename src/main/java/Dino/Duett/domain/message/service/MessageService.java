@@ -112,7 +112,7 @@ public class MessageService {
         return MessageDeleteResponse.of(deleteMessageIds);
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 4 * * ?", zone = "Asia/Seoul")
     @Transactional
     public void deleteOldMessagesScheduler() {
         LocalDate cutoffDate = LocalDateTime.now().toLocalDate().minusWeeks(2);
