@@ -10,6 +10,7 @@ import Dino.Duett.domain.message.dto.response.MessageReceiveResponse;
 import Dino.Duett.domain.message.dto.response.MessageResponse;
 import Dino.Duett.domain.message.dto.response.MessageSendResponse;
 import Dino.Duett.domain.message.entity.Message;
+import Dino.Duett.domain.message.exception.MessageException;
 import Dino.Duett.domain.message.repository.MessageRepository;
 import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
 import Dino.Duett.domain.profile.service.ProfileCardService;
@@ -19,12 +20,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -68,6 +66,19 @@ public class MessageService {
     // 메시지 전송
     @Transactional
     public MessageResponse sendMessage(Long senderId, MessageSendRequest messageSendRequest) {
+        Integer TYPE = messageSendRequest.getSendType();
+        if (TYPE != 0 && TYPE != 1) {
+            Map<String, String> error = new HashMap<>();
+            error.put("메시지 전송 타입이 잘못되었습니다.", "sendType: " + TYPE);
+            throw new MessageException.MessageTypeInvalidException(error);
+        }
+
+        if (messageSendRequest.getContent().length() > 2000) {
+            Map<String, String> error = new HashMap<>();
+            error.put("메시지 길이가 너무 깁니다.", "content: " + messageSendRequest.getContent());
+            throw new MessageException.MessageLengthExceedException(error);
+        }
+
         // senderId로 회원을 찾아서 없으면 예외처리
         Member sender = memberRepository.findById(senderId).orElseThrow(
                 () -> {
@@ -110,12 +121,5 @@ public class MessageService {
         //messageRepository.deleteAllByIdIn(deleteMessageIds);
 
         return MessageDeleteResponse.of(deleteMessageIds);
-    }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    @Transactional
-    public void deleteOldMessagesScheduler() {
-        LocalDate cutoffDate = LocalDateTime.now().toLocalDate().minusWeeks(2);
-        messageRepository.deleteByCreatedDateBefore(cutoffDate.atStartOfDay());
     }
 }

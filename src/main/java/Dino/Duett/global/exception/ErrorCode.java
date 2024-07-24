@@ -65,7 +65,13 @@ public enum ErrorCode {
 
     // 9000: Youtube
     YOUTUBE_API_REQUEST_FAILED(9000, "Youtube API 요청 실패"),
-    YOUTUBE_API_REQUEST_LIMIT_EXCEEDED(9001, "Youtube API 키 사용량 초과");
+    YOUTUBE_API_REQUEST_LIMIT_EXCEEDED(9001, "Youtube API 키 사용량 초과"),
+
+    // 10000: Message
+    MESSAGE_TYPE_INVALID(10000, "메시지 타입이 유효하지 않습니다"),
+    MESSAGE_LENGTH_EXCEED(10001, "메세지 길이가 초과되었습니다(최대 200자)"),
+    MESSAGE_NOT_FOUND(10002, "메세지를 찾을 수 없습니다");
+
 
     private final int code;
     private final String message;

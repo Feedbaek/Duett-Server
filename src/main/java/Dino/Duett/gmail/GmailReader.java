@@ -5,11 +5,16 @@ import Dino.Duett.gmail.exception.GmailException;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.search.ComparisonTerm;
 import jakarta.mail.search.FromStringTerm;
+import jakarta.mail.search.ReceivedDateTerm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Slf4j(topic = "GmailReader")
@@ -110,6 +115,33 @@ public class GmailReader {
             log.error("Failed to read email");
             e.printStackTrace();
             throw new GmailException.EmailValidationFailedException();
+        }
+    }
+
+
+    @Scheduled(cron = "0 0 4 * * ?", zone = "Asia/Seoul")
+    public void deleteOldMails() {
+        Properties props = new Properties();
+        props.put("mail.store.protocol", "imaps");
+
+        try (Store store = SESSION.getStore()) {
+            store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            Folder inbox = store.getFolder("INBOX");
+            inbox.open(Folder.READ_WRITE);
+
+            LocalDateTime threeDaysAgo = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(3);
+            Date searchDate = Date.from(threeDaysAgo.atZone(ZoneId.of("Asia/Seoul")).toInstant());
+            ReceivedDateTerm olderThanThreeDays = new ReceivedDateTerm(ComparisonTerm.LT, searchDate);
+
+            Message[] messages = inbox.search(olderThanThreeDays);
+
+            for (Message message : messages) {
+                message.setFlag(Flags.Flag.DELETED, true);
+            }
+
+            inbox.close(true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

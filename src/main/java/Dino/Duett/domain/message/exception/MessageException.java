@@ -15,10 +15,28 @@ public class MessageException extends CustomException {
 
     public static class MessageNotFoundException extends MessageException {
         public MessageNotFoundException() {
-            super(ErrorCode.MAIL_NOT_FOUND);
+            super(ErrorCode.MESSAGE_NOT_FOUND);
         }
         public MessageNotFoundException(Map<String, String> property) {
-            super(ErrorCode.MAIL_NOT_FOUND, property);
+            super(ErrorCode.MESSAGE_NOT_FOUND, property);
+        }
+    }
+
+    public static class MessageTypeInvalidException extends MessageException {
+        public MessageTypeInvalidException() {
+            super(ErrorCode.MESSAGE_TYPE_INVALID);
+        }
+        public MessageTypeInvalidException(Map<String, String> property) {
+            super(ErrorCode.MESSAGE_TYPE_INVALID, property);
+        }
+    }
+
+    public static class MessageLengthExceedException extends MessageException {
+        public MessageLengthExceedException() {
+            super(ErrorCode.MESSAGE_LENGTH_EXCEED);
+        }
+        public MessageLengthExceedException(Map<String, String> property) {
+            super(ErrorCode.MESSAGE_LENGTH_EXCEED, property);
         }
     }
 }

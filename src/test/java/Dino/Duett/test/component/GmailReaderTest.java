@@ -90,4 +90,15 @@ public class GmailReaderTest {
         assertThat(throwable).isInstanceOf(CustomException.class);
         assertThat(throwable.getMessage()).isEqualTo(new GmailException.EmailValidationFailedException().getMessage());
     }
+
+    @Test
+    @DisplayName("email 삭제 테스트 - 3일이 지난 발신 메일 삭제")
+    public void deleteEmailTest() {
+        // given
+        given(env.getEmailUsername()).willReturn(System.getenv("EMAIL_USERNAME"));
+        given(env.getEmailPassword()).willReturn(System.getenv("EMAIL_PASSWORD"));
+
+        // when
+        gmailReader.deleteOldMails();
+    }
 }
