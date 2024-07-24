@@ -38,7 +38,6 @@ import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_MIN_SIZE;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileService {
-
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
     private final MusicService musicService;
