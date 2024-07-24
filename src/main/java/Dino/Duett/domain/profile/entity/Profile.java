@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_STRING_MIN_SIZE;
+
 
 @Entity
 @Table(name = "profile")
@@ -99,15 +101,18 @@ public class Profile extends BaseEntity {
             this.oneLineIntroduction = oneLineIntroduction;
         }
     }
+
     public void updateProfileIntro(final MbtiType mbti, final String selfIntroduction, final String likeableMusicTaste) {
         if (mbti != null) {
             this.mbti = mbti;
         }
-        if (!Validator.isNullOrBlank(selfIntroduction)) {
-            this.selfIntroduction = selfIntroduction;
+
+        if(selfIntroduction != null) {
+            this.selfIntroduction = selfIntroduction.length() < PROFILE_INTRO_STRING_MIN_SIZE.getLimit() ? null : selfIntroduction;
         }
-        if (!Validator.isNullOrBlank(likeableMusicTaste)) {
-            this.likeableMusicTaste = likeableMusicTaste;
+
+        if (likeableMusicTaste != null) {
+            this.likeableMusicTaste = likeableMusicTaste.length() < PROFILE_INTRO_STRING_MIN_SIZE.getLimit() ? null : likeableMusicTaste;
         }
     }
 

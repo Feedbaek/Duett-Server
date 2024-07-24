@@ -38,7 +38,6 @@ import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_MIN_SIZE;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileService {
-
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
     private final MusicService musicService;
@@ -307,9 +306,7 @@ public class ProfileService {
      * @param profile 프로필
      */
     private void updateProfileCompleteStatusOnFirstFill(Profile profile) {
-        if(isProfileComplete(profile)){
-            if(!profile.getIsProfileComplete())
-                return;
+        if(isProfileComplete(profile) && !profile.getIsProfileComplete()){
             profile.updateIsProfileComplete(true);
         }
     }

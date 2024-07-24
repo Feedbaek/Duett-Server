@@ -85,7 +85,7 @@ public class ProfileTagService {
         long musicTagCount = tagCounts.getOrDefault(TagType.MUSIC, 0L);
         long hobbyTagCount = tagCounts.getOrDefault(TagType.HOBBY, 0L);
 
-        return musicTagCount == 1 && hobbyTagCount == 1;
+        return musicTagCount == FEATURED_PROFILE_TAG_MAX_LIMIT.getLimit() && hobbyTagCount == FEATURED_PROFILE_TAG_MAX_LIMIT.getLimit();
     }
     @Transactional
     public void changeProfileTags(final Long memberId, final List<TagRequest> musicTags, final List<TagRequest> hobbyTags) {
