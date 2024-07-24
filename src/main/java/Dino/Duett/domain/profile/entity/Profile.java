@@ -116,6 +116,12 @@ public class Profile extends BaseEntity {
         }
     }
 
+    public void updateLocation(final Location location){
+        if(location != null){
+            this.location = location;
+        }
+    }
+
     public void addMood(final Mood mood) {
         this.mood = mood;
     }
