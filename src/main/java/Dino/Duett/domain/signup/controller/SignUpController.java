@@ -36,12 +36,5 @@ public class SignUpController {
     public JsonBody<SignUpRes> signUp(@Valid SignUpReq signUpReq) {
         return JsonBody.of(200, "회원가입 성공", signUpService.signUp(signUpReq));
     }
-
-
-    @Operation(summary = "회원가입 Mock data, 인증 절차를 거치지 않습니다.")
-    @PostMapping(value = "/mock", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public JsonBody<SignUpRes> signUpMock(@Valid SignUpReq signUpReq) {
-        return JsonBody.of(200, "회원가입 성공", signUpService.signUpMock(signUpReq));
-    }
 }
 

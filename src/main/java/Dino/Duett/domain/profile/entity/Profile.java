@@ -116,6 +116,12 @@ public class Profile extends BaseEntity {
         }
     }
 
+    public void updateLocation(final Location location){
+        if(location != null){
+            this.location = location;
+        }
+    }
+
     public void addMood(final Mood mood) {
         this.mood = mood;
     }
@@ -127,7 +133,7 @@ public class Profile extends BaseEntity {
         this.musics.add(music);
     }
 
-    public void deleteMusic(final Music music) {
+    public void removeMusic(final Music music) {
         if(!this.musics.contains(music)) {
             return;
         }

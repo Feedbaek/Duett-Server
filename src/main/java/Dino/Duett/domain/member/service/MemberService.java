@@ -25,7 +25,7 @@ public class MemberService {
 
     // 멤버 엔티티 생성
     @Transactional
-    public Member createMember(String phoneNumber, String kakaoId) throws MemberException {
+    public Member createMember(String phoneNumber, String kakaoId, Boolean snsAgree) throws MemberException {
         // 중복 체크
         if (memberRepository.existsByPhoneNumber(phoneNumber)) {
             throw new MemberException.DuplicatePhoneNumberException();
@@ -43,8 +43,8 @@ public class MemberService {
                 .coin(0)
                 .state(MemberState.ACTIVE)
                 .role(role)
+                .smsAgree(snsAgree)
                 .build();
-
         return memberRepository.save(member);
     }
 

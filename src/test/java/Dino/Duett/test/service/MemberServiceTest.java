@@ -52,7 +52,7 @@ public class MemberServiceTest {
         });
 
         // when
-        Member retMember = memberService.createMember(inputMember.getPhoneNumber(), inputMember.getKakaoId());
+        Member retMember = memberService.createMember(inputMember.getPhoneNumber(), inputMember.getKakaoId(), false);
 
         // then
         assertThat(retMember.getId()).isEqualTo(1L);
