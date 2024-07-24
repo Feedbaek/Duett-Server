@@ -10,6 +10,7 @@ import Dino.Duett.domain.message.dto.response.MessageReceiveResponse;
 import Dino.Duett.domain.message.dto.response.MessageResponse;
 import Dino.Duett.domain.message.dto.response.MessageSendResponse;
 import Dino.Duett.domain.message.entity.Message;
+import Dino.Duett.domain.message.exception.MessageException;
 import Dino.Duett.domain.message.repository.MessageRepository;
 import Dino.Duett.domain.profile.dto.response.ProfileCardBriefResponse;
 import Dino.Duett.domain.profile.service.ProfileCardService;
@@ -65,6 +66,19 @@ public class MessageService {
     // 메시지 전송
     @Transactional
     public MessageResponse sendMessage(Long senderId, MessageSendRequest messageSendRequest) {
+        Integer TYPE = messageSendRequest.getSendType();
+        if (TYPE != 0 && TYPE != 1) {
+            Map<String, String> error = new HashMap<>();
+            error.put("메시지 전송 타입이 잘못되었습니다.", "sendType: " + TYPE);
+            throw new MessageException.MessageTypeInvalidException(error);
+        }
+
+        if (messageSendRequest.getContent().length() > 2000) {
+            Map<String, String> error = new HashMap<>();
+            error.put("메시지 길이가 너무 깁니다.", "content: " + messageSendRequest.getContent());
+            throw new MessageException.MessageLengthExceedException(error);
+        }
+
         // senderId로 회원을 찾아서 없으면 예외처리
         Member sender = memberRepository.findById(senderId).orElseThrow(
                 () -> {

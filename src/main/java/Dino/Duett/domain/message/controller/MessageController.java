@@ -10,6 +10,8 @@ import Dino.Duett.domain.message.dto.response.MessageSendResponse;
 import Dino.Duett.domain.message.service.MessageService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -52,6 +54,8 @@ public class MessageController {
     @PostMapping("/send")
     @Operation(summary = "메시지 전송", tags = {"메시지"})
     @ApiResponse(responseCode = "200", description = "메시지 전송 성공")
+    @ApiResponse(responseCode = "10000", description = "메세지 타입 오류", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "10001", description = "메세지 길이 초과", content = @Content(schema = @Schema(hidden = true)))
     public JsonBody<MessageResponse> sendMessage(
             @AuthenticationPrincipal final AuthMember authMember,
             @Valid @RequestBody final MessageSendRequest messageSendRequest) {

@@ -75,7 +75,9 @@ public class GlobalExceptionHandler {
             ProfileException.ProfileUsernameExistException.class,
             ProfileException.ProfileSelfLikeException.class,
             ProfileException.ProfileUsernameExistException.class,
-            MusicException.MusicMaxLimitException.class
+            MusicException.MusicMaxLimitException.class,
+            MessageException.MessageTypeInvalidException.class,
+            MessageException.MessageLengthExceedException.class,
         }
     )
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
