@@ -310,9 +310,7 @@ public class ProfileService {
      * @param profile 프로필
      */
     private void updateProfileCompleteStatusOnFirstFill(Profile profile) {
-        if(isProfileComplete(profile)){
-            if(!profile.getIsProfileComplete())
-                return;
+        if(isProfileComplete(profile) && !profile.getIsProfileComplete()){
             profile.updateIsProfileComplete(true);
         }
     }

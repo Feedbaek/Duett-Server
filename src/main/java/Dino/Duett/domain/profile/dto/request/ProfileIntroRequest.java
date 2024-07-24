@@ -22,10 +22,10 @@ public class ProfileIntroRequest {
     List<TagRequest> musicTags;
     @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": \"STANDARD\"}, {\"name\": \"콘서트\", \"state\": \"STANDARD\"}, {\"name\": \"캠핑\", \"state\": \"STANDARD\"}]", nullable = true)
     List<TagRequest> hobbyTags;
-    @Schema(description = "긴 자기 소개", example = "안녕하세요!", minLength = 50, maxLength = 500, nullable = true)
-    @Size(min = 50, max = 500)
+    @Schema(description = "긴 자기 소개", example = "안녕하세요!", maxLength = 500, nullable = true)
+    @Size(max = 500)
     String selfIntroduction;
-    @Schema(description = "호감을 느낄만한 상대의 음악취향", minLength = 50, maxLength = 500, example = "인디", nullable = true)
-    @Size(min = 50, max = 500)
+    @Schema(description = "호감을 느낄만한 상대의 음악취향",  example = "인디", maxLength = 500, nullable = true)
+    @Size(max = 500)
     String likeableMusicTaste;
 }
