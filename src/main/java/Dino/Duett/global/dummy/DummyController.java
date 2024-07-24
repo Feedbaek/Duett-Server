@@ -51,7 +51,6 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
     @PostMapping("/signup-member")
     @Operation(description = "회원가입 후 초기 상태로 로그인(이미지 제외)", tags = {"테스트"})
     public ResponseEntity<?> testSignupMember() {
-
         Member member = createDummyMemberAfterSignup();
 
         String accessToken = tokenProvider.createToken(member.getId(), JwtTokenType.ACCESS_TOKEN);
