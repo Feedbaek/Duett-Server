@@ -49,9 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // SecurityContext 에 Authentication 객체를 저장합니다.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-//            else {
-//                throw new JwtException("토큰이 존재하지 않습니다.");
-//            }
         } catch (ExpiredJwtException e) { // 유효하지 않은 토큰
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             setErrorResponse(response, ErrorCode.EXPIRED_JWT_TOKEN, e);

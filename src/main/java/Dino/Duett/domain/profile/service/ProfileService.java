@@ -19,10 +19,9 @@ import Dino.Duett.domain.profile.dto.response.ProfileIntroResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileMusicResponse;
 import Dino.Duett.domain.profile.entity.Location;
 import Dino.Duett.domain.profile.entity.Profile;
-import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
-import Dino.Duett.domain.signup.dto.SignUpReq;
+import Dino.Duett.domain.signup.dto.request.SignUpReq;
 import Dino.Duett.domain.tag.dto.response.TagByTypeResponse;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.domain.tag.service.ProfileTagService;
@@ -31,8 +30,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Objects;
 
 import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_MIN_SIZE;

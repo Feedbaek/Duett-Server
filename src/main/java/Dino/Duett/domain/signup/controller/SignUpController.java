@@ -1,7 +1,8 @@
 package Dino.Duett.domain.signup.controller;
 
-import Dino.Duett.domain.signup.dto.SignUpReq;
-import Dino.Duett.domain.signup.dto.SignUpRes;
+import Dino.Duett.domain.signup.dto.request.SignUpReq;
+import Dino.Duett.domain.signup.dto.request.WithdrawalReq;
+import Dino.Duett.domain.signup.dto.response.SignUpRes;
 import Dino.Duett.domain.signup.service.SignUpService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +36,7 @@ public class SignUpController {
     public JsonBody<SignUpRes> signUp(@Valid SignUpReq signUpReq) {
         return JsonBody.of(200, "회원가입 성공", signUpService.signUp(signUpReq));
     }
+
 
     @Operation(summary = "회원가입 Mock data, 인증 절차를 거치지 않습니다.")
     @PostMapping(value = "/mock", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
