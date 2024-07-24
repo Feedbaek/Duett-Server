@@ -127,7 +127,7 @@ public class Profile extends BaseEntity {
         this.musics.add(music);
     }
 
-    public void deleteMusic(final Music music) {
+    public void removeMusic(final Music music) {
         if(!this.musics.contains(music)) {
             return;
         }
