@@ -49,7 +49,7 @@ public class MusicService {
     }
 
     @Transactional
-    public void changeMusics(final Long memberId,
+    public Profile changeMusics(final Long memberId,
                              final List<MusicCreateRequest> createMusics,
                              final List<MusicUpdateRequest> updateMusics,
                              final List<MusicDeleteRequest> deleteMusics) {
@@ -71,6 +71,7 @@ public class MusicService {
                 throw new MusicException.MusicMaxLimitException();
             }
         }
+        return profile;
     }
 
     private void createMusics(final Profile profile, final List<MusicCreateRequest> requests) {
