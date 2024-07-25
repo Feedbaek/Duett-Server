@@ -3,6 +3,8 @@ package Dino.Duett.domain.music.controller;
 import Dino.Duett.config.security.AuthMember;
 import Dino.Duett.domain.music.dto.request.MusicChangeRequest;
 import Dino.Duett.domain.music.service.MusicService;
+import Dino.Duett.domain.profile.entity.Profile;
+import Dino.Duett.domain.profile.service.ProfileService;
 import Dino.Duett.global.dto.JsonBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class MusicController {
     private final MusicService musicService;
+    private final ProfileService profileService;
 
     @Operation(summary = "자신의 인생곡 한번에 추가, 수정, 삭제하기", tags = {"마이페이지 - 음악 취향"})
     @PostMapping("/profiles/musics")
@@ -35,11 +38,12 @@ public class MusicController {
     })
     public JsonBody<Void> changeProfileMusic(@AuthenticationPrincipal final AuthMember authMember,
                                                     @RequestBody final MusicChangeRequest request){
-        musicService.changeMusics(
+        Profile profile = musicService.changeMusics(
                 authMember.getMemberId(),
                 request.getCreateLifeMusics(),
                 request.getUpdateLifeMusics(),
                 request.getDeleteLifeMusics());
+        profileService.updateProfileCompleteStatusOnFirstFill(profile);
         return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 추가, 수정, 삭제하기", null);
     }
 }
