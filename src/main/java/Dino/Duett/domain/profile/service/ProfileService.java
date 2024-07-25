@@ -87,6 +87,7 @@ public class ProfileService {
                 .infoCount(getProfileInfoCount(profile))
                 .introCount(getProfileIntroCount(profile))
                 .musicCount(getProfileMusicCount(profile))
+                .isProfileComplete(profile.getIsProfileComplete())
                 .build();
     }
 

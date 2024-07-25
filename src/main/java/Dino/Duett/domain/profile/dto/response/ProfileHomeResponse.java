@@ -23,4 +23,6 @@ public class ProfileHomeResponse {
     Integer introCount;
     @Schema(description = "내 음악 취향 입력 완료 개수", example = "1")
     Integer musicCount;
+    @Schema(description = "내 프로필 완성 여부", example = "true")
+    Boolean isProfileComplete;
 }
