@@ -27,15 +27,15 @@ public class WithdrawalService {
     private final MoodService moodService;
     private final ImageService imageService;
 
-    public boolean withdrawal(WithdrawalReq withdrawalReq) throws CustomException {
-        gmailReader.sendWithdrawalEmail(withdrawalReq.getPhoneNumber(), withdrawalReq.getReason());
-        Member member = memberRepository.findByPhoneNumber(withdrawalReq.getPhoneNumber())
+    public boolean withdrawal(String phoneNumber, WithdrawalReq withdrawalReq) throws CustomException {
+        gmailReader.sendWithdrawalEmail(phoneNumber, withdrawalReq.getReason());
+        Member member = memberRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
 
         if (member.getProfile() != null && member.getProfile().getMood() != null && member.getProfile().getMood().getMoodImage() != null) {
             imageService.deleteImage(member.getProfile().getMood().getMoodImage().getId());
         }
-        memberService.deleteMember(withdrawalReq.getPhoneNumber());
+        memberService.deleteMember(phoneNumber);
         return true;
     }
 }

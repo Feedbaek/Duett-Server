@@ -1,5 +1,6 @@
 package Dino.Duett.domain.signup.controller;
 
+import Dino.Duett.config.security.AuthMember;
 import Dino.Duett.domain.signup.dto.request.WithdrawalReq;
 import Dino.Duett.domain.signup.service.WithdrawalService;
 import Dino.Duett.global.dto.JsonBody;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,9 @@ public class WithdrawalController {
             @ApiResponse(responseCode = "2003", description = "멤버를 찾을 수 없음", content = @Content(schema = @Schema(hidden = true))),
     })
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public JsonBody<Boolean> withdrawal(@Valid @RequestBody WithdrawalReq withdrawalReq) {
-        return JsonBody.of(200, "회원탈퇴 성공", withdrawalService.withdrawal(withdrawalReq));
+    public JsonBody<Boolean> withdrawal(
+            @AuthenticationPrincipal final AuthMember authMember,
+            @Valid @RequestBody WithdrawalReq withdrawalReq) {
+        return JsonBody.of(200, "회원탈퇴 성공", withdrawalService.withdrawal(authMember.getPhoneNumber(), withdrawalReq));
     }
 }
