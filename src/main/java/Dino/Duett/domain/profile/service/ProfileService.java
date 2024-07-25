@@ -87,8 +87,22 @@ public class ProfileService {
                 .infoCount(getProfileInfoCount(profile))
                 .introCount(getProfileIntroCount(profile))
                 .musicCount(getProfileMusicCount(profile))
-                .isProfileComplete(profile.getIsProfileComplete())
+                .unlockCount(getUnlockCount(profile))
                 .build();
+    }
+
+    private int getUnlockCount(final Profile profile){
+        int count = 0;
+        if(isInfoComplete(profile)){
+            count++;
+        }
+        if(isIntroComplete(profile)){
+            count++;
+        }
+        if(isMusicTasteComplete(profile)){
+            count++;
+        }
+        return count;
     }
 
     private int getProfileInfoCount(final Profile profile){
@@ -276,11 +290,15 @@ public class ProfileService {
      * @return boolean
      */
     protected boolean isProfileComplete(final Profile profile) {
-        // 내 정보
-        boolean info = !Validator.isNullOrBlank(profile.getName()) &&
-                !Validator.isNullOrBlank(profile.getOneLineIntroduction());
+        return isInfoComplete(profile) && isIntroComplete(profile) && isMusicTasteComplete(profile);
+    }
 
-        // 내 소개
+    private boolean isInfoComplete(final Profile profile) {
+        return !Validator.isNullOrBlank(profile.getName()) &&
+                !Validator.isNullOrBlank(profile.getOneLineIntroduction());
+    }
+
+    private boolean isIntroComplete(final Profile profile) {
         int introCount = 0;
         if (profile.getMbti() != null) {
             introCount++;
@@ -294,13 +312,13 @@ public class ProfileService {
         if (!Validator.isNullOrBlank(profile.getLikeableMusicTaste())) {
             introCount++;
         }
-        boolean intro = introCount >= PROFILE_INTRO_MIN_SIZE.getLimit();
-
-        // 음악 취향
-        boolean musicTaste = profile.getMusics().size() >= MUSIC_MAX_LIMIT.getLimit();
-
-        return info && intro && musicTaste;
+        return introCount >= PROFILE_INTRO_MIN_SIZE.getLimit();
     }
+
+    private boolean isMusicTasteComplete(final Profile profile) {
+        return profile.getMusics().size() >= MUSIC_MAX_LIMIT.getLimit();
+    }
+
 
     /**
      * 프로필 정보가 처음으로 채워졌을 때 프로필 완성 여부를 업데이트
