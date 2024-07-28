@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -62,7 +63,8 @@ public class TermService {
 
     public String readFileContent(String fileName) throws IOException {
         ClassPathResource resource = new ClassPathResource(fileName);
-        Path path = resource.getFile().toPath();
-        return Files.readString(path);
+        try (var inputStream = resource.getInputStream()) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 }
