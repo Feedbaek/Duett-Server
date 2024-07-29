@@ -22,8 +22,8 @@ public class MusicUpdateRequest {
     @Schema(description = "아티스트 이름", name = "artist")
     @Size(max = 100)
     private String artist;
-    @Schema(description = "유튜브 URL", example = "url")
-    private String url;
+    @Schema(description = "유튜브 비디오 id", example = "Y4nEEZwckuU")
+    private String videoId;
     public MusicUpdateRequest of(final Long musicId,
                                  final String title,
                                  final String artist,

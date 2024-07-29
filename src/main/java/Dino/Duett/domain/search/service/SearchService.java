@@ -1,11 +1,10 @@
 package Dino.Duett.domain.search.service;
 
 import Dino.Duett.config.EnvBean;
+import Dino.Duett.domain.search.dto.ThumbnailResponse;
 import Dino.Duett.domain.search.dto.VideoResponse;
 import Dino.Duett.domain.search.exception.YoutubeException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.SearchResultSnippet;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static Dino.Duett.global.enums.LimitConstants.YOUTUBE_SEARCH_LIMIT;
 
@@ -54,7 +52,7 @@ public class SearchService {
     /** @param search 유튜브 검색 요청 객체
      * @return 유튜브 동영상 검색 결과 목록
      */
-    private List<SearchResultSnippet> requestYoutubeSearching(final YouTube.Search.List search) throws IOException {
+    private List<VideoResponse> requestYoutubeSearching(final YouTube.Search.List search) throws IOException {
         for (int i = 0; i < envBean.getYoutubeKeyMaxSize(); i++) {
             try {
                 int idx = (youtubeKeyCurrentIndex + i) % envBean.getYoutubeKeyMaxSize();
@@ -62,7 +60,7 @@ public class SearchService {
                 List<SearchResult> searchResult = search.execute().getItems();
                 youtubeKeyCurrentIndex = idx;
                 return searchResult.stream()
-                        .map(SearchResult::getSnippet)
+                        .map(this::convertToDto)
                         .toList();
             } catch (GoogleJsonResponseException e) {
                 if (e.getStatusCode() == 403) {
@@ -85,21 +83,26 @@ public class SearchService {
      */
     public List<VideoResponse> searchVideos(final String q, Long maxResults){
         try {
-            // YouTube Data API를 사용해 동영상 검색을 위한 요청 객체 생성. 최대 사이즈 제한
             YouTube.Search.List search = youtube.search().list(Collections.singletonList("id,snippet"))
                     .setQ(q)
                     .setType(Collections.singletonList("video"))
                     .setMaxResults(Math.min(maxResults, YOUTUBE_SEARCH_LIMIT.getLimit()));
 
-            // 검색 요청 실행 후 검색 결과에서 동영상 목록 가져오기
-            List<SearchResultSnippet> searchResultSnippets = requestYoutubeSearching(search);
-
-            return searchResultSnippets.stream()
-                    .map(VideoResponse::of)
-                    .collect(Collectors.toList());
+            return requestYoutubeSearching(search);
         }
         catch (IOException e) {
             throw new YoutubeException.YoutubeApiRequestFailed();
         }
+    }
+
+    private VideoResponse convertToDto(SearchResult searchResult) {
+        SearchResultSnippet searchResultSnippet= searchResult.getSnippet();
+
+        return VideoResponse.builder()
+                .videoId(searchResult.getId().getVideoId())
+                .title(searchResultSnippet.getTitle())
+                .thumbnail(ThumbnailResponse.of(searchResultSnippet.getThumbnails().getHigh()))
+                .ChannelTitle(searchResultSnippet.getChannelTitle())
+                .build();
     }
 }

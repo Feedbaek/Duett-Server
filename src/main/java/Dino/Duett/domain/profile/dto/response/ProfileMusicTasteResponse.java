@@ -12,14 +12,13 @@ import java.util.List;
 @Schema(description = "내 정보 조회 응답")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProfileMusicResponse {
-    @Schema(description = "인생곡 리스트", example = "[{\"musicId\": 1, \"title\": \"title\", \"artist\": \"artist\", \"url\": \"https://www.youtube.com/watch?v=UUID\"}]")
+public class ProfileMusicTasteResponse {
+    @Schema(description = "인생곡 리스트")
     private List<MusicResponse> lifeMusics;
-    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImageUrl\": \"https://duett.com/image.jpg\"}")
+    @Schema(description = "mood 정보")
     private MoodResponse mood;
-
-    public static ProfileMusicResponse of(final List<MusicResponse> lifeMusics, final MoodResponse moodResponse) {
-        return new ProfileMusicResponse(
+    public static ProfileMusicTasteResponse of(final List<MusicResponse> lifeMusics, final MoodResponse moodResponse) {
+        return new ProfileMusicTasteResponse(
                 lifeMusics,
                 moodResponse
         );

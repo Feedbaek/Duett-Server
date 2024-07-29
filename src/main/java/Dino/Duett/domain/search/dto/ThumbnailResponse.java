@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ThumbnailResponse {
-    @Schema(name = "url", description = "유튜브 비디오 썸네일 URL")
+    @Schema(description = "유튜브 비디오 썸네일 URL")
     private String url;
-    @Schema(name = "width", description = "유튜브 비디오 썸네일 너비")
+    @Schema(description = "유튜브 비디오 썸네일 너비")
     private Long width;
-    @Schema(name = "height", description = "유튜브 비디오 썸네일 높이")
+    @Schema(description = "유튜브 비디오 썸네일 높이")
     private Long height;
 
     public static ThumbnailResponse of(final Thumbnail thumbnail){

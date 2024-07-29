@@ -12,7 +12,6 @@ import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.profile.repository.ProfileLikeRepository;
 import Dino.Duett.domain.profile.repository.ProfileRepository;
-import Dino.Duett.domain.tag.dto.response.TagResponse;
 import Dino.Duett.domain.tag.enums.TagType;
 import Dino.Duett.domain.tag.service.ProfileTagService;
 import lombok.RequiredArgsConstructor;
@@ -223,7 +222,6 @@ public class ProfileCardService {
     private boolean checkMemberReceivedMessage(final Member receiver, final Member sender){
         return messageRepository.existsByReceiverIdAndSenderId(receiver.getId(), sender.getId());
     }
-
 
     /**
      * 자신의 프로필 완성 여부 검증

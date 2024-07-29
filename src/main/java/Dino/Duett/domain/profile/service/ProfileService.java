@@ -5,18 +5,15 @@ import Dino.Duett.domain.image.service.ImageService;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
-import Dino.Duett.domain.mood.dto.response.MoodResponse;
 import Dino.Duett.domain.mood.entity.Mood;
 import Dino.Duett.domain.mood.service.MoodService;
-import Dino.Duett.domain.music.dto.response.MusicResponse;
 import Dino.Duett.domain.music.service.MusicService;
 import Dino.Duett.domain.profile.dto.request.ProfileInfoRequest;
 import Dino.Duett.domain.profile.dto.request.ProfileIntroRequest;
-import Dino.Duett.domain.profile.dto.request.ProfileMusicRequest;
 import Dino.Duett.domain.profile.dto.response.ProfileHomeResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileInfoResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileIntroResponse;
-import Dino.Duett.domain.profile.dto.response.ProfileMusicResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileMusicTasteResponse;
 import Dino.Duett.domain.profile.entity.Location;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.exception.ProfileException;
@@ -86,7 +83,7 @@ public class ProfileService {
                 .mbti(profile.getMbti())
                 .infoCount(getProfileInfoCount(profile))
                 .introCount(getProfileIntroCount(profile))
-                .musicCount(getProfileMusicCount(profile))
+                .musicCount(getProfileMusicTasteCount(profile))
                 .unlockCount(getUnlockCount(profile))
                 .build();
     }
@@ -135,7 +132,7 @@ public class ProfileService {
         return count;
     }
 
-    private int getProfileMusicCount(final Profile profile){
+    private int getProfileMusicTasteCount(final Profile profile){
         int count = 0;
         if(profile.getMusics() != null){
             if(profile.getMusics().size() == MUSIC_MAX_LIMIT.getLimit())
@@ -228,45 +225,15 @@ public class ProfileService {
                 .build();
     }
 
-    public ProfileMusicResponse getProfileMusic(final Long memberId) {
+    public ProfileMusicTasteResponse getProfileMusicTaste(final Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
         Profile profile = validateProfileIsNull(member.getProfile());
         Mood mood = profile.getMood();
 
-        return ProfileMusicResponse.of(
+        return ProfileMusicTasteResponse.of(
                 musicService.getMusics(profile),
                 mood != null ? moodService.getMood(profile) : null
         );
-    }
-
-    @Transactional
-    public void updateProfileMusic(final Long memberId, final ProfileMusicRequest profileMusicRequest){
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
-        Profile profile = validateProfileIsNull(member.getProfile());
-
-        musicService.changeMusics(
-                profile,
-                profileMusicRequest.getCreateLifeMusics(),
-                profileMusicRequest.getUpdateLifeMusics(),
-                profileMusicRequest.getDeleteLifeMusics());
-
-        if(profileMusicRequest.getMood() != null) {
-            moodService.changeMood(
-                    profile,
-                    profileMusicRequest.getMood());
-        }
-
-        ProfileMusicResponse.of(
-                MusicResponse.of(
-                        profile.getMusics()),
-                MoodResponse.of(
-                        profile.getMood() != null ? profile.getMood().getTitle() : null,
-                        profile.getMood() != null ? profile.getMood().getArtist() : null,
-                        profile.getMood() != null ? imageService.getUrl(profile.getMood().getMoodImage()) : null
-                )
-        );
-
-        updateProfileCompleteStatusOnFirstFill(profile);
     }
 
     private Profile validateProfileIsNull(Profile profile) {
