@@ -28,15 +28,15 @@ public class ProfileCardResponse {
     String oneLineIntroduction;
     @Schema(description = "사용자와의 거리", example = "1.5")
     Double distance;
-    @Schema(description = "프로필 이미지 URL", example = "crush")
+    @Schema(description = "프로필 이미지 URL", example = "https://duett-profile-image/image.jpg")
     String profileImageUrl;
     @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}, {\"name\": \"힙합\", \"state\": \"STANDARD\"}]")
     List<TagResponse> musicTags;
     @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": \"STANDARD\"}, {\"name\": \"콘서트\", \"state\": \"STANDARD\"}, {\"name\": \"캠핑\", \"state\": \"STANDARD\"}]")
     List<TagResponse> hobbyTags;
-    @Schema(description = "인생곡 리스트", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"url\": \"url\"}]")
+    @Schema(description = "인생곡 리스트")
     List<MusicResponse> lifeMusics;
-    @Schema(description = "mood 정보", example = "{\"title\": \"title\", \"artist\": \"artist\", \"moodImageUrl\": \"https://duett-mood-image/image.jpg\"}")
+    @Schema(description = "mood 정보")
     MoodResponse mood;
     @Schema(description = "긴 자기 소개", example = "crush")
     String selfIntroduction;

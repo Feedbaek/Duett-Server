@@ -27,11 +27,11 @@ public class MusicUpdateRequest {
     public MusicUpdateRequest of(final Long musicId,
                                  final String title,
                                  final String artist,
-                                 final String url) {
+                                 final String videoId) {
         return new MusicUpdateRequest(
                 musicId,
                 title,
                 artist,
-                url);
+                videoId);
     }
 }
