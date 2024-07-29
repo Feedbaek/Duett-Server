@@ -2,7 +2,6 @@ package Dino.Duett.domain.music.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,7 @@ public class MusicCreateRequest {
     @Size(max = 100)
     @NotBlank
     private String artist;
-    @Schema(description = "유튜브 URL", example = "url")
+    @Schema(description = "유튜브 비디오 id", example = "Y4nEEZwckuU")
     @NotBlank
-    private String url;
+    private String videoId;
 }

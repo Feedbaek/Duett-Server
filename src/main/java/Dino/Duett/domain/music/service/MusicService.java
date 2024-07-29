@@ -33,22 +33,6 @@ public class MusicService {
     }
 
     @Transactional
-    public void changeMusics(final Profile profile,
-                             final List<MusicCreateRequest> createMusics,
-                             final List<MusicUpdateRequest> updateMusics,
-                             final List<MusicDeleteRequest> deleteMusics) {
-        if(!Validator.isNullOrEmpty(createMusics)) {
-            createMusics(profile, createMusics);
-        }
-        if(!Validator.isNullOrEmpty(updateMusics)) {
-            updateMusics(profile, updateMusics);
-        }
-        if(!Validator.isNullOrEmpty(deleteMusics)){
-            deleteMusics(profile, deleteMusics);
-        }
-    }
-
-    @Transactional
     public Profile changeMusics(final Long memberId,
                              final List<MusicCreateRequest> createMusics,
                              final List<MusicUpdateRequest> updateMusics,
@@ -79,7 +63,7 @@ public class MusicService {
                 .map(request -> Music.of(
                         request.getTitle(),
                         request.getArtist(),
-                        request.getUrl(),
+                        request.getVideoId(),
                         profile))
                 .toList();
         musicRepository.saveAll(musics);

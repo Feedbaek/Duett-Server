@@ -22,7 +22,7 @@ public class Music extends BaseEntity {
     @Column(nullable = false)
     private String artist;
     @Column(nullable = false)
-    private String url;
+    private String videoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
@@ -30,13 +30,13 @@ public class Music extends BaseEntity {
 
     public static Music of(final String title,
                            final String artist,
-                           final String url,
+                           final String videoId,
                            final Profile profile) {
         return new Music(
                 null,
                 title,
                 artist,
-                url,
+                videoId,
                 profile
         );
     }
@@ -48,8 +48,8 @@ public class Music extends BaseEntity {
         if (!Validator.isNullOrBlank(musicUpdateRequest.getArtist())) {
             this.artist = musicUpdateRequest.getArtist();
         }
-        if (!Validator.isNullOrBlank(musicUpdateRequest.getUrl())) {
-            this.url = musicUpdateRequest.getUrl();
+        if (!Validator.isNullOrBlank(musicUpdateRequest.getVideoId())) {
+            this.videoId = musicUpdateRequest.getVideoId();
         }
     }
 }

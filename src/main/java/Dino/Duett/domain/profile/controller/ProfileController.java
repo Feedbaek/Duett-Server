@@ -3,11 +3,10 @@ package Dino.Duett.domain.profile.controller;
 import Dino.Duett.config.security.AuthMember;
 import Dino.Duett.domain.profile.dto.request.ProfileInfoRequest;
 import Dino.Duett.domain.profile.dto.request.ProfileIntroRequest;
-import Dino.Duett.domain.profile.dto.request.ProfileMusicRequest;
 import Dino.Duett.domain.profile.dto.response.ProfileHomeResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileInfoResponse;
 import Dino.Duett.domain.profile.dto.response.ProfileIntroResponse;
-import Dino.Duett.domain.profile.dto.response.ProfileMusicResponse;
+import Dino.Duett.domain.profile.dto.response.ProfileMusicTasteResponse;
 import Dino.Duett.domain.profile.service.ProfileService;
 import Dino.Duett.domain.tag.dto.response.TagByTypeResponse;
 import Dino.Duett.global.dto.JsonBody;
@@ -50,23 +49,8 @@ public class ProfileController implements ProfileApi{ //todo: 이후에 API 문�
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
     })
-    public JsonBody<ProfileMusicResponse> getProfileMusicAndMood(@AuthenticationPrincipal final AuthMember authMember){
-        return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 조회", profileService.getProfileMusic(authMember.getMemberId()));
-    }
-
-    @Operation(summary = "자신의 음악 취향(인생곡과 무드) 한번에 추가, 수정, 삭제하기", tags = {"테스트"}) //todo: 삭제 예정
-    @PostMapping(value = "/profiles/music-taste", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "음악 취향 조회 성공"),
-            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
-            @ApiResponse(responseCode = "6001", description = "최대 인생곡 개수 도달(400)", content = @Content(schema = @Schema(hidden = true))),
-    })
-    public JsonBody<Void> changeProfileMusicAndMood(@AuthenticationPrincipal final AuthMember authMember,
-                                                    @ModelAttribute final ProfileMusicRequest request){
-        profileService.updateProfileMusic(authMember.getMemberId(), request);
-        return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 추가, 수정, 삭제하기", null);
+    public JsonBody<ProfileMusicTasteResponse> getProfileMusicTaste(@AuthenticationPrincipal final AuthMember authMember){
+        return JsonBody.of(HttpStatus.OK.value(), "자신의 음악 취향(인생곡과 무드) 조회", profileService.getProfileMusicTaste(authMember.getMemberId()));
     }
 
     @GetMapping("/profiles/info")
