@@ -161,7 +161,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
             List<String> artists = List.of("이영지", "Attention", "어느날 머리에서 뿔이 자랐다", "Architect", "Falling Slowly", "I Don't Think That I Like Her");
             List<Integer> randomNumbers = getUniqueRandomIntegers(titles.size(), 1);
 
-            musics.add(Music.of(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "https://www.youtube.com/watch?v=LnhE5-ONvOc", null));
+            musics.add(Music.of(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "LnhE5-ONvOc", null));
         }
         return musics;
     }
@@ -173,7 +173,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
             List<String> titles = List.of("Small girl", "뉴진스", "투모로우바이투게더", "Livingstone", "Glen Hansard & Marketa Irglova", "Charlie Puth");
             List<String> artists = List.of("이영지", "Attention", "어느날 머리에서 뿔이 자랐다", "Architect", "Falling Slowly", "I Don't Think That I Like Her");
             List<Integer> randomNumbers = getUniqueRandomIntegers(titles.size(), 1);
-            MusicCreateRequest musicCreateRequest = new MusicCreateRequest(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "https://www.youtube.com/watch?v=LnhE5-ONvOc");
+            MusicCreateRequest musicCreateRequest = new MusicCreateRequest(titles.get(randomNumbers.get(0)), artists.get(randomNumbers.get(0)), "LnhE5-ONvOc");
             requests.add(musicCreateRequest);
         }
 
