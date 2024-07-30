@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_MIN_SIZE;
 
