@@ -291,6 +291,7 @@ public class ProfileService {
      * 프로필 정보가 처음으로 채워졌을 때 프로필 완성 여부를 업데이트
      * @param profile 프로필
      */
+    @Transactional
     public void updateProfileCompleteStatusOnFirstFill(Profile profile) {
         if(isProfileComplete(profile) && !profile.getIsProfileComplete()){
             profile.updateIsProfileComplete(true);
