@@ -18,7 +18,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(u.location.latitude)) * " +
             "cos(radians(u.location.longitude) - radians(:longitude)) + " +
             "sin(radians(:latitude)) * sin(radians(u.location.latitude)))) < :radius AND " +
-            "(:excludedProfileIds IS NULL OR u.id NOT IN :excludedProfileIds)")
+            "(:excludedProfileIds IS NULL OR u.id NOT IN :excludedProfileIds)" +
+            "ORDER BY RANDOM()")
     List<Profile> findAllUsersWithinRadius(
             @Param("latitude") double latitude,
             @Param("longitude") double longitude,

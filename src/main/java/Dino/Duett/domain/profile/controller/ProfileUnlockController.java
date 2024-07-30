@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,6 @@ public class ProfileUnlockController {
     public JsonBody<List<ProfileCardBriefResponse>> getUnlockedProfiles(@AuthenticationPrincipal final AuthMember authMember,
                                                                         @RequestParam(defaultValue = "0") int page,
                                                                         @RequestParam(defaultValue = "10") int size) {
-        return JsonBody.of(HttpStatus.OK.value(), "열어본 프로필 목록 조회 성공", profileUnlockService.getUnlockedProfiles(authMember.getMemberId(), PageRequest.of(page, size)));
+        return JsonBody.of(HttpStatus.OK.value(), "열어본 프로필 목록 조회 성공", profileUnlockService.getUnlockedProfiles(authMember.getMemberId(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifiedDate"))));
     }
 }
