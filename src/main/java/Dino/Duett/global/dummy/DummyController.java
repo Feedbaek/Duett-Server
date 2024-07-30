@@ -43,7 +43,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
     private final MemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
     private final ProfileTagService profileTagService;
-    private final MusicService musicService;
+    private final ProfileService profileService;
     private final Random random = new Random();
     private final EnvBean envBean;
     private final StringRedisTemplate redisTemplate;
@@ -234,7 +234,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
 
         memberRepository.save(member);
         profileTagService.changeProfileTags(member.getId(), makeDummyMusicTagRequests(), makeDummyHobbyTagRequests());
-        musicService.changeMusics(member.getId(), makeDummyMusicRequests(), null, null);
+        profileService.changeMusics(member.getId(), makeDummyMusicRequests(), null, null);
         return member;
     }
 
