@@ -10,14 +10,13 @@ import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.entity.Mood;
-import Dino.Duett.domain.music.dto.request.MusicChangeRequest;
 import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
 import Dino.Duett.domain.music.entity.Music;
-import Dino.Duett.domain.music.service.MusicService;
 import Dino.Duett.domain.profile.entity.Location;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.enums.GenderType;
 import Dino.Duett.domain.profile.enums.MbtiType;
+import Dino.Duett.domain.profile.service.ProfileService;
 import Dino.Duett.domain.tag.dto.request.TagRequest;
 import Dino.Duett.domain.tag.enums.TagState;
 import Dino.Duett.domain.tag.service.ProfileTagService;
@@ -43,7 +42,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
     private final MemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
     private final ProfileTagService profileTagService;
-    private final MusicService musicService;
+    private final ProfileService profileService;
     private final Random random = new Random();
     private final EnvBean envBean;
     private final StringRedisTemplate redisTemplate;
@@ -234,7 +233,7 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
 
         memberRepository.save(member);
         profileTagService.changeProfileTags(member.getId(), makeDummyMusicTagRequests(), makeDummyHobbyTagRequests());
-        musicService.changeMusics(member.getId(), makeDummyMusicRequests(), null, null);
+        profileService.changeMusics(member.getId(), makeDummyMusicRequests(), null, null);
         return member;
     }
 

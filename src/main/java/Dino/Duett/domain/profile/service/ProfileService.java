@@ -7,6 +7,10 @@ import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.mood.entity.Mood;
 import Dino.Duett.domain.mood.service.MoodService;
+import Dino.Duett.domain.music.dto.request.MusicCreateRequest;
+import Dino.Duett.domain.music.dto.request.MusicDeleteRequest;
+import Dino.Duett.domain.music.dto.request.MusicUpdateRequest;
+import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.music.service.MusicService;
 import Dino.Duett.domain.profile.dto.request.ProfileInfoRequest;
 import Dino.Duett.domain.profile.dto.request.ProfileIntroRequest;
@@ -27,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static Dino.Duett.global.enums.LimitConstants.MUSIC_MAX_LIMIT;
 import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_MIN_SIZE;
@@ -234,6 +240,33 @@ public class ProfileService {
                 musicService.getMusics(profile),
                 mood != null ? moodService.getMood(profile) : null
         );
+    }
+
+    @Transactional
+    public void changeMusics(final Long memberId,
+                                final List<MusicCreateRequest> createMusics,
+                                final List<MusicUpdateRequest> updateMusics,
+                                final List<MusicDeleteRequest> deleteMusics) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+        Profile profile = member.getProfile();
+
+        if(!Validator.isNullOrEmpty(createMusics)) {
+            musicService.createMusics(profile, createMusics);
+        }
+        if(!Validator.isNullOrEmpty(updateMusics)) {
+            musicService.updateMusics(profile, updateMusics);
+        }
+        if(!Validator.isNullOrEmpty(deleteMusics)){
+            musicService.deleteMusics(profile, deleteMusics);
+        }
+
+        if(!Validator.isNullOrEmpty(profile.getMusics())) {
+            if (profile.getMusics().size() > MUSIC_MAX_LIMIT.getLimit()) {
+                throw new MusicException.MusicMaxLimitException();
+            }
+        }
+
+        updateProfileCompleteStatusOnFirstFill(profile);
     }
 
     private Profile validateProfileIsNull(Profile profile) {
