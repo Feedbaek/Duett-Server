@@ -113,7 +113,6 @@ public class GmailReader {
         } catch (GmailException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Failed to read email");
             e.printStackTrace();
             throw new GmailException.EmailValidationFailedException();
         }
@@ -143,6 +142,7 @@ public class GmailReader {
 
             inbox.close(true);
         } catch (Exception e) {
+            log.error(Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }

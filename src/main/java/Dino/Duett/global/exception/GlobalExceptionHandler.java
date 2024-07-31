@@ -8,7 +8,10 @@ import Dino.Duett.domain.music.exception.MusicException;
 import Dino.Duett.domain.profile.exception.ProfileException;
 import Dino.Duett.domain.search.exception.YoutubeException;
 import Dino.Duett.domain.tag.exception.TagException;
+import Dino.Duett.gmail.GmailReader;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -25,6 +28,8 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<ErrorResponse> handleInternalServer(final Exception e) {
 //        final CustomException customException = CustomException.from(
@@ -44,6 +49,7 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        logger.error(String.valueOf(ex.getClass()), ex);
         final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.BAD_REQUEST, errors));
         return ResponseEntity.badRequest().body(response);
 
@@ -55,6 +61,7 @@ public class GlobalExceptionHandler {
         String fieldName = ex.getName();
         String errorMessage = "Invalid value for field: " + fieldName;
         errors.put(fieldName, errorMessage);
+        logger.error(String.valueOf(ex.getClass()), ex);
         final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.BAD_REQUEST, errors));
         return ResponseEntity.badRequest().body(response);
     }
@@ -63,6 +70,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageConversionException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageConversionException(final HttpMessageConversionException e) {
         log.error("HttpMessageConversionException", e);
+        logger.error(String.valueOf(e.getClass()), e);
         final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.BAD_REQUEST));
         return ResponseEntity.badRequest().body(response);
     }
@@ -82,6 +90,7 @@ public class GlobalExceptionHandler {
     )
     public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
         log.error(e.getErrorInfoLog());
+        logger.error(String.valueOf(e.getClass()), e);
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));
     }
     @ExceptionHandler({
@@ -95,6 +104,7 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleGlobalNotFoundException(final CustomException e) {
         log.error(e.getErrorInfoLog());
+        logger.error(String.valueOf(e.getClass()), e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.from(e));
     }
 
@@ -105,6 +115,7 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
         log.error(e.getErrorInfoLog());
+        logger.error(String.valueOf(e.getClass()), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.from(e));
     }
 
@@ -113,6 +124,7 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleGlobalPaymentRequiredException(final CustomException e) {
         log.error(e.getErrorInfoLog());
+        logger.error(String.valueOf(e.getClass()), e);
         return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(ErrorResponse.from(e));
     }
 
@@ -121,12 +133,14 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleGlobalInternalServerException(final CustomException e) {
         log.error(e.getErrorInfoLog());
+        logger.error(String.valueOf(e.getClass()), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.from(e));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(final Exception e) {
         log.error("Global Exception - {}", e.getMessage());
+        logger.error(String.valueOf(e.getClass()), e);
         e.printStackTrace();
         Map<String, String> errors = new HashMap<>();
         String fieldName = "Exception";
