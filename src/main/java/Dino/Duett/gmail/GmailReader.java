@@ -79,8 +79,9 @@ public class GmailReader {
         }
 
         try (Store store = SESSION.getStore()) {
-            store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
-
+            if (!store.isConnected()) {
+                store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            }
             try (Folder inbox = store.getFolder("INBOX")) {
                 inbox.open(Folder.READ_ONLY);
 
@@ -112,20 +113,20 @@ public class GmailReader {
         } catch (GmailException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Failed to read email");
             e.printStackTrace();
             throw new GmailException.EmailValidationFailedException();
         }
     }
 
 
-    @Scheduled(cron = "0 0 4 * * ?", zone = "Asia/Seoul")
     public void deleteOldMails() {
         Properties props = new Properties();
         props.put("mail.store.protocol", "imaps");
 
         try (Store store = SESSION.getStore()) {
-            store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            if (!store.isConnected()) {
+                store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            }
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
 
@@ -141,6 +142,7 @@ public class GmailReader {
 
             inbox.close(true);
         } catch (Exception e) {
+            log.error(Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
     }
