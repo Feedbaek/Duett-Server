@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "profile_unlock")
+@Table(name = "profile_unlock", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"viewer_profile_id", "viewed_profile_id"})
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ProfileUnlock extends BaseEntity {
