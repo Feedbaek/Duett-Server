@@ -22,7 +22,7 @@ public class ProfileHomeResponse {
     @Schema(description = "내 소개 입력 완료 개수", example = "2")
     Integer introCount;
     @Schema(description = "내 음악 취향 입력 완료 개수", example = "1")
-    Integer musicCount;
+    Integer musicTasteCount;
     @Schema(description = "완성된 프로필 정보(내 정보, 내 소개, 음악 취향) 개수", example = "3")
     Integer unlockCount;
 }

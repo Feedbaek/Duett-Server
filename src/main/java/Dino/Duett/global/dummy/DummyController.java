@@ -239,17 +239,17 @@ public class DummyController { // todo: 테스트 이후 API 삭제 예정
 
     private Image makeDummyMoodImage(){
         return Image.builder()
-                .name(envBean.getBucketDir() + "/df658869-d57c-40bb-a2f6-247eb0ffb1b6")
+                .name(envBean.getBucketDir() + "/ba05d76f-fa55-4b18-a4a8-44d60ddce1d2")
                 .extension("image/webp")
-                .uuid("df658869-d57c-40bb-a2f6-247eb0ffb1b6")
+                .uuid("ba05d76f-fa55-4b18-a4a8-44d60ddce1d2")
                 .build();
     }
 
     private Image makeDummyProfileImage(){
         return Image.builder()
-                .name(envBean.getBucketDir() + "/2ac84e25-736a-420c-8c7e-09c42eff4993")
+                .name(envBean.getBucketDir() + "/e55bf38e-9625-453f-9776-e9e6ef243f8a")
                 .extension("image/webp")
-                .uuid("2ac84e25-736a-420c-8c7e-09c42eff4993")
+                .uuid("e55bf38e-9625-453f-9776-e9e6ef243f8a")
                 .build();
     }
 
