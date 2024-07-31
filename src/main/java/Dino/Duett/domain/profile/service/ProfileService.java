@@ -91,9 +91,6 @@ public class ProfileService {
                 .introCount(getProfileIntroCount(profile))
                 .musicTasteCount(getProfileMusicTasteCount(profile))
                 .unlockCount(getUnlockCount(profile))
-                .isInfoComplete(isInfoComplete(profile))
-                .isIntroComplete(isIntroComplete(profile))
-                .isMusicTasteComplete(isMusicTasteComplete(profile))
                 .build();
     }
 
