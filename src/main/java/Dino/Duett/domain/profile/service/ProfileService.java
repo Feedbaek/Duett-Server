@@ -89,8 +89,11 @@ public class ProfileService {
                 .mbti(profile.getMbti())
                 .infoCount(getProfileInfoCount(profile))
                 .introCount(getProfileIntroCount(profile))
-                .musicCount(getProfileMusicTasteCount(profile))
+                .musicTasteCount(getProfileMusicTasteCount(profile))
                 .unlockCount(getUnlockCount(profile))
+                .isInfoComplete(isInfoComplete(profile))
+                .isIntroComplete(isIntroComplete(profile))
+                .isMusicTasteComplete(isMusicTasteComplete(profile))
                 .build();
     }
 
