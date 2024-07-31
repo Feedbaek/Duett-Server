@@ -79,8 +79,9 @@ public class GmailReader {
         }
 
         try (Store store = SESSION.getStore()) {
-            store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
-
+            if (!store.isConnected()) {
+                store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            }
             try (Folder inbox = store.getFolder("INBOX")) {
                 inbox.open(Folder.READ_ONLY);
 
@@ -119,13 +120,14 @@ public class GmailReader {
     }
 
 
-    @Scheduled(cron = "0 0 4 * * ?", zone = "Asia/Seoul")
     public void deleteOldMails() {
         Properties props = new Properties();
         props.put("mail.store.protocol", "imaps");
 
         try (Store store = SESSION.getStore()) {
-            store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            if (!store.isConnected()) {
+                store.connect(envBean.getEmailUsername(), envBean.getEmailPassword());
+            }
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_WRITE);
 
