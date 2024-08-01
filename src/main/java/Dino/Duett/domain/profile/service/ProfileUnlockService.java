@@ -61,7 +61,7 @@ public class ProfileUnlockService {
                                         profileUnlock.getViewedProfile().getMusics().get(0).getTitle(),
                                         profileUnlock.getViewedProfile().getMusics().get(0).getArtist()
                                 ) : null)
-                .tags(profileTagService.getProfileTagsOnlyFeatured(profileUnlock.getId()))
+                .tags(profileTagService.getProfileTagsOnlyFeatured(profileUnlock.getViewedProfile().getId()))
                 .build()).stream()
                 .toList();
     }
