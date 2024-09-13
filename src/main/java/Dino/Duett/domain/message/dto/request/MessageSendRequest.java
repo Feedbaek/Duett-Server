@@ -15,7 +15,6 @@ public class MessageSendRequest {
     private Integer sendType;
     @NotNull
     private Long receiverId;
-    @NotBlank
     private String content;
 
     @Builder
