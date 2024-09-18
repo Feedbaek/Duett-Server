@@ -41,7 +41,7 @@ public class TermService {
         termRepository.save(term);
     }
 
-    public TermResponse getLatestTerms(TermType type) {
+    public TermResponse getLatestTerms() {
         return TermResponse.builder()
                 .signUpTerm(getLatestSingUpTerms().orElse(null))
                 .privacyPolicyTerm(getLatestPrivacyPolicyTerms().orElse(null))

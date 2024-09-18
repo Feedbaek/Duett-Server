@@ -30,7 +30,7 @@ public class TermController {
     })
     @GetMapping(value = "")
     public JsonBody<TermResponse> getLatestTerm() {
-        return JsonBody.of(200, "약관 조회 성공", termService.getLatestTerms(TermType.SIGN_UP));
+        return JsonBody.of(200, "약관 조회 성공", termService.getLatestTerms());
     }
 
     @Operation(summary = "회원가입 약관 생성")
