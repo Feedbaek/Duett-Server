@@ -17,16 +17,16 @@ public class ProfileCardSummaryResponse {
     Long profileId;
     @Schema(description = "사용자의 이름", example = "name")
     String name;
-    @Schema(description = "사용자의 생년월일", example = "2000.01.01")
+    @Schema(description = "사용자의 생년월일", example = "2000년 01월 01일")
     String birthDate;
     @Schema(description = "MBTI 유형", example = "ENTP")
     MbtiType mbti;
     @Schema(description = "한 줄 소개", example = "crush")
     String oneLineIntroduction;
-    @Schema(description = "사용자와의 거리", example = "1.5")
-    double distance;
+    @Schema(description = "사용자와의 거리. 소수점 첫번째 자리까지 표시", example = "1.5")
+    Double distance;
     @Schema(description = "인생곡 리스트", example = "[{\"title\": \"title\", \"artist\": \"artist\", \"url\": \"url\"}]")
     List<MusicResponse> lifeMusics;
-    @Schema(description = "태그", example = "[\"팝\", \"콘서트\"]")
-    List<String> tags;
+    @Schema(description = "태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}]")
+    List<TagResponse> tags;
 }

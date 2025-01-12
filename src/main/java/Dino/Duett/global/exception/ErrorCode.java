@@ -19,6 +19,9 @@ public enum ErrorCode {
     VERIFICATION_CODE_NOT_FOUND(1001, "인증 코드를 찾을 수 없습니다"),
     LOGIN_FAILED(1002, "로그인 실패"),
     INVALID_PHONE_NUMBER(1003, "휴대폰 번호가 유효하지 않습니다"),
+    EXPIRED_JWT_TOKEN(1100, "JWT 토큰의 유효기간이 만료되었습니다"),
+    INVALID_JWT_TOKEN(1101, "JWT 토큰이 유효하지 않습니다"),
+
 
     // 2000: Member
     DUPLICATE_PHONE_NUMBER(2000, "전화번호가 중복됩니다"),
@@ -31,7 +34,7 @@ public enum ErrorCode {
     // 3000: Gmail
     INVALID_CONTENT_TYPE(3000, "올바르지 않은 메일 형식"),
     EMAIL_VALIDATION_FAILED(3001, "이메일 유효성 검사 실패"),
-    MESSAGE_NOT_FOUND(3002, "메일을 찾을 수 없습니다"),
+    MAIL_NOT_FOUND(3002, "메일을 찾을 수 없습니다"),
 
     // 4000: Image
     IMAGE_NOT_FOUND(4000, "이미지를 찾을 수 없습니다"),
@@ -43,11 +46,14 @@ public enum ErrorCode {
     // 5000: Profile
     PROFILE_NOT_FOUND(5000, "프로필을 찾을 수 없습니다."),
     PROFILE_FORBIDDEN(5001, "프로필 접근 권한이 없습니다."),
-    PROFILE_INCOMPLETE(5002, "프로필의 모든 필드를 채워야합니다."),
+    PROFILE_INCOMPLETE(5002, "프로필의 특정 필드를 모두 채워야합니다."),
+    PROFILE_USERNAME_EXIST(5003, "이미 존재하는 유저 아이디입니다."),
+    PROFILE_SELF_LIKE(5004, "자신의 프로필은 좋아요할 수 없습니다."),
 
     // 6000: Music
     MUSIC_NOT_FOUND(6000, "음악을 찾을 수 없습니다"),
     MUSIC_MAX_LIMIT(6001, "음악 최대 개수 초과"),
+    MUSIC_FORBIDDEN(6002, "음악 접근 권한이 없습니다"),
 
     // 7000: Mood
     MOOD_NOT_FOUND(7000, "무드를 찾을 수 없습니다."),
@@ -59,7 +65,13 @@ public enum ErrorCode {
 
     // 9000: Youtube
     YOUTUBE_API_REQUEST_FAILED(9000, "Youtube API 요청 실패"),
-    YOUTUBE_API_REQUEST_LIMIT_EXCEEDED(9001, "Youtube API 키 사용량 초과");
+    YOUTUBE_API_REQUEST_LIMIT_EXCEEDED(9001, "Youtube API 키 사용량 초과"),
+
+    // 10000: Message
+    MESSAGE_TYPE_INVALID(10000, "메시지 타입이 유효하지 않습니다"),
+    MESSAGE_LENGTH_EXCEED(10001, "메세지 길이가 초과되었습니다(최대 200자)"),
+    MESSAGE_NOT_FOUND(10002, "메세지를 찾을 수 없습니다");
+
 
     private final int code;
     private final String message;

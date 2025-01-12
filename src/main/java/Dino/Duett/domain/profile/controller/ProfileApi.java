@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ProfileApi {
 
 
-    @Operation(summary = "내 정보 조회하기", tags = {"마이페이지"})
+    @Operation(summary = "내 정보 조회하기", tags = {"마이페이지 - 내 정보"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -29,18 +29,19 @@ public interface ProfileApi {
     })
     public JsonBody<ProfileInfoResponse> getProfileInfo(@AuthenticationPrincipal final AuthMember authMember);
 
-    @Operation(summary = "내 정보 등록 및 수정하기", tags = {"마이페이지"})
+    @Operation(summary = "내 정보 등록 및 수정하기", tags = {"마이페이지 - 내 정보"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 정보 등록 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "400", description = "잘못된 인자 입력, 유효성 검사 실패", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "2003", description = "사용자를 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "5000", description = "프로필을 찾을 수 없음(404)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "5003", description = "이미 존재하는 유저 네임(400)", content = @Content(schema = @Schema(hidden = true))),
     })
     public JsonBody<Void> updateProfileInfo(@AuthenticationPrincipal final AuthMember authMember,
                                             @Validated @ModelAttribute final ProfileInfoRequest profileInfoRequest);
 
-    @Operation(summary = "내 소개 조회하기", tags = {"마이페이지"})
+    @Operation(summary = "내 소개 조회하기", tags = {"마이페이지 - 내 소개"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 소개 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -48,7 +49,7 @@ public interface ProfileApi {
     })
     public JsonBody<ProfileIntroResponse> getProfileIntro(@AuthenticationPrincipal final AuthMember authMember);
 
-    @Operation(summary = "내 소개 등록 및 수정하기", tags = {"마이페이지"})
+    @Operation(summary = "내 소개 등록 및 수정하기", tags = {"마이페이지 - 내 소개"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내 소개 등록 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),
@@ -62,7 +63,7 @@ public interface ProfileApi {
     JsonBody<?> updateProfileIntro(@AuthenticationPrincipal final AuthMember authMember,
                                    @Validated @RequestBody final ProfileIntroRequest profileIntroRequest);
 
-    @Operation(summary = "선택 가능한 모든 태그 조회하기", tags = {"마이페이지"})
+    @Operation(summary = "선택 가능한 모든 태그 조회하기", tags = {"마이페이지 - 내 소개"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유저 태그 조회 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(hidden = true))),

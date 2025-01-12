@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Dino.Duett.global.enums.LimitConstants.PROFILE_INTRO_STRING_MIN_SIZE;
+
+
 @Entity
 @Table(name = "profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,7 +29,7 @@ public class Profile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
     private Long id;
-    @Column(length = 15)
+    @Column(unique = true, length = 15)
     private String name;
     private String birthDate;
     @Enumerated(EnumType.STRING)
@@ -35,12 +38,15 @@ public class Profile extends BaseEntity {
     private String oneLineIntroduction;
     @Column(length = 500)
     private String selfIntroduction;
+    @Column(length = 500)
     private String likeableMusicTaste;
     @Enumerated(EnumType.STRING)
     private GenderType gender;
+    @Column(nullable = false)
+    private Boolean isProfileComplete;
+
     @Embedded
     private Location location;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_image_id")
     private Image profileImage;
@@ -52,14 +58,17 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "mood_id")
     private Mood mood;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Music> musics = new ArrayList<>();
 
     @OneToMany(mappedBy = "viewerProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileUnlock> profileUnlocks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "likedProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileLike> profileLikes = new ArrayList<>();
+
     @Builder
-    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
+    public Profile(Long id, String name, String birthDate, MbtiType mbti, String oneLineIntroduction, String selfIntroduction, String likeableMusicTaste, GenderType gender, Boolean isProfileComplete, Location location, Image profileImage, List<ProfileTag> profileTags, Mood mood, List<Music> musics, List<ProfileUnlock> profileUnlocks) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -68,6 +77,7 @@ public class Profile extends BaseEntity {
         this.selfIntroduction = selfIntroduction;
         this.likeableMusicTaste = likeableMusicTaste;
         this.gender = gender;
+        this.isProfileComplete = isProfileComplete;
         this.location = location;
         this.profileImage = profileImage;
         this.profileTags = profileTags;
@@ -76,8 +86,8 @@ public class Profile extends BaseEntity {
         this.profileUnlocks = profileUnlocks;
     }
 
-    public void updateMood(final Mood mood) {
-        this.mood = mood;
+    public void updateIsProfileComplete(final Boolean isProfileComplete) {
+        this.isProfileComplete = isProfileComplete;
     }
 
     public void updateProfileInfo(final Image image, final String name, final String oneLineIntroduction) {
@@ -91,15 +101,42 @@ public class Profile extends BaseEntity {
             this.oneLineIntroduction = oneLineIntroduction;
         }
     }
+
     public void updateProfileIntro(final MbtiType mbti, final String selfIntroduction, final String likeableMusicTaste) {
         if (mbti != null) {
             this.mbti = mbti;
         }
-        if (!Validator.isNullOrBlank(selfIntroduction)) {
-            this.selfIntroduction = selfIntroduction;
+
+        if(selfIntroduction != null) {
+            this.selfIntroduction = selfIntroduction.length() < PROFILE_INTRO_STRING_MIN_SIZE.getLimit() ? null : selfIntroduction;
         }
-        if (!Validator.isNullOrBlank(likeableMusicTaste)) {
-            this.likeableMusicTaste = likeableMusicTaste;
+
+        if (likeableMusicTaste != null) {
+            this.likeableMusicTaste = likeableMusicTaste.length() < PROFILE_INTRO_STRING_MIN_SIZE.getLimit() ? null : likeableMusicTaste;
         }
+    }
+
+    public void updateLocation(final Location location){
+        if(location != null){
+            this.location = location;
+        }
+    }
+
+    public void addMood(final Mood mood) {
+        this.mood = mood;
+    }
+
+    public void addMusic(final Music music) {
+        if(this.musics == null){
+            this.musics = new ArrayList<>();
+        }
+        this.musics.add(music);
+    }
+
+    public void removeMusic(final Music music) {
+        if(!this.musics.contains(music)) {
+            return;
+        }
+        this.musics.remove(music);
     }
 }

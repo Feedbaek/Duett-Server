@@ -31,8 +31,10 @@ public class GmailReaderTest {
     @DisplayName("email 인증 성공 테스트")
     public void validateTest() {
         // given
-        String phoneNumber = "01044206790";
-        String code = "ㅡ";
+//        String phoneNumber = "01044206790";
+//        String code = "ㅡ";
+        String phoneNumber = "01045801821";
+        String code = "610df830-4832-4248-acc5-5479cfb1bc06";
         given(env.getEmailUsername()).willReturn(System.getenv("EMAIL_USERNAME"));
         given(env.getEmailPassword()).willReturn(System.getenv("EMAIL_PASSWORD"));
 
@@ -87,5 +89,16 @@ public class GmailReaderTest {
         // then
         assertThat(throwable).isInstanceOf(CustomException.class);
         assertThat(throwable.getMessage()).isEqualTo(new GmailException.EmailValidationFailedException().getMessage());
+    }
+
+    @Test
+    @DisplayName("email 삭제 테스트 - 3일이 지난 발신 메일 삭제")
+    public void deleteEmailTest() {
+        // given
+        given(env.getEmailUsername()).willReturn(System.getenv("EMAIL_USERNAME"));
+        given(env.getEmailPassword()).willReturn(System.getenv("EMAIL_PASSWORD"));
+
+        // when
+        gmailReader.deleteOldMails();
     }
 }

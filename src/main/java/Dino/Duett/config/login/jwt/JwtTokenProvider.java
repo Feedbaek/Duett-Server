@@ -5,6 +5,7 @@ import Dino.Duett.config.security.AuthMemberService;
 import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
+import Dino.Duett.global.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +34,7 @@ public class JwtTokenProvider {
     private long accessTokenTime;
     @Value("${jwt.refresh-token-time}")
     private long refreshTokenTime;
-
+    private final StringRedisTemplate redisTemplate;
     private final MemberRepository memberRepository;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
@@ -76,7 +78,7 @@ public class JwtTokenProvider {
 
         // AuthMember 객체 생성
         AuthMember authMember = AuthMember.builder()
-                .id(member.getId())
+                .memberId(member.getId())
                 .phoneNumber(member.getPhoneNumber())
                 .kakaoId(member.getKakaoId())
                 .role(member.getRole().getName())
@@ -107,5 +109,17 @@ public class JwtTokenProvider {
 
     public boolean isAccessToken(Jws<Claims> jws) {
         return jws.getBody().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
+    }
+
+    public TokenDto refresh(Long memberId, String token) {
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(token))) {
+            throw new MemberException.InvalidTokenException();
+        }
+        redisTemplate.delete(token);
+        String accessToken = createToken(memberId, JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = createToken(memberId, JwtTokenType.REFRESH_TOKEN);
+        redisTemplate.opsForValue().set(refreshToken, memberId.toString());
+
+        return TokenDto.of(accessToken, refreshToken);
     }
 }

@@ -35,15 +35,6 @@ public class MoodService {
     }
 
     @Transactional
-    public void changeMood(final Profile profile, final MoodRequest moodRequest) {
-        Mood mood = profile.getMood();
-        if(mood == null) {
-            createMood(profile, moodRequest);
-            return;
-        }
-        updateMood(mood, moodRequest);
-    }
-    @Transactional
     public void changeMood(final Long memberId, final MoodRequest moodRequest) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
@@ -63,7 +54,7 @@ public class MoodService {
                 imageService.saveImage(moodRequest.getMoodImage())
         );
         moodRepository.save(mood);
-        profile.updateMood(mood);
+        profile.addMood(mood);
     }
 
     private void updateMood(final Mood mood, final MoodRequest moodRequest) {

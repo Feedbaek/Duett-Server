@@ -13,14 +13,16 @@ public class ProfileHomeResponse {
     String profileImageUrl;
     @Schema(description = "사용자의 이름", example = "name")
     String name;
-    @Schema(description = "사용자의 생년월일", example = "2000.01.01")
+    @Schema(description = "사용자의 생년월일", example = "2000년 01월 01일")
     String birthDate;
     @Schema(description = "MBTI 유형", example = "ENTP")
     MbtiType mbti;
     @Schema(description = "내 정보 입력 완료 개수", example = "2")
-    int infoCount;
+    Integer infoCount;
     @Schema(description = "내 소개 입력 완료 개수", example = "2")
-    int introCount;
+    Integer introCount;
     @Schema(description = "내 음악 취향 입력 완료 개수", example = "1")
-    int musicCount;
+    Integer musicTasteCount;
+    @Schema(description = "완성된 프로필 정보(내 정보, 내 소개, 음악 취향) 개수", example = "3")
+    Integer unlockCount;
 }

@@ -3,8 +3,6 @@ package Dino.Duett.domain.profile.dto.response;
 import Dino.Duett.domain.profile.enums.MbtiType;
 import Dino.Duett.domain.tag.dto.response.TagResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,9 +14,9 @@ import java.util.List;
 public class ProfileIntroResponse {
     @Schema(description = "MBTI", example = "ENFP")
     MbtiType mbti;
-    @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}, {\"name\": \"힙합\", \"state\": \"STANDARD\"}]", nullable = true)
+    @Schema(description = "음악 태그", example = "[{\"name\": \"팝\", \"state\": \"FEATURED\"}, {\"name\": \"발라드\", \"state\": \"STANDARD\"}, {\"name\": \"힙합\", \"state\": \"STANDARD\"}]")
     List<TagResponse> musicTags;
-    @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": \"STANDARD\"}, {\"name\": \"콘서트\", \"state\": \"STANDARD\"}, {\"name\": \"캠핑\", \"state\": \"STANDARD\"}]", nullable = true)
+    @Schema(description = "취미 태그", example = "[{\"name\": \"영화\", \"state\": \"STANDARD\"}, {\"name\": \"콘서트\", \"state\": \"STANDARD\"}, {\"name\": \"캠핑\", \"state\": \"STANDARD\"}]")
     List<TagResponse> hobbyTags;
     @Schema(description = "자기소개", example = "안녕하세요!")
     String selfIntroduction;

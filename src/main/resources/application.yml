@@ -44,7 +44,6 @@ spring:
 
 server:
   port: 8080
-
   error:
     include-exception: false      # Response 에 Exception 을 표시할지
     include-message: always       # Response 에 Exception Message 를 표시할지 (never | always | on_param)
@@ -53,9 +52,10 @@ server:
 
 jwt:
   secret: HELLONICETOSEEYOUWELCOMETOTHEMYMATCHINGHELLONICETOSEEYOUWELCOMETOTHEMYMATCHINGHELLONICETOSEEYOUWELCOMETOTHEMYMATCHINGHELLONICETOSEEYOUWELCOMETOTHEMYMATCHING
-  access-token-time: 600000  # 10분
+  access-token-time: 6000000000000000000  # 10분
   refresh-token-time: 864000000  # 10일
 
 email:
   username: ${EMAIL_USERNAME}
   password: ${EMAIL_PASSWORD}
+  withdrawal: ${EMAIL_WITHDRAWAL}

@@ -17,7 +17,8 @@ public interface ProfileTagRepository extends JpaRepository<ProfileTag, Long> {
     @Query("SELECT t.name as name, pt.state as state " +
             "FROM ProfileTag pt " +
             "JOIN pt.tag t " +
-            "WHERE pt.profile.id = :profileId AND t.type = :type")
+            "WHERE pt.profile.id = :profileId AND t.type = :type " +
+            "ORDER BY pt.createdDate ASC")
     List<ProfileTagProjection> findByProfileIdAndTagType(
             @Param("profileId") Long profileId,
             @Param("type") TagType type);
@@ -47,6 +48,5 @@ public interface ProfileTagRepository extends JpaRepository<ProfileTag, Long> {
             @Param("profileId") Long profileId,
             @Param("type") TagType type,
             @Param("state") TagState state);
-
     List<ProfileTag> findByProfileIdAndState(Long profileId, TagState tagState);
 }

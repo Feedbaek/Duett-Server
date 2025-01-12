@@ -2,6 +2,7 @@ package Dino.Duett.domain.tag.entity;
 
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.tag.enums.TagState;
+import Dino.Duett.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "profile_tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ProfileTag {
+public class ProfileTag extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_tag_id")

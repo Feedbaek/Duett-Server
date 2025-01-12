@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -35,6 +36,10 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
+    @Column(name = "sms_agree")
+    @ColumnDefault("false")
+    private Boolean smsAgree;
+
     public void updateProfile(Profile profile){
         this.profile = profile;
     }
@@ -47,7 +52,7 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(Long id, String phoneNumber, String kakaoId, Integer coin, MemberState state, Role role, Profile profile) {
+    public Member(Long id, String phoneNumber, String kakaoId, Integer coin, MemberState state, Role role, Profile profile, Boolean smsAgree) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.kakaoId = kakaoId;
@@ -55,5 +60,6 @@ public class Member extends BaseEntity {
         this.state = state;
         this.role = role;
         this.profile = profile;
+        this.smsAgree = smsAgree != null ? smsAgree : false; // default false
     }
 }

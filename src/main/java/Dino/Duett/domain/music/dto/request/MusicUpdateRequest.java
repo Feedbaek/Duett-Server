@@ -7,10 +7,12 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "음악 수정 요청")
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MusicUpdateRequest {
     @Schema(description = "음악 id", name = "musicId")
     private Long musicId;
@@ -20,16 +22,16 @@ public class MusicUpdateRequest {
     @Schema(description = "아티스트 이름", name = "artist")
     @Size(max = 100)
     private String artist;
-    @Schema(description = "유튜브 URL", example = "url")
-    private String url;
-    public MusicUpdateRequest of(Long musicId,
-                                 String title,
-                                 String artist,
-                                 String url) {
+    @Schema(description = "유튜브 비디오 id", example = "Y4nEEZwckuU")
+    private String videoId;
+    public MusicUpdateRequest of(final Long musicId,
+                                 final String title,
+                                 final String artist,
+                                 final String videoId) {
         return new MusicUpdateRequest(
                 musicId,
                 title,
                 artist,
-                url);
+                videoId);
     }
 }

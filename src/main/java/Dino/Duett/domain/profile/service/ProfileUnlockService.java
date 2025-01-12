@@ -56,8 +56,12 @@ public class ProfileUnlockService {
                 .birthDate(profileUnlock.getViewedProfile().getBirthDate())
                 .mbti(profileUnlock.getViewedProfile().getMbti())
                 .lifeMusic(profileUnlock.getViewedProfile().getMusics() !=null && !profileUnlock.getViewedProfile().getMusics().isEmpty() ?
-                                MusicResponse.of(profileUnlock.getViewedProfile().getMusics().get(0)) : null)
-                .tags(profileTagService.getProfileTagsOnlyFeatured(profileUnlock.getId()))
+                                MusicResponse.of(
+                                        profileUnlock.getViewedProfile().getMusics().get(0).getId(),
+                                        profileUnlock.getViewedProfile().getMusics().get(0).getTitle(),
+                                        profileUnlock.getViewedProfile().getMusics().get(0).getArtist()
+                                ) : null)
+                .tags(profileTagService.getProfileTagsOnlyFeatured(profileUnlock.getViewedProfile().getId()))
                 .build()).stream()
                 .toList();
     }

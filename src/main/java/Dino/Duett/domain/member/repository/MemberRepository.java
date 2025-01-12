@@ -11,4 +11,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByKakaoId(String kakaoId);
     Optional<Member> findByPhoneNumber(String phoneNumber);
+    Optional<Member> findByProfileId(Long profileId);
+
+    void deleteByPhoneNumber(String phoneNumber);
 }

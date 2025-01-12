@@ -1,4 +1,4 @@
-package Dino.Duett.domain.signup.dto;
+package Dino.Duett.domain.signup.dto.request;
 
 
 import Dino.Duett.domain.profile.enums.GenderType;
@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Nullable;
 
 @Getter
 @Setter
@@ -31,4 +33,6 @@ public class SignUpReq {
     private MultipartFile profileImage;
     @NotBlank
     private String oneLineIntroduction;
+    @Nullable
+    private Boolean snsAgree = false;
 }

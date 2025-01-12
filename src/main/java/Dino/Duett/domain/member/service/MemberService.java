@@ -9,6 +9,7 @@ import Dino.Duett.domain.member.enums.RoleName;
 import Dino.Duett.domain.member.exception.MemberException;
 import Dino.Duett.domain.member.repository.MemberRepository;
 import Dino.Duett.domain.member.repository.RoleRepository;
+import Dino.Duett.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
     private final RoleRepository roleRepository;
 
     // 멤버 엔티티 생성
     @Transactional
-    public Member createMember(String phoneNumber, String kakaoId) throws MemberException {
+    public Member createMember(String phoneNumber, String kakaoId, Boolean snsAgree) throws MemberException {
         // 중복 체크
         if (memberRepository.existsByPhoneNumber(phoneNumber)) {
             throw new MemberException.DuplicatePhoneNumberException();
@@ -41,12 +43,20 @@ public class MemberService {
                 .coin(0)
                 .state(MemberState.ACTIVE)
                 .role(role)
+                .smsAgree(snsAgree)
                 .build();
-
         return memberRepository.save(member);
     }
 
-    // 멤버 dto 생성
+    @Transactional
+    public void deleteMember(String phoneNumber) throws MemberException {
+        if (!memberRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new MemberException.MemberNotFoundException();
+        }
+        memberRepository.deleteByPhoneNumber(phoneNumber);
+    }
+
+        // 멤버 dto 생성
     @Transactional
     public MemberDto makeMemberDto(Member member) {
         return MemberDto.builder()
@@ -61,5 +71,13 @@ public class MemberService {
 
     public CheckMemberDto existsByPhoneNumber(String phoneNumber) {
         return CheckMemberDto.of(memberRepository.existsByPhoneNumber(phoneNumber));
+    }
+
+    public CheckMemberDto existsByKakaoId(String kakaoId) {
+        return CheckMemberDto.of(memberRepository.existsByKakaoId(kakaoId));
+    }
+
+    public CheckMemberDto existsByMemberName(String memberName) {
+        return CheckMemberDto.of(profileRepository.existsByName(memberName));
     }
 }

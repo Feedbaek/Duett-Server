@@ -8,11 +8,17 @@ import Dino.Duett.domain.member.entity.Member;
 import Dino.Duett.domain.member.entity.Role;
 import Dino.Duett.domain.member.enums.MemberState;
 import Dino.Duett.domain.member.enums.RoleName;
+import Dino.Duett.domain.member.repository.MemberRepository;
+import Dino.Duett.domain.member.repository.RoleRepository;
+import Dino.Duett.domain.message.entity.Message;
+import Dino.Duett.domain.message.repository.MessageRepository;
 import Dino.Duett.domain.profile.entity.Profile;
 import Dino.Duett.domain.profile.enums.GenderType;
-import Dino.Duett.domain.signup.dto.SignUpReq;
+import Dino.Duett.domain.signup.dto.request.SignUpReq;
 import Dino.Duett.domain.tag.entity.Tag;
 import Dino.Duett.domain.tag.enums.TagType;
+import Dino.Duett.global.dummy.DummyController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
@@ -33,13 +39,27 @@ import java.util.List;
 @Component
 public class TestUtil {
     public static final String MEMBER_PHONE_NUMBER = "01012345678";
+    public static final String MEMBER_PHONE_NUMBER2 = "01087654321";
     public static final String MEMBER_KAKAO_ID = "kakaoId";
     public static final String MEMBER_NICKNAME = "nickname";
+
+    private static Long incrementId = 0L;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private MessageRepository messageRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private DummyController dummyController;
 
     /**
      * 테스트용 회원가입 요청 생성
@@ -138,7 +158,7 @@ public class TestUtil {
                 .id(1L)
                 .name(RoleName.USER.name())
                 .build();
-        Member member = Member.builder()
+        return Member.builder()
                 .phoneNumber("010-1234-5678")
                 .kakaoId("kakaoId")
                 .coin(0)
@@ -147,9 +167,9 @@ public class TestUtil {
                 .profile(Profile.builder()
                         .gender(GenderType.MAN)
                         .birthDate("1999.01.01")
+                        .isProfileComplete(true)
                         .build())
                 .build();
-        return member;
     }
 
     public Image createImage() {
@@ -158,5 +178,40 @@ public class TestUtil {
                 .extension("webp")
                 .uuid("uuid")
                 .build());
+    }
+
+    public Role createRole() {
+        return roleRepository.save(Role.builder()
+                .name(RoleName.USER.name())
+                .build());
+    }
+
+    public Member createTestMember() {
+        ++incrementId;
+        Role role = roleRepository.findByName(RoleName.USER.name()).orElseGet(this::createRole);
+        return memberRepository.save(Member.builder()
+                .phoneNumber(MEMBER_PHONE_NUMBER + incrementId)
+                .kakaoId(MEMBER_KAKAO_ID + incrementId)
+                .coin(0)
+                .state(MemberState.ACTIVE)
+                .role(role)
+                .build());
+    }
+
+    public Message createTestMessage(Member sender, Member receiver) {
+        return messageRepository.save(Message.builder()
+                .content("test content")
+                .sender(sender)
+                .receiver(receiver)
+                .sendType(1)
+                .build());
+    }
+
+    public Member createTestMemberWithProfile() {
+        return dummyController.createDummyMember();
+    }
+
+    public String toJson(Object object) throws IOException {
+        return objectMapper.writeValueAsString(object);
     }
 }

@@ -4,6 +4,7 @@ import Dino.Duett.domain.authentication.dto.VerificationCodeDto;
 import Dino.Duett.domain.authentication.exception.AuthenticationException;
 import Dino.Duett.gmail.exception.GmailException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VerificationCodeManager {
     private final StringRedisTemplate redisTemplate;
 
@@ -26,11 +28,14 @@ public class VerificationCodeManager {
     }
 
     public VerificationCodeDto requestCodeDto(String phoneNumber) {
+
         String code = generateVerificationCode(phoneNumber);
         return VerificationCodeDto.builder()
+                .exists(false)
                 .code(code)
                 .build();
     }
+
 
     public void verifyCode(String phoneNumber, String code) throws AuthenticationException {
         String storedCode = redisTemplate.opsForValue().get(phoneNumber);

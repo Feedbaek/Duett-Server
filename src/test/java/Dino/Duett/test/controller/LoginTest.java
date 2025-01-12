@@ -41,7 +41,7 @@ public class LoginTest {
     @DisplayName("로그인 테스트")
     public void loginTest(TestReporter testReporter) throws Exception {
         // given
-        Member member = memberService.createMember(TestUtil.MEMBER_PHONE_NUMBER, TestUtil.MEMBER_KAKAO_ID);
+        Member member = memberService.createMember(TestUtil.MEMBER_PHONE_NUMBER, TestUtil.MEMBER_KAKAO_ID, false);
         String code = verificationCodeManager.generateVerificationCode(member.getPhoneNumber());
         doAnswer(invocation -> null).when(gmailReader).validate(member.getPhoneNumber(), code);
 
@@ -62,7 +62,7 @@ public class LoginTest {
     @DisplayName("로그인 실패 테스트 - Redis에 저장된 코드와 입력한 코드가 다를 때")
     public void loginFailTest(TestReporter testReporter) throws Exception {
         // given
-        Member member = memberService.createMember(TestUtil.MEMBER_PHONE_NUMBER, TestUtil.MEMBER_KAKAO_ID);
+        Member member = memberService.createMember(TestUtil.MEMBER_PHONE_NUMBER, TestUtil.MEMBER_KAKAO_ID, false);
         String code = verificationCodeManager.generateVerificationCode(member.getPhoneNumber());
         doAnswer(invocation -> null).when(gmailReader).validate(member.getPhoneNumber(), code);
 

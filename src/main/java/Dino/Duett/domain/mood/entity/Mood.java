@@ -42,11 +42,11 @@ public class Mood {
     }
 
     public void updateMood(final String title, final String artist, final Image moodImage) {
-        if(Validator.isNullOrBlank(title)) {
+        if(!Validator.isNullOrBlank(title)) {
             this.title = title;
         }
 
-        if(Validator.isNullOrBlank(artist)) {
+        if(!Validator.isNullOrBlank(artist)) {
             this.artist = artist;
         }
 
